@@ -144,7 +144,7 @@ def flower_all():
 
 
 @app.route('/flower_new_price', methods=['POST'])
-def flower_update_price():
+def flower_new_price():
     data = request.json
     flower_id = data.get("id")
     new_price = data.get("price")
@@ -153,11 +153,12 @@ def flower_update_price():
         return jsonify({"status": "ERROR", "message": "ID и цена обязательны."}), 400
 
     try:
-        sql = f'UPDATE flowers SET price = "{new_price}" WHERE id = {flower_id}'
+        sql = f'UPDATE `flowers` SET `price` = "{new_price}" WHERE `id` = {flower_id}'
+        print(sql)
 
         print(f"flower_id: {flower_id}, new_price: {new_price}")
-        cur.execute(sql, (new_price, flower_id))
-        cur.connection.commit()
+        cur.execute(sql)
+        cur._connection.commit()
 
         return jsonify({"status": "OK", "message": "Цена успешно обновлена!"})
     except Exception as e:
