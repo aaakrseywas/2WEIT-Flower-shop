@@ -164,9 +164,51 @@ def flower_new_price():
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e)})
 
+@app.route('/flower_quantity', methods=['POST'])
+def flower_quantity():
+    try:
+        sql_insert = f'''
+            INSERT INTO flowers_quantity (flower_ID, quantity, date_delivery)
+            SELECT id, COUNT(*) AS quantity, MAX(date) AS date_delivery
+            FROM flowers
+            GROUP BY id;
+        '''
+        cur.execute(sql_insert)
+        cur._connection.commit()
 
-if __name__ == '__main__':
-    app.run(debug=True)
+        count = cur.rowcount
+
+        return jsonify({
+            "status": "OK",
+            "count": count,
+            "message": "Data inserted successfully!"
+        })
+    except Exception as e:
+        cur.connection.rollback()
+        return jsonify({"status": "ERROR", "message": str(e)})
+
+@app.route('/flower_quantity_show', methods=['POST'])
+def flower_quantity_show():
+    try:
+        sql_select = f'''
+            SELECT name, COUNT(*) AS quantity
+            FROM flowers 
+            JOIN flowers_quantity ON id = flower_ID
+            GROUP BY name;
+        '''
+        cur.execute(sql_select)
+        flowers = cur.fetchall()
+
+
+        flower_list = [{"name": row[0], "quantity": row[1]} for row in flowers]
+
+        return jsonify({
+            "status": "OK",
+            "flowers": flower_list
+        })
+    except Exception as e:
+        cur.connection.rollback()
+        return jsonify({"status": "ERROR", "message": str(e)})
 
 
 if __name__ == '__main__':
