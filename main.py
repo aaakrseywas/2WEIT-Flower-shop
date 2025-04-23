@@ -127,22 +127,18 @@ def flower():
 @app.route('/flower_all', methods=['GET'])
 def flower_all():
     try:
-        with connection.cursor() as cur:
-            sql = 'SELECT * FROM flowers'
-            cur.execute(sql)
-            result = cur.fetchall()
+        sql='SELECT * FROM flowers'
+        cur.execute(sql)
+        flowers=[]
+        for row in cur:
+            flowers.append(row)
+            print(row)
 
-            flowers = []
-            for row in result:
-                flowers.append({
-                    'id': row[0],
-                    'name': row[1],
-                    'sort': row[2],
-                    'color': row[3],
-                    'date': row[4].strftime('%Y-%m-%d'),
-                    'price': row[5]
-                })
-            return jsonify({"status": "OK", "flowers": flowers})
+        return jsonify({
+            "status": "OK",
+            "count": len(flowers),
+            "flowers": flowers
+        })
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e)})
 
