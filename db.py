@@ -1,4 +1,5 @@
 import mysql.connector
+import pymysql
 
 # Connect to server
 cnx = mysql.connector.connect(
@@ -6,7 +7,8 @@ cnx = mysql.connector.connect(
     port=3306,
     user="test1",
     password="P@$$w0rd",
-    database="Flower_shop_2weit")
+    database="Flower_shop_2weit"
+)
 
 # Get a cursor
 cur = cnx.cursor()

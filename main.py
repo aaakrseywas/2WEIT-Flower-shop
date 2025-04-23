@@ -143,5 +143,30 @@ def flower_all():
         return jsonify({"status": "ERROR", "message": str(e)})
 
 
+@app.route('/flower_new_price', methods=['POST'])
+def flower_update_price():
+    data = request.json
+    flower_id = data.get("id")
+    new_price = data.get("price")
+
+    if flower_id is None or new_price is None:
+        return jsonify({"status": "ERROR", "message": "ID и цена обязательны."}), 400
+
+    try:
+        sql = f'UPDATE flowers SET price = "{new_price}" WHERE id = {flower_id}'
+
+        print(f"flower_id: {flower_id}, new_price: {new_price}")
+        cur.execute(sql, (new_price, flower_id))
+        cur.connection.commit()
+
+        return jsonify({"status": "OK", "message": "Цена успешно обновлена!"})
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e)})
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
