@@ -199,7 +199,6 @@ def flower_quantity_show():
         cur.execute(sql_select)
         flowers = cur.fetchall()
 
-
         flower_list = [{"name": row[0], "quantity": row[1]} for row in flowers]
 
         return jsonify({
@@ -211,5 +210,156 @@ def flower_quantity_show():
         return jsonify({"status": "ERROR", "message": str(e)})
 
 
+@app.route('/reviews', methods=['POST'])
+def reviews():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Данные не предоставлены"}), 400
+
+    required_fields = ["username", "comment"]
+    missing_fields = [field for field in required_fields if field not in data or not data[field]]
+
+    if missing_fields:
+        return jsonify({
+            "error": "Не заполнены обязательные поля",
+            "missing_fields": missing_fields
+        }), 400
+
+    username = data.get('username')
+    comment = data.get('comment')
+
+    sql = f'INSERT INTO Reviews (username, comment) VALUES ("{username}", "{comment}")'
+    print(sql)
+    cur.execute(sql)
+    cur._connection.commit()
+
+    return jsonify({
+        "status": "success",
+        "message": "review saved successfully"
+    }), 201
+
+
+@app.route('/apply_discount', methods=['POST'])
+def apply_discount():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Данные не предоставлены"}), 400
+
+    required_fields = ["user_id", "order_id", "original_amount"]
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        return jsonify({
+            "error": "Не заполнены обязательные поля",
+            "missing_fields": missing_fields
+        }), 400
+
+    user_id = data["user_id"]
+    order_id = data["order_id"]
+    original_amount = float(data["original_amount"])
+
+    try:
+            sql = "SELECT discount_percent FROM discounts WHERE user_id = %s"
+            cur.execute(sql, (user_id,))
+            result = cur.fetchone()
+
+            if not result:
+                return jsonify({
+                    "status": "no_discount",
+                    "message": "Пользователь не найден или скидка не назначена",
+                    "original_amount": original_amount
+                })
+
+            discount_percent = float(result[0])
+
+            if discount_percent < 0 or discount_percent > 100:
+                return jsonify({
+                    "error": "Некорректный размер скидки",
+                    "discount_percent": discount_percent
+                }), 400
+
+            discount_amount = (original_amount * discount_percent) / 100
+            final_amount = original_amount - discount_amount
+
+            sql_insert = """
+                 INSERT INTO orders 
+                 (order_id, user_id, original_amount, discount_percent, final_amount) 
+                 VALUES (%s, %s, %s, %s, %s)
+             """
+            cur.execute(sql_insert, (order_id, user_id, original_amount,
+                                     discount_percent, final_amount))
+            cur._connection.commit()
+
+            return jsonify({
+                "status": "success",
+                "message": "Скидка применена",
+                "discount_percent": discount_percent,
+                "discount_amount": discount_amount,
+                "final_amount": final_amount
+            })
+
+    except Exception as e:
+        cur._connection.rollback()
+        return jsonify({
+            "error": "Ошибка при обработке запроса",
+            "details": str(e)
+        }), 500
+
+@app.route('/add_discount', methods=['POST'])
+def add_discount():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Данные не предоставлены"}), 400
+
+    required_fields = ["name", "discount_percent"]
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        return jsonify({
+            "error": "Не заполнены обязательные поля",
+            "missing_fields": missing_fields
+        }), 400
+
+    name = data["name"]
+    discount_percent = float(data["discount_percent"])
+
+    try:
+        sql_user = f"SELECT User_ID FROM Users WHERE name = '{name}'"
+        cur.execute(sql_user)
+        user_result = cur.fetchone()
+
+        if not user_result:
+            return jsonify({"error": "Пользователь не найден"}), 404
+
+        user_id = user_result[0]
+
+        sql_discount = f"""
+            INSERT INTO discounts (user_id, discount_percent) 
+            VALUES ('{user_id}', '{discount_percent}') 
+            ON DUPLICATE KEY UPDATE discount_percent = '{discount_percent}'
+        """
+        cur.execute(sql_discount)
+        cur._connection.commit()
+
+        return jsonify({
+            "status": "success",
+            "message": "Скидка добавлена или обновлена",
+            "user_id": user_id,
+            "discount_percent": discount_percent
+        })
+
+    except Exception as e:
+        return jsonify({
+            "error": "Ошибка при выполнении запроса",
+            "details": str(e)
+        }), 500
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
