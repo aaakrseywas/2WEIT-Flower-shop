@@ -234,6 +234,8 @@ def reviews():
     cur.execute(sql)
     cur._connection.commit()
 
+
+
     return jsonify({
         "status": "success",
         "message": "review saved successfully"
