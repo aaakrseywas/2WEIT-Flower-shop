@@ -1,0 +1,43 @@
+header {
+    background-color: #94C2DA;
+    padding: 10px;
+}
+
+.Flower {
+    text-align: center;
+}
+
+header ul {
+    display: flex;
+    justify-content: center;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+header > ul > li {
+    margin: 0 1rem;
+}
+
+header > ul > li > a {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    font-family: "Carlito", sans-serif;
+    font-style: normal;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+header ul li a:hover {
+    color: #CD4662;
+    transition: color 0.1s ease;
+}
+
+header > h1 {
+    color: #203F9A;
+    font-size: 25px;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 2WEIT flower</title>
+    <link rel="stylesheet" href="/static/regictration.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+    <script>
+    <script>
+        async function registerUser(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Registration successful!');
+                    // Redirect or clear form
+                    form.reset();
+                } else {
+                    alert(`Error: ${result.message}`);
+                }
+            } catch (error) {
+                alert('An error occurred. Please try again.');
+                console.error('Registration error:', error);
+            }
+        }
+    </script>
+    </script>
+</head>
+<body>
+      {% include "header.html" %}
+<main>
+        <form id="registrationForm" onsubmit="registerUser(event)" METHOD="post" action="/2weit/register">
+            <label for="name">Имя:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="username">Имя пользователя:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="email">Электронная почта:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Телефон:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Зарегистрироваться</button>
+        </form>
+</main>
+      {% include "footer.html" %}
+</body>
+</html>

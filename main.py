@@ -164,15 +164,16 @@ def flower_new_price():
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e)})
 
+
 @app.route('/flower_quantity', methods=['POST'])
 def flower_quantity():
     try:
         sql_insert = f'''
-            INSERT INTO flowers_quantity (flower_ID, quantity, date_delivery)
-            SELECT id, COUNT(*) AS quantity, MAX(date) AS date_delivery
-            FROM flowers
-            GROUP BY id;
-        '''
+             INSERT INTO flowers_quantity (name, quantity, date_delivery)
+             SELECT name, COUNT(*) AS quantity, MAX(date) AS date_delivery
+             FROM flowers
+             GROUP BY name;
+         '''
         cur.execute(sql_insert)
         cur._connection.commit()
 
@@ -181,21 +182,22 @@ def flower_quantity():
         return jsonify({
             "status": "OK",
             "count": count,
-            "message": "Data inserted successfully!"
+            "message": "Данные успешно вставлены!"
         })
     except Exception as e:
         cur.connection.rollback()
         return jsonify({"status": "ERROR", "message": str(e)})
 
+
 @app.route('/flower_quantity_show', methods=['POST'])
 def flower_quantity_show():
     try:
         sql_select = f'''
-            SELECT name, COUNT(*) AS quantity
+            SELECT flowers.name, SUM(flowers_quantity.quantity) AS quantity
             FROM flowers 
-            JOIN flowers_quantity ON id = flower_ID
-            GROUP BY name;
-        '''
+            JOIN flowers_quantity ON flowers.name = flowers_quantity.name
+            GROUP BY flowers.name;
+         '''
         cur.execute(sql_select)
         flowers = cur.fetchall()
 
@@ -206,7 +208,7 @@ def flower_quantity_show():
             "flowers": flower_list
         })
     except Exception as e:
-        cur.connection.rollback()
+        cur._connection.rollback()
         return jsonify({"status": "ERROR", "message": str(e)})
 
 
