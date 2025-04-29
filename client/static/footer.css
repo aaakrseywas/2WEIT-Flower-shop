@@ -2,9 +2,26 @@ footer {
     display: flex;
     flex-direction: column;
     background: #F140A9;
-    padding: 30px;
-    font-family: "Carlito", sans-serif;
+    padding: 40px 30px;
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
+    overflow: hidden;
 }
+
+
+
+footer > h2:first-of-type {
+    align-self: flex-start;
+    margin-bottom: 25px;
+    color: white;
+    font-size: 1.8rem;
+    position: relative;
+    padding-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+
 
 footer > ul {
     display: flex;
@@ -13,40 +30,68 @@ footer > ul {
     margin: 0;
     padding: 0;
     list-style: none;
-    align-self: flex-start;
-    max-width: 60%;
-}
-
-footer > ul :hover {
-    color: #000000;
-    transition: color 0.1s ease
+    max-width: 70%;
+    position: relative;
+    z-index: 2;
 }
 
 footer > ul li h2 {
     font-size: 1.2rem;
-    color: #ffffff;
+    color: white;
     margin: 0;
-    padding: 5px 10px;
-    background: rgba(251, 251, 251, 0);
-    border-radius: 5px;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 30px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    font-weight: 500;
 }
 
-footer > h2:first-of-type {
-    align-self: flex-start;
-    margin-bottom: 15px;
-    color: #fdfdfd;
+footer > ul li h2:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    color: #fff;
 }
+
 
 footer > h1 {
     align-self: flex-end;
-    margin-top: -60px;
-    margin-bottom: 20px;
-    color: #203F9A;
-    font-size: 2.5rem;
+    margin-top: -70px;
+    margin-bottom: 25px;
+    color: white;
+    font-size: 3rem;
+    font-weight: 700;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 2;
+    opacity: 0.9;
+    transition: all 0.3s ease;
 }
+
+footer > h1:hover {
+    opacity: 1;
+    text-shadow: 0 2px 15px rgba(0,0,0,0.3);
+}
+
 
 footer > p {
     text-align: center;
-    margin: 5px 0;
-    color: #ffffff;
-    width: 100
+    margin: 8px 0;
+    color: rgba(255, 255, 255, 0.8);
+    width: 100%;
+    font-size: 0.9rem;
+    position: relative;
+    z-index: 2;
+}
+
+footer > p:last-of-type {
+    margin-top: 20px;
+    color: white;
+    font-weight: 500;
+    font-size: 1rem;
+}
+

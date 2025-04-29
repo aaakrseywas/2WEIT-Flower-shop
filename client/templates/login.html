@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2WEIT flower - Авторизация</title>
+    <link rel="stylesheet" href="/static/login.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+     <script>
+    async function loginUser(event) {
+        event.preventDefault();
+
+        const form = event.target;
+        const email = form.email.value.trim();
+        const password = form.password.value.trim();
+
+        if (!email || !password) {
+            alert("Все поля обязательны для заполнения");
+            return;
+        }
+
+        try {
+            const response = await fetch('/2weit/logine', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                if (data.token) {
+                    localStorage.setItem('authToken', data.token);
+                }
+                    window.location.href = data.redirect;
+            } else {
+                alert(`Ошибка: ${data.message}`);
+            }
+        } catch (error) {
+            alert('Произошла ошибка. Пожалуйста, попробуйте снова.');
+            console.error('Login error:', error);
+        }
+    }
+    </script>
+</head>
+<body>
+    {% include "header.html" %}
+    <main>
+        <form id="loginForm" onsubmit="loginUser(event)" method="post" action="/2weit">
+            <h2>Вход в аккаунт</h2>
+
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
+
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Войти</button>
+
+            <p class="register-link">
+                Нет аккаунта? <a href="/2weit/registration">Зарегистрируйтесь</a>
+            </p>
+        </form>
+    </main>
+    {% include "footer.html" %}
+</body>
+</html>

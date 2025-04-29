@@ -1,43 +1,87 @@
 header {
-    background-color: #94C2DA;
-    padding: 10px;
+    background: #94C2DA;
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.Flower {
-    text-align: center;
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: #203F9A;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+    transition: all 0.3s ease;
 }
+
+header h1:hover {
+    transform: scale(1.05);
+    text-shadow: 0 0 10px rgba(0, 180, 219, 0.3);
+}
+
 
 header ul {
     display: flex;
-    justify-content: center;
-    list-style-type: none;
-    padding: 0;
+    list-style: none;
     margin: 0;
+    padding: 0;
+    gap: 2rem;
+    align-items: center;
 }
 
-header > ul > li {
-    margin: 0 1rem;
+header li {
+    position: relative;
 }
 
-header > ul > li > a {
-    color: rgb(0, 0, 0);
+header a {
+    color: #e6e6e6;
     text-decoration: none;
-    font-family: "Carlito", sans-serif;
-    font-style: normal;
+    font-weight: 500;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    padding: 0.5rem 0;
 }
 
-ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+
+header a:hover {
+    color: white;
 }
 
-header ul li a:hover {
-    color: #CD4662;
-    transition: color 0.1s ease;
+header a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: #ed82c2;
+    transition: width 0.3s ease;
 }
 
-header > h1 {
-    color: #203F9A;
-    font-size: 25px;
+header a:hover::after {
+    width: 100%;
+}
+
+header li:last-child a {
+    background:;
+    padding: 0.5rem 1.5rem;
+    border-radius: 25px;
+    border: 1px solid #ed82c2;
+    transition: all 0.3s ease;
+}
+
+header li:last-child a:hover {
+    background: #5099bf;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 180, 219, 0.2);
 }

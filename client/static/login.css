@@ -1,4 +1,4 @@
-body {
+ body {
     font-family: 'Arial', sans-serif;
     background-color: #f4f4f4;
     margin: 0;
@@ -10,21 +10,13 @@ h2 {
     font-size: 28px;
     text-align: center;
     margin-bottom: 20px;
-    position: relative;
-}
-
-h1 {
-    color: #203F9A;
-    font-size: 36px;
-    text-align: center;
-    margin-top: 20px;
 }
 
 main {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 70vh;
 }
 
 form {
@@ -44,7 +36,7 @@ label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
-    color: #333;
+    color: #333; /* Темный цвет для лучшей читаемости */
 }
 
 input[type="text"],
@@ -52,12 +44,12 @@ input[type="email"],
 input[type="tel"],
 input[type="password"] {
     width: 100%;
-    padding: 12px;
+    padding: 12px; /* Увеличено для удобства ввода */
     margin-bottom: 15px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
-    font-size: 14px;
+    font-size: 14px; /* Увеличен размер шрифта */
 }
 
 input[type="text"]:focus,
@@ -66,23 +58,23 @@ input[type="tel"]:focus,
 input[type="password"]:focus {
     border-color: #203F9A;
     outline: none;
-    box-shadow: 0 0 5px rgba(32, 63, 154, 0.5);
+    box-shadow: 0 0 5px rgba(32, 63, 154, 0.5); /* Добавлена тень при фокусе */
 }
 
 button {
     background-color: #203F9A;
     color: white;
-    padding: 12px;
+    padding: 12px; /* Увеличено для удобства */
     border: none;
     border-radius: 4px;
     cursor: pointer;
     width: 100%;
     font-size: 16px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Добавлен эффект при наведении */
 }
 
 button:hover {
-    background-color:  #ed6fba;
+    background-color: #ed6fba;
     transform: translateY(-2px);
 }
 
@@ -96,4 +88,22 @@ button:hover {
     color: #5cb85c;
     margin: 5px 0;
     font-size: 14px;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    font-size: 14px;
+}
+
+.register-link a {
+    color: #CD4662;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.register-link a:hover {
+    color: #000000;
+    text-decoration: underline; /* Добавлено подчеркивание при наведении */
 }
