@@ -212,8 +212,8 @@ def flower_quantity_show():
         return jsonify({"status": "ERROR", "message": str(e)})
 
 
-@app.route('/reviews', methods=['POST'])
-def reviews():
+@app.route('/reviews_add', methods=['POST'])
+def reviews_add():
     data = request.get_json()
 
     if not data:
@@ -242,6 +242,28 @@ def reviews():
         "status": "success",
         "message": "review saved successfully"
     }), 201
+
+@app.route('/reviews', methods=['POST', 'GET'])  # Разрешаем оба метода
+def reviews():
+    try:
+        sql = 'SELECT * FROM Reviews'
+        cur.execute(sql)
+        reviews = []
+        for row in cur:
+            reviews.append({
+                "id": row[0],
+                "username": row[1],
+                "comment": row[2],
+                "date": row[3].strftime('%Y-%m-%d %H:%M:%S') if row[3] else None
+            })
+
+        return jsonify({
+            "status": "OK",
+            "count": len(reviews),
+            "Reviews": reviews
+        })
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e)}), 500
 
 
 @app.route('/apply_discount', methods=['POST'])

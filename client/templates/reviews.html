@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 2WEIT flower - Отзывы</title>
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+    <link rel="stylesheet" href="/static/reviews.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+
+</head>
+<body>
+      {% include "header.html" %}
+      <div class="main-container">
+        <div class="menu-name">
+            <h1>Отзывы клиентов о нас</h1>
+            <p>Здесь вы можете посмотреть отзывы от наших клиентов</p>
+            <p>Также сами можете оставить о нас ваш отзыв</p>
+        </div>
+
+    <div class="reviews-list">
+        <h2>Последние отзывы</h2>
+                <div class="review">
+                    <div class="review-content">
+                        <div class="reviews-container">
+                            {{ param | safe }}
+                    </div>
+                </div>
+                </div>
+        </div>
+
+    <!-- Форма для добавления отзыва -->
+    <div class="add-review-form">
+        <h2>Оставить отзыв</h2>
+        <form id="reviewForm">
+            <div class="form-group">
+                <label for="username">Ваше имя:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="comment">Ваш отзыв:</label>
+                <textarea id="comment" name="comment" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Отправить отзыв</button>
+        </form>
+    </div>
+</div>
+      {% include "footer.html" %}
+
+</body>
+</html>
