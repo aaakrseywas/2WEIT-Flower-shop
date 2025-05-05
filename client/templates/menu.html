@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2WEIT flower-Меню </title>
+    <link rel="stylesheet" href="/static/menu.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.add-to-cart');
+
+    buttons.forEach(button => {
+        // Инициализируем счетчик для каждой кнопки
+        let count = 0;
+
+        button.addEventListener('click', function() {
+            count++;
+            if(count === 1) {
+                this.innerHTML = 'В корзине <span class="count">1</span> ✓';
+                this.classList.add('in-cart');
+                this.style.backgroundColor = '#a0a0a0';
+            } else {
+                this.innerHTML = 'В корзине <span class="count">'+count+'</span> ✓';
+            }
+
+            // Анимация
+            this.style.transform = 'scale(1.05)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+        });
+    });
+});
+</script>
+</head>
+<body>
+    {% include "header.html" %}
+    <main>
+       <div class="flowers-header">
+
+    <h1 class="menu-title">Наше меню</h1>
+    <h2 class="main-description">Ищете свежие цветы? Мы собрали для вас актуальное меню с полным списком доступных сортов. Каждый цветок в нашем ассортименте — это символ красоты и радости. Узнайте, какие цветы доступны сегодня, и сделайте свой выбор, чтобы добавить яркие акценты в вашу жизнь!</h2>
+</div>
+        <div class="flowers-container">
+              {{ param | safe }}
+
+</div>
+    </main>
+    {% include "footer.html" %}
+</body>
+</html>

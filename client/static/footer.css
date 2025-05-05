@@ -8,8 +8,6 @@ footer {
     overflow: hidden;
 }
 
-
-
 footer > h2:first-of-type {
     align-self: flex-start;
     margin-bottom: 25px;
@@ -19,9 +17,6 @@ footer > h2:first-of-type {
     padding-bottom: 10px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-
-
-
 
 footer > ul {
     display: flex;
@@ -39,22 +34,13 @@ footer > ul li h2 {
     color: white;
     margin: 0;
     padding: 8px 20px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 30px;
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
     font-weight: 500;
 }
 
 footer > ul li h2:hover {
-    background: rgba(255, 255, 255, 0.3);
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    color: #fff;
+    color: #000000;
+    transition: color 0.1s ease;
 }
-
 
 footer > h1 {
     align-self: flex-end;
@@ -69,11 +55,6 @@ footer > h1 {
     z-index: 2;
     opacity: 0.9;
     transition: all 0.3s ease;
-}
-
-footer > h1:hover {
-    opacity: 1;
-    text-shadow: 0 2px 15px rgba(0,0,0,0.3);
 }
 
 

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2WEIT flower - Корзина</title>
+    <link rel="stylesheet" href="/static/order.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.add-to-cart');
+
+    buttons.forEach(button => {
+        // Инициализируем счетчик для каждой кнопки
+        let count = 0;
+
+        button.addEventListener('click', function() {
+            count++;
+
+            // Получаем данные о товаре из карточки
+            const card = this.closest('.item-card');
+            const productName = card.querySelector('.card-name p').textContent;
+            const productPrice = parseFloat(card.querySelector('.card-text p:nth-child(2)').textContent.replace('Цена: ', '').replace(' руб. за штуку', ''));
+            const productImage = card.querySelector('.card-image img').src;
+
+            // Отправляем данные на сервер
+            fetch('/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    name: productName,
+                    price: productPrice,
+                    image: productImage,
+                    quantity: count
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    if(count === 1) {
+                        this.innerHTML = 'В корзине <span class="count">1</span> ✓';
+                        this.classList.add('in-cart');
+                        this.style.backgroundColor = '#a0a0a0';
+                    } else {
+                        this.innerHTML = `В корзине <span class="count">${count}</span> ✓`;
+                    }
+
+                    // Анимация
+                    this.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            });
+        });
+    });
+});
+</script>
+</head>
+<body>
+    {% include "header.html" %}
+    <main>
+<div class="main-container">
+            <h1 class="menu-name">КОРЗИНА</h1>
+            <div class="orders">
+                <h3>Ваши заказы:</h3>
+                <p id="total-price">Итоговая сумма: {{ total_price }} руб.</p>
+                <ul id="cart-items">
+
+                    {% for item in cart %}
+                        <li>
+                            <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 50px; height: 50px;">
+                            {{ item.name }}
+                        </li>
+                    {% endfor %}
+
+                </ul>
+                <div class="checkout-container">
+                <a href="{{ url_for('main_page') }}">Добавить еще</a>
+                <a href="/2weit/order2" id="checkout" class="placing-order">Оформить заказ</a>
+
+                <form action="/2weit/order/clear_cart" method="post">
+                    <button type="submit">Очистить корзину</button>
+                </form>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+    {% include "footer.html" %}
+</body>
+</html>

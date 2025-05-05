@@ -180,3 +180,37 @@ main {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.add-to-cart {
+        background-color: #F140A9;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 10px auto;
+        cursor: pointer;
+        border-radius: 5px;
+        width: 90%;
+        transition: all 0.3s ease;
+    }
+
+    .add-to-cart:hover {
+        background-color: #ffffff;
+        transform: translateY(-2px);
+        color: #000000;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .add-to-cart:active {
+        transform: translateY(0);
+        background-color: #;
+    }
+
+    /* Дополнительные стили для карточек, чтобы кнопка хорошо вписалась */
+    .item-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+

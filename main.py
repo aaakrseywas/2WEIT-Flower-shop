@@ -6,6 +6,12 @@ import bcrypt
 from datetime import datetime, timedelta, timezone
 
 app = Flask(__name__)
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')  # Разрешить все источники
+    response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    return response
 
 @app.route('/')
 def index():
@@ -124,8 +130,8 @@ def flower():
 
     return jsonify({"status": "OK", "message": "Flower added successfully!"})
 
-@app.route('/flower_all', methods=['GET'])
-def flower_all():
+@app.route('/menu', methods=['GET'])
+def menu():
     try:
         sql='SELECT * FROM flowers'
         cur.execute(sql)
@@ -215,7 +221,7 @@ def flower_quantity_show():
 @app.route('/reviews_add', methods=['POST'])
 def reviews_add():
     data = request.get_json()
-
+    print(data)
     if not data:
         return jsonify({"error": "Данные не предоставлены"}), 400
 
@@ -382,8 +388,9 @@ def add_discount():
             "error": "Ошибка при выполнении запроса",
             "details": str(e)
         }), 500
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
 
 
 

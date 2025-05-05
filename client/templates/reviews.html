@@ -40,7 +40,6 @@
                 </div>
         </div>
 
-    <!-- Форма для добавления отзыва -->
     <div class="add-review-form">
         <h2>Оставить отзыв</h2>
         <form id="reviewForm">
@@ -57,6 +56,41 @@
     </div>
 </div>
       {% include "footer.html" %}
+<script>
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+        e.preventDefault();
 
+        const formData = {
+            username: document.getElementById('username').value,
+            comment: document.getElementById('comment').value
+        };
+
+        fetch('http://192.168.200.1:5000/reviews_add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === "success") {
+                alert('Спасибо за ваш отзыв!');
+                document.getElementById('reviewForm').reset();
+                location.reload();
+            } else {
+                if (data.error === "Не заполнены обязательные поля") {
+                    alert('Ошибка: Пожалуйста, заполните все обязательные поля - ' + data.missing_fields.join(', '));
+                } else {
+                    alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Произошла ошибка при отправке отзыва');
+        });
+    });
+</script>
 </body>
 </html>

@@ -1,102 +1,93 @@
  * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
-        color: var(--text-color);
-        background-color: #f5f7fa;
-        padding: 0;
-        margin: 0;
-    }
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333; /* Изменено на более универсальный цвет */
+    background-color: #f5f7fa;
+    padding: 0;
+    margin: 0;
+}
 
-    .main-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem;
-    }
+.main-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
 
-    .menu-name {
-        text-align: center;
-        margin-bottom: 3rem;
-        animation: fadeIn 1s ease-out;
-    }
+.menu-name {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeIn 1s ease-out;
+}
 
-    .menu-name h1 {
-        font-size: 2.5rem;
-        color: var(--secondary-color);
-        margin-bottom: 1rem;
-        font-weight: 700;
-        font-family: "Unbounded", sans-serif;
-        color: #CD4662;
-    }
+.menu-name h1 {
+    font-size: 2.5rem;
+    color: #CD4662; /* Цвет заголовка */
+    margin-bottom: 1rem;
+    font-weight: 700;
+    font-family: "Unbounded", sans-serif;
+}
 
-    .menu-name p {
-        font-size: 1.1rem;
-        color: var(--dark-color);
-        margin-bottom: 0.5rem;
-    }
+.menu-name p {
+    font-size: 1.1rem;
+    color: #555; /* Цвет текста */
+    margin-bottom: 0.5rem;
+}
 
-    .review-form {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: var(--shadow);
-        margin-bottom: 3rem;
-        transition: var(--transition);
-        animation: slideUp 0.8s ease-out;
-    }
+.reviews-list, .add-review-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Улучшенная тень */
+    margin-bottom: 3rem;
+}
 
-    .review-form:hover {
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        transform: translateY(-5px);
-    }
+.reviews-list h2, .add-review-form h2 {
+    color: #CD4662; /* Цвет заголовка секции */
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+}
 
-    .review-form h2 {
-        color: var(--secondary-color);
-        margin-bottom: 1.5rem;
-        font-size: 1.8rem;
-    }
+.form-group {
+    margin-bottom: 1.5rem;
+}
 
-    .form-group {
-        margin-bottom: 1.5rem;
-    }
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333; /* Цвет меток */
+}
 
-    .form-group label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-        color: var(--dark-color);
-    }
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s; /* Плавный переход цвета границы */
+}
 
-    .form-group input,
-    .form-group textarea {
-        width: 100%;
-        padding: 0.8rem 1rem;
-        border: 2px solid #e9ecef;
-        border-radius: 8px;
-        font-size: 1rem;
-        transition: var(--transition);
-    }
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #0056b3; /* Цвет границы при фокусе */
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+}
 
-    .form-group input:focus,
-    .form-group textarea:focus {
-        border-color: var(--accent-color);
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
-    }
-
-    .form-group textarea {
-        min-height: 150px;
-        resize: vertical;
-    }
-
+.form-group textarea {
+    min-height: 150px;
+    resize: vertical;
+}
 
 button[type="submit"] {
-    background-color:  #00008b;
+    background-color: #00008b; /* Цвет кнопки */
     color: white;
     border: none;
     padding: 12px 24px;
@@ -107,43 +98,28 @@ button[type="submit"] {
     width: 100%;
     max-width: 200px;
     margin-top: 1rem;
+    transition: background-color 0.3s; /* Плавный переход цвета кнопки */
 }
 
 button[type="submit"]:hover {
-    background-color: #0056b3;
+    background-color: #0056b3; /* Цвет кнопки при наведении */
 }
 
-    .reviews-list {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: var(--shadow);
-        animation: fadeIn 1.2s ease-out;
-        margin-bottom: 1rem;
-    }
+.review {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
 
-    .reviews-list h2 {
-        color: var(--secondary-color);
-        margin-bottom: 1.5rem;
-        font-size: 1.8rem;
-    }
+.review:last-child {
+    border-bottom: none;
+}
 
-    .review {
-        padding: 1.5rem 0;
-        border-bottom: 1px solid #e9ecef;
-        animation: fadeIn 0.6s ease-out;
-    }
+.review-content {
+    color: #555; /* Цвет текста отзыва */
+    line-height: 1.7;
+}
 
-    .review:last-child {
-        border-bottom: none;
-    }
-
-    .review-content {
-        color: var(--dark-color);
-        line-height: 1.7;
-    }
-
-    .error-message {
+.error-message {
     padding: 10px;
     background-color: #ffebee;
     color: #c62828;
