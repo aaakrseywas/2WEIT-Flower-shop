@@ -11,6 +11,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const buttons = document.querySelectorAll('.add-to-cart');
@@ -22,11 +26,12 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             count++;
 
-            // Получаем данные о товаре из карточки
-            const card = this.closest('.item-card');
-            const productName = card.querySelector('.card-name p').textContent;
-            const productPrice = parseFloat(card.querySelector('.card-text p:nth-child(2)').textContent.replace('Цена: ', '').replace(' руб. за штуку', ''));
-            const productImage = card.querySelector('.card-image img').src;
+            // Получаем данные о товаре из формы
+            const form = this.closest('form');
+            const productName = form.querySelector('input[name="flower_name"]').value;
+            const productType = form.querySelector('input[name="flower_sort"]').value;
+            const productColor = form.querySelector('input[name="flower_color"]').value;
+            const productPrice = parseFloat(form.querySelector('input[name="flower_price"]').value);
 
             // Отправляем данные на сервер
             fetch('/add_to_cart', {
@@ -37,8 +42,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 body: JSON.stringify({
                     name: productName,
+                    sort: productSort,
+                    color: productColor,
                     price: productPrice,
-                    image: productImage,
                     quantity: count
                 })
             })
@@ -64,38 +70,67 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-</head>
 <body>
     {% include "header.html" %}
-    <main>
-<div class="main-container">
-            <h1 class="menu-name">КОРЗИНА</h1>
-            <div class="orders">
-                <h3>Ваши заказы:</h3>
-                <p id="total-price">Итоговая сумма: {{ total_price }} руб.</p>
-                <ul id="cart-items">
-
+     <main>
+    <div class="cart-container">
+        <h1 class="cart-title">КОРЗИНА</h1>
+        <div class="cart-content">
+            <h3 class="cart-subtitle">Ваши заказы:</h3>
+            {% if cart %}
+                <ul class="cart-items">
                     {% for item in cart %}
-                        <li>
-                            <img src="{{ item.image }}" alt="{{ item.name }}" style="width: 50px; height: 50px;">
-                            {{ item.name }}
+                        <li class="cart-item">
+                            <span class="item-name">{{ item.name }}</span>
+                            <span class="item-details">({{ item.sort }}, {{ item.color }})</span>
+                            <span class="item-price">{{ item.price }} руб.</span>
                         </li>
                     {% endfor %}
-
                 </ul>
-                <div class="checkout-container">
-                <a href="{{ url_for('main_page') }}">Добавить еще</a>
-                <a href="/2weit/order2" id="checkout" class="placing-order">Оформить заказ</a>
-
-                <form action="/2weit/order/clear_cart" method="post">
-                    <button type="submit">Очистить корзину</button>
-                </form>
+                <div class="cart-total">
+                    <p>Итоговая сумма: <span>{{ total_price }} руб.</span></p>
                 </div>
+            {% else %}
+                <div class="empty-cart">
+                    <p>Ваша корзина пуста</p>
+                    <a href="/2weit/menu" class="continue-shopping-btn">Выбрать цветы</a>
+                </div>
+            {% endif %}
 
-            </div>
+            {% if cart %}
+                <div class="cart-actions">
+                    <a href="/2weit/menu" class="add-more-btn">Добавить еще цветы</a>
+                    <form class="checkout-form" action="/2weit/order" method="post">
+                        <h4>Оформление заказа</h4>
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Ваше имя" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="comment" placeholder="Комментарий(необязательно)" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="address" placeholder="Адрес доставки" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <select name="payment_method" required>
+                                <option value="" disabled selected>Выберите способ оплаты</option>
+                                <option value="card">Банковская карта</option>
+                                <option value="cash">Наличные при получении</option>
+                            </select>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="checkout-btn">Подтвердить заказ</button>
+                            <button type="submit" formaction="/2weit/order/clear_cart" class="clear-cart-btn">Очистить корзину</button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
         </div>
-
-    </main>
+    </div>
+</main>
     {% include "footer.html" %}
 </body>
 </html>

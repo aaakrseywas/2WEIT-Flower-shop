@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заказ оформлен | 2WEIT</title>
+    <link rel="stylesheet" href="/static/order_success.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital@1&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    {% include "header.html" %}
+    <main>
+    <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h1>Ваш заказ успешно оформлен!</h1>
+
+        <div class="order-info">
+            <p><strong>Номер вашего заказа:</strong> <span class="order-number">#{{ order_id }}</span></p>
+            <p>Мы отправили подтверждение на вашу электронную почту.</p>
+            <p>Наш менеджер свяжется с вами в ближайшее время для уточнения деталей.</p>
+        </div>
+
+        <p>Спасибо, что выбрали наш магазин!</p>
+
+        <div class="action-buttons">
+            <a href="/2weit/menu" class="btn btn-home">Вернуться в магазин</a>
+        </div>
+    </div>
+    </main>
+    {% include "footer.html" %}
+</body>
+</html>

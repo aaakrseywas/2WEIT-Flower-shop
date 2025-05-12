@@ -1,14 +1,16 @@
 import datetime
 import sqlite3
+from contextlib import closing
+
 import mysql
 from flask import Flask, render_template, request, jsonify, url_for, redirect, session
 import requests
 from mysql.connector import Error
 
-from db import cur
+from db import cur, cnx
 
 app = Flask(__name__)
-
+app.secret_key = '2weit-flower'
 
 REGISTRATION_API_URL = "http://127.0.0.1:5000/registration"
 
@@ -17,35 +19,9 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-
-def add_order(name, address, email, payment_method, order_details):
-    conn = mysql.connector.connect()
-
-    if conn:
-        cursor = conn.cursor()
-        insert_order_query = """
-        INSERT INTO `2weit_orders` (name, address, email, payment_method, order_details)
-        VALUES (%s, %s, %s, %s, %s)
-        """
-
-        order_data = (name, address, email, payment_method, order_details)
-
-        try:
-            print(f"Вставка данных: {order_data}")
-            cursor.execute(insert_order_query, order_data)
-            conn.commit()
-            print("Заказ успешно добавлен")
-
-        except Error as e:
-            print(f"Ошибка при добавлении заказа: '{e}'")
-        finally:
-            cursor.close()
-            conn.close()
-
 @app.route("/2weit/registration")
 def registration_page():
     return render_template("registration.html")
-
 
 @app.route("/2weit/register", methods=["POST"])
 def register_user():
@@ -85,7 +61,6 @@ LOGIN_API_URL = "http://127.0.0.1:5000/login"
 @app.route("/2weit/login", methods=["GET"])
 def login_page():
     return render_template("login.html")
-
 
 @app.route("/2weit/logine", methods=["POST"])
 def logine_user():
@@ -142,7 +117,6 @@ def reviews_page():
 
 REVIEWS_API_URL = "http://127.0.0.1:5000/reviews"
 
-
 @app.route("/2weit/review", methods=["POST"])
 def review_user():
     try:
@@ -192,73 +166,114 @@ def menu_page():
                 <h3>{flower[1]}</h3>  
                 <p>Сорт: {flower[2]}</p>  
                 <p>Цвет: {flower[3]}</p>  
-                <p>Цена: {flower[5]}</p>  
-                <button class="add-to-cart">Добавить в корзину</button>
+               <p> Цена: {flower[5]} за штуку.</p>  
+                <button class="add-to-cart" data-name={flower[1]}
+                data-sort={flower[2]}
+                data-color={flower[3]}
+                data-price={flower[5]}>
+                Добавить в корзину</button>
             </div>
             """
         html += html_temp
-
     return render_template("menu.html", param=html)
-@app.route("/2weit/order", methods=["GET", "POST"])
+
+@app.route('/2weit/order/cart', methods=['POST'])
+def cart_page():
+    flower_name = request.form.get('flower_name')
+    flower_sort = request.form.get('flower_sort')
+    flower_color = request.form.get('flower_color')
+    flower_price = request.form.get('flower_price')
+    print(flower_price)
+    try:
+        print(flower_price)
+        flower_price = float(flower_price)
+    except ValueError:
+        print(flower_price)
+        print("error")
+        flower_price = 1.0
+
+    if 'cart' not in session:
+        session['cart'] = []
+
+    session['cart'].append({
+        'name': flower_name,
+        'sort': flower_sort,
+        'color': flower_color,
+        'price': flower_price
+    })
+
+    session.modified = True
+    return redirect(url_for('order_page'))
+
+@app.route("/2weit/order", methods=['GET', 'POST'])
 def order_page():
     cart = session.get('cart', [])
-    total_price = sum(item['price'] for item in cart)
-    error = None
+    total_price = sum(item['price'] * item.get('quantity', 1) for item in cart)
 
     if request.method == 'POST':
-        name = request.form.get('name')
-        address = request.form.get('address')
-        email = request.form.get('email')
-        payment_method = request.form.get('payment_method')
+        try:
+            name = request.form['name']
+            address = request.form['address']
+            email = request.form['email']
+            payment_method = request.form['payment_method']
+            comment = request.form.get('comment', '')
+            discount_percent = float(request.form.get('discount_percent', 0))
+            final_amount = total_price
 
-        if not all([name, address, email, payment_method]):
-            error = "Пожалуйста, заполните все обязательные поля"
-        else:
-            order_details = ", ".join([item['name'] for item in cart])
-            add_order(name, address, email, payment_method, order_details)
+            # Проверяем соединение с MySQL
+            if not cnx.is_connected():
+                cnx.reconnect()
+
+            # Создаем заказ
+            cur.execute("""
+                 INSERT INTO orders (
+                     customer_name, comment, address, email, 
+                     payment_method, total_price, final_amount
+                 ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+                 """, (name, comment, address, email, payment_method, total_price, final_amount))
+
+            order_id = cur.lastrowid
+
+            for item in cart:
+                cur.execute("""
+                     INSERT INTO order_items (
+                         order_id, flower_name, flower_sort, color, quantity, price
+                     ) VALUES (%s, %s, %s, %s, %s, %s)
+                     """, (
+                    order_id,
+                    item['name'],
+                    item.get('sort', ''),
+                    item.get('color', ''),
+                    item.get('quantity', 1),
+                    item['price']
+                ))
+
+            cnx.commit()
             session.pop('cart', None)
-            return redirect(url_for('main_page'))
+            return redirect(url_for('order_success', order_id=order_id))
 
-    return render_template('order.html',
-                         cart=cart,
-                         total_price=total_price,
-                         error=error)
+        except Exception as e:
+            print(f"Ошибка при сохранении заказа: {e}")
+            return render_template('order.html',
+                                   cart=cart,
+                                   total_price=total_price,
+                                   error="Ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз.")
+
+    return render_template('order.html', cart=cart, total_price=total_price)
+
+@app.route("/order/success/<int:order_id>")
+def order_success(order_id):
+    return render_template('order_success.html', order_id=order_id)
 
 
-
-@app.route('/2weit/order/clear_cart', methods=['POST'])
+@app.route("/2weit/order/clear_cart", methods=['POST'])
 def clear_cart():
     session.pop('cart', None)
     return redirect(url_for('order_page'))
 
-
-@app.route('/add_to_cart', methods=['POST'])
-def add_to_cart():
-    if request.method == 'POST':
-        data = request.get_json()
-        product = {
-            'name': data['name'],
-            'price': data['price'],
-            'quantity': data['quantity']
-        }
-
-        cart = session.get('cart', [])
-
-
-        found = False
-        for item in cart:
-            if item['name'] == product['name']:
-                item['quantity'] = product['quantity']
-                found = True
-                break
-
-        if not found:
-            cart.append(product)
-
-        session['cart'] = cart
-        return jsonify({'success': True})
-
-    return jsonify({'success': False})
+@app.route("/2weit/contact", methods=["GET"])
+def contact_page():
+    return render_template("contact.html")
 
 if __name__ == '__main__':
     app.run(debug=True, port=5005)

@@ -1,203 +1,308 @@
-<!DOCTYPE html>
-<html lang="en">
+ <!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title> 2WEIT flower</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2WEIT flower | Цветочная мастерская</title>
     <link rel="stylesheet" href="/static/header.css">
     <link rel="stylesheet" href="/static/footer.css">
     <link rel="stylesheet" href="/static/main.css">
 
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant:wght@400;500;600;700&family=Overpass+Mono:wght@300..700&family=Yeseva+One&family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
-
+    <style>
+        :root {
+            --primary-color: #F140A9;
+            --secondary-color: #203f9a;
+            --accent-color: #ff66b3;
+            --light-bg: #EFE8E0;
+            --card-bg: #ffffff;
+            --text-dark: #333333;
+            --text-light: #f4f4f4;
+            --transition: all 0.3s ease;
+        }
+    </style>
 </head>
 <body>
-      {% include "header.html" %}
-      <div class ="Flower">
-        <div class="image-container1">
-            <img src="/static/12.png" alt="Цветок">
-            <div class="text-overlay">
+    {% include "header.html" %}
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-image">
+            <img src="/static/12.png" alt="Цветочная композиция">
+            <div class="hero-content">
                 <h1>Цветы</h1>
-                <p>Добро пожаловать! Здесь вы найдете широкий ассортимент свежих и красивых цветов для любого повода. Ознакомьтесь с нашим ассортиментом и выберите идеальные цветы для себя или в подарок!!</p>
+                <p>Добро пожаловать в мир природной элегантности! Здесь каждый цветок — это история, а каждый букет — произведение искусства.</p>
+                <a href="#flowers" class="scroll-down">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
             </div>
         </div>
-    </div>
-    <main>
+    </section>
+
+    <!-- Flowers Grid -->
+    <main id="flowers">
+        <div class="section-title">
+            <h2>Наша коллекция</h2>
+            <div class="divider"></div>
+        </div>
+
         <div class="cards-container">
+            <!-- Rose Card -->
             <div class="item-card">
-                <div class="card-name">
-                    <p>Розы</p>
-                </div>
-                <div class="card-text">
-                    <p>Классические цветы, символизирующие любовь и романтику. Доступны в различных цветах, включая красный, белый, розовый и желтый.</p>
-                    <p>Цена: 150 руб. за штуку</p>
-                </div>
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
-                    <img src="/static/image (1).png" alt="Розы">
+                    <img src="/static/image (1).png" alt="Розы" loading="lazy">
+                </div>
+                <div class="card-content">
+                    <div class="card-name">
+                        <h3>Розы</h3>
+                        <div class="price">150 ₽/шт</div>
+                    </div>
+                    <div class="card-text">
+                        <p>Классические цветы, символизирующие любовь и романтику. Доступны в различных цветах.</p>
+                    </div>
+                    <button class="add-to-cart">Добавить в букет</button>
                 </div>
             </div>
             <div class="item-card">
-                <div class="card-name">
-                    <p>Тюльпаны</p>
-                </div>
-                <div class="card-text">
-                    <p>Яркие весенние цветы, символизирующие обновление и надежду. Доступны в множестве оттенках.</p>
-                    <p>Цена: 100 руб. за штуку</p>
-                </div>
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (2).png" alt="Тюльпаны">
                 </div>
-            </div>
-            <div class="item-card">
+                <div class="card-content">
                 <div class="card-name">
-                    <p>Лилии</p>
+                    <h3>Тюльпаны</h3>
+                    <div class="price">100 ₽/шт</div>
                 </div>
                 <div class="card-text">
-                    <p>Элегантные и ароматные цветы, часто используемые в свадебных букетах. Имеют крупные цветы и разнообразные оттенки.</p>
-                    <p>Цена: 200 руб. за штуку</p>
+                    <p>Яркие весенние цветы, символизирующие обновление и надежду. Доступны в множестве оттенках.</p>
                 </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
+            </div>
+            <div class="item-card">
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (3).png" alt="Лилии">
                 </div>
-            </div>
-            <div class="item-card">
+                <div class="card-content">
                 <div class="card-name">
-                    <p>Герберы</p>
+                    <h3>Лилии</h3>
+                    <div class="price">200 ₽/шт</div>
                 </div>
                 <div class="card-text">
-                    <p>Яркие и жизнерадостные цветы, которые отлично подходят для создания веселых композиций. Доступны в различных цветах.</p>
-                    <p>Цена: 100 руб. за штуку</p>
+                    <p>Элегантные и ароматные цветы, часто используемые в свадебных букетах. Имеют крупные цветы и разнообразные оттенки.</p>
                 </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
+            </div>
+            <div class="item-card">
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (5).png" alt="Герберы">
                 </div>
-            </div>
-            <div class="item-card">
+                <div class="card-content">
                 <div class="card-name">
-                    <p>Орхидеи</p>
+                    <h3>Герберы</h3>
+                    <div class="price">100 ₽/шт</div>
                 </div>
                 <div class="card-text">
-                    <p>Экзотические и изысканные цветы, которые добавляют элегантности любому букету. Часто используются в оформлении.</p>
-                    <p>Цена: 300 руб. за штуку</p>
+                    <p>Яркие и жизнерадостные цветы, которые отлично подходят для создания веселых композиций. Доступны в различных цветах.</p>
                 </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
+            </div>
+            <div class="item-card">
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (6).png" alt="Орхидеи">
                 </div>
+                <div class="card-content">
+                <div class="card-name">
+                    <h3>Орхидеи</h3>
+                    <div class="price">300 ₽/шт</div>
+                </div>
+                <div class="card-text">
+                    <p>Экзотические и изысканные цветы, которые добавляют элегантности любому букету. Часто используются в оформлении.</p>
+                </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
             </div>
             <div class="item-card">
+                <div class="card-badge">Хит продаж</div>
+                 <div class="card-image">
+                    <img src="/static/image (8).png" alt="Пионы">
+                </div>
+                <div class="card-content">
                 <div class="card-name">
-                    <p>Пионы</p>
+                    <h3>Пионы</h3>
+                    <div class="price">250 ₽/шт</div>
                 </div>
                 <div class="card-text">
                     <p>Пышные и ароматные цветы, популярные в свадебных букетах. Имеют нежные оттенки и крупные бутоны.</p>
-                    <p>Цена: 250 руб. за штуку</p>
                 </div>
-                <div class="card-image">
-                    <img src="/static/image (8).png" alt="Пионы">
+                    <button class="add-to-cart">Добавить в букет</button>
                 </div>
             </div>
             <div class="item-card">
-                <div class="card-name">
-                    <p>Фрезии</p>
-                </div>
-                <div class="card-text">
-                    <p>Ароматные цветы с яркими оттенками, которые часто используются в букете и для декора.</p>
-                    <p>Цена: 120 руб. за штуку</p>
-                </div>
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (9).png" alt="Фрезии">
                 </div>
-            </div>
-            <div class="item-card">
+                <div class="card-content">
                 <div class="card-name">
-                    <p>Хризантемы</p>
+                    <h3>Фрезии</h3>
+                    <div class="price">120 ₽/шт</div>
                 </div>
                 <div class="card-text">
-                    <p>Символизируют долголетие и счастье. Доступны в различных формах и цветах, часто используются в осенних композициях.</p>
-                    <p>Цена: 90 руб. за штуку</p>
+                    <p>Ароматные цветы с яркими оттенками, которые часто используются в букете и для декора.</p>
                 </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
+            </div>
+            <div class="item-card">
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (10).png" alt="Хризантемы">
                 </div>
-            </div>
-            <div class="item-card">
+                <div class="card-content">
                 <div class="card-name">
-                    <p>Лаванда</p>
+                    <h3>Хризантемы</h3>
+                    <div class="price">90 ₽/шт</div>
                 </div>
                 <div class="card-text">
-                    <p>Ароматные цветы, символизирующие спокойствие. Часто используются в букете и для создания композиции.</p>
-                    <p>Цена: 150 руб. за штуку</p>
+                    <p>Символизируют долголетие и счастье. Доступны в различных формах и цветах, часто используются в осенних композициях.</p>
                 </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
+            </div>
+            <div class="item-card">
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (11).png" alt="Лаванда">
                 </div>
-            </div>
-            <div class="item-card">
+                <div class="card-content">
                 <div class="card-name">
-                    <p>Ромашки</p>
+                    <h3>Лаванда</h3>
+                    <div class="price">150 ₽/шт</div>
                 </div>
                 <div class="card-text">
-                    <p>Нежные и простые цветы, символизирующие чистоту и невинность. Часто используются в полевых букетах.</p>
-                    <p>Цена: 60 руб. за штуку</p>
+                    <p>Ароматные цветы, символизирующие спокойствие. Часто используются в букете и для создания композиции.</p>
                 </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
+            </div>
+            <div class="item-card">
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (12).png" alt="Ромашки">
                 </div>
-            </div>
-            <div class="item-card">
+                <div class="card-content">
                 <div class="card-name">
-                    <p>Гипсофилы</p>
+                    <h3>Ромашки</h3>
+                    <div class="price">60 ₽/шт</div>
                 </div>
                 <div class="card-text">
-                    <p>Легкие и воздушные цветы, часто используемые в качестве дополнения к букетам. Символизируют нежность и искренность.</p>
-                    <p>Цена: 80 руб. за штуку</p>
+                    <p>Нежные и простые цветы, символизирующие чистоту и невинность. Часто используются в полевых букетах.</p>
                 </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
+            </div>
+            <div class="item-card">
+                <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (13).png" alt="Гипсофилы">
                 </div>
-            </div>
-            <div class="item-card">
+                <div class="card-content">
                 <div class="card-name">
-                    <p>Астры</p>
+                    <h3>Гипсофилы</h3>
+                    <div class="price">80 ₽/шт</div>
                 </div>
                 <div class="card-text">
-                    <p>Яркие и разнообразные цветы, которые отлично подходят для букетов.</p>
-                    <p>Цена: 70 руб. за штуку</p>
+                    <p>Легкие и воздушные цветы, часто используемые в качестве дополнения к букетам. Символизируют нежность и искренность.</p>
                 </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
+            </div>
+            <div class="item-card">
+            <div class="card-badge">Хит продаж</div>
                 <div class="card-image">
                     <img src="/static/image (14).png" alt="Астры">
                 </div>
+                <div class="card-content">
+                <div class="card-name">
+                    <h3>Астры</h3>
+                    <div class="price">70 ₽/шт</div>
+                </div>
+                <div class="card-text">
+                    <p>Яркие и разнообразные цветы, которые отлично подходят для букетов.</p>
+                </div>
+                    <button class="add-to-cart">Добавить в букет</button>
+                </div>
             </div>
-        </div>
-        <div class="container">
-            <div class="image-container">
-                <img src="/static/103.png" alt="Букет цветов" class="image">
-            </div>
-            <div class="content-container">
-                <h1 class="title">Букеты в нашем магазине</h1>
-                <p class="description">
-                    В нашем магазине вы найдете уникальные букеты, созданные с любовью и вниманием к деталям.
-                    Мы предлагаем вам возможность собрать свой идеальный букет из любых цветов на ваш вкус!
-                    <br><br>
-                    Выберите из ярких роз, нежных лилий, экзотических орхидей и многих других прекрасных растений.
-                    Каждый букет — это не просто набор цветов, а настоящая история, которую вы можете рассказать своим близким.
-                    <br><br>
-                    Пусть ваши эмоции и чувства найдут отражение в нашем букете, который станет идеальным подарком для любого повода.
-                </p>
-                <button class="order-button"><a href="{{ url_for('menu_page') }}">Заказать букет</a></button>
-            </div>
-        </div>
+         </div>
     </main>
 
-      {% include "footer.html" %}
+    <!-- Custom Bouquet Section -->
+    <section class="custom-bouquet">
+        <div class="container">
+            <div class="image-container">
+                <div class="image-wrapper">
+                    <img src="/static/103.png" alt="Кастомный букет" class="image" loading="lazy">
+                    <div class="image-overlay"></div>
+                </div>
+            </div>
+            <div class="content-container">
+                <span class="section-subtitle">Создайте свой идеальный букет</span>
+                <h2 class="title">Уникальные цветочные композиции</h2>
+                <p class="description">
+                    Каждый наш букет создается с любовью и вниманием к деталям.
+                    Соберите свою идеальную композицию из нашего разнообразия цветов.
+                </p>
+                <ul class="features-list">
+                    <li>Свежие цветы от проверенных поставщиков</li>
+                    <li>Индивидуальный подход к каждому заказу</li>
+                    <li>Быстрая доставка в день заказа</li>
+                </ul>
+                <button class="order-button pulse">
+                    <a href="{{ url_for('menu_page') }}">Собрать букет</a>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    {% include "footer.html" %}
+
+    <script>
+        // Плавная прокрутка
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Анимация при загрузке
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.item-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,170 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+    body {
+        font-family: 'Montserrat', 'Arial', sans-serif;
+        background-color: #fff;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        line-height: 1.7;
+        overflow-x: hidden;
+    }
+
+    .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+
+    /* Стили для секции "О нас" с асимметричным дизайном */
+    .about-container {
+        position: relative;
+        background: linear-gradient(145deg, #fff 0%, #f9f2ff 100%);
+        padding: 60px 40px;
+        border-radius: 30px;
+        margin-bottom: 80px;
+        box-shadow: 0 15px 40px -15px rgba(158, 104, 203, 0.15);
+        overflow: hidden;
+        z-index: 1;
+    }
+
+    .about-container::before {
+        content: "";
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: radial-gradient(circle, rgba(255,105,180,0.1) 0%, rgba(255,105,180,0) 70%);
+        z-index: -1;
+    }
+
+    .about-container::after {
+        content: "";
+        position: absolute;
+        bottom: -30px;
+        left: -30px;
+        width: 150px;
+        height: 150px;
+        background: radial-gradient(circle, rgba(65,105,225,0.08) 0%, rgba(65,105,225,0) 70%);
+        z-index: -1;
+    }
+
+    .about-container h1 {
+        color: #ff69b4;
+        font-size: 2.8em;
+        font-family: "Unbounded", sans-serif;
+        margin-bottom: 40px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+        position: relative;
+        display: inline-block;
+    }
+
+
+
+    .about-container h2 {
+        color: #4169e1;
+        text-align: center;
+        font-size: 2em;
+        margin-top: 50px;
+        font-weight: 600;
+        text-shadow: 0 2px 4px rgba(65,105,225,0.1);
+    }
+
+    .about-text {
+        column-count: 2;
+        column-gap: 40px;
+        padding: 0 30px;
+    }
+
+    .about-text p {
+        margin-bottom: 25px;
+        font-size: 1.1em;
+        text-align: justify;
+        hyphens: auto;
+        position: relative;
+        padding-left: 20px;
+    }
+
+    .about-text p::before {
+        content: "❀";
+        position: absolute;
+        left: -5px;
+        color: rgba(255,105,180,0.3);
+    }
+
+    /* Галерея с эффектом параллакса */
+     .about-images {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 40px;
+    }
+
+    .about-images img {
+        width: calc(25% - 15px);
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .about-images img:hover {
+        transform: scale(1.03);
+    }
+
+    /* Контактная информация с аккордеон-эффектом */
+   .contact-name{
+    font-family: "Unbounded", sans-serif;
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    font-size: 20px;
+}
+.contact-text{
+ margin-left: 150px;
+ margin-right: 30px;
+}
+
+.contact-text > h1 {
+    font-family: "Unbounded", sans-serif;
+    color: rgb(240, 118, 175);
+    font-size: 20px;
+}
+
+.feedback :hover {
+    color: #b4df63;
+    transition: color 0.1s ease
+}
+    .feedback a {
+        display: inline-block;
+        color: #ff69b4;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 8px 15px;
+        border: 2px solid #ff69b4;
+        border-radius: 30px;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+
+    .feedback a:hover {
+        background: linear-gradient(45deg, #ff69b4 0%, #4169e1 100%);
+        color: white;
+        border-color: transparent;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px -5px rgba(255,105,180,0.3);
+    }
+
+    /* Анимации */
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+    }
+
+

@@ -1,104 +1,162 @@
- .flowers-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-row-gap: 10px;
-    grid-column-gap: 30px;
-    justify-content: center;
-    gap: 50px;
-    padding: 20px;
+ /* Основные стили */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rubik', sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Герой-секция */
+.hero-section {
+    position: relative;
+    height: 500px;
+    margin-bottom: 40px;
+    overflow: hidden;
+    border-radius: 0 0 20px 20px;
+}
+
+.hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.9);
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
     max-width: 1200px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(205, 70, 98, 0.1);
+    backdrop-filter: blur(1px);
+}
+
+.hero-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #CD4662;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    color: #555;
+}
+
+/* Вводный текст */
+.flowers-intro {
+    text-align: center;
+    font-size: 1.25rem;
+    color: #666;
+    margin: 30px auto;
+    padding: 0 20px;
+    max-width: 800px;
+    font-style: italic;
+}
+
+/* Сетка цветов */
+.flowers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 20px;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
 .flower {
-    background-color: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    font-family: 'Arial', sans-serif;
-    border: 1px solid #e0e0e0;
-    box-sizing: border-box;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
 }
 
 .flower:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px rgba(205, 70, 98, 0.15);
 }
 
 .flower h3 {
-    color:  #21279a;
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-size: 1.4em;
-    border-bottom: 2px solid #f0f0f0;
-    padding-bottom: 10px;
+    color: #CD4662;
+    font-size: 1.5rem;
+    padding: 20px 20px 10px;
+    margin: 0;
+    border-bottom: 1px solid #f5f5f5;
 }
 
 .flower p {
-    color: #555;
-    margin: 8px 0;
-    font-size: 0.95em;
+    padding: 8px 20px;
+    color: #666;
+    font-size: 1rem;
 }
 
 .flower p:last-of-type {
-    font-weight: bold;
-    color:  #CD4662;
-    font-size: 1.1em;
-    margin-bottom: 20px;
+    color: #CD4662;
+    font-weight: 600;
+    font-size: 1.2rem;
+    padding-bottom: 20px;
 }
 
 .add-to-cart {
-    background-color: #CD4662;
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #CD4662, #A53A56);
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 500;
     cursor: pointer;
-    width: 100%;
-    font-size: 1em;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .add-to-cart:hover {
-    background-color: #CD4662;
+    background: linear-gradient(135deg, #A53A56, #CD4662);
 }
 
-.flowers-header {
-    text-align: center;
-    padding: 50px 20px;
-    background: linear-gradient(to right, #fff5f7, #ffe6eb);
-    margin-bottom: 40px;
-    border-radius: 0 0 15px 15px;
-    box-shadow: 0 4px 12px rgba(205, 70, 98, 0.1);
-}
-
-.menu-title {
-    color: #CD4662;
-    font-size: 3rem;
-    margin-bottom: 25px;
-    font-weight: 700;
-    position: relative;
-    display: inline-block;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
-}
-
-.menu-title:after {
-    content: '';
-    position: absolute;
-    width: 70%;
-    height: 4px;
-    bottom: -12px;
-    left: 15%;
-    border-radius: 4px;
-}
-
-.main-description {
-    color: #555;
-    font-size: 1.25rem;
-    line-height: 1.7;
-    max-width: 800px;
-    margin: 30px auto 0;
-    font-weight: 400;
+/* Футер корзины */
+.cart-footer {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0;
     padding: 0 20px;
+}
+
+.checkout-btn {
+    display: inline-block;
+    padding: 15px 40px;
+    background: linear-gradient(135deg, #006AFF, #0056CF);
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 106, 255, 0.3);
+}
+
+.checkout-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 106, 255, 0.4);
+    background: linear-gradient(135deg, #0056CF, #006AFF);
 }

@@ -11,47 +11,80 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:ital@1&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    {% include "header.html" %}
+    <main>
+    <div class="hero-section">
+        <img src="/static/12.png" alt="Цветочная композиция" class="hero-image">
+        <div class="hero-content">
+            <h1 class="hero-title">СОБЕРИТЕ БУКЕТ САМИ ИЛИ ВОЗЬМИТЕ ГОТОВЫЙ!</h1>
+            <p class="hero-description">Не бойтесь экспериментировать и добавлять свои любимые элементы — будь то зелень, сухоцветы или необычные аксессуары. Создайте свой идеальный букет, который станет не только украшением вашего дома, но и прекрасным подарком для близких!</p>
+        </div>
+    </div>
+
+    <div class="flowers-intro">
+        <p>Выберите цветы из которых хотите собрать букет, а наши сотрудники соберут и украсят ваш букет.</p>
+    </div>
+
+    <div class="flowers-grid">
+        {{ param | safe }}
+    </div>
+
+    <div class="cart-footer">
+        <a href="/2weit/order" class="checkout-btn">Оформить заказ</a>
+    </div>
+</main>
+    {% include "footer.html" %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const buttons = document.querySelectorAll('.add-to-cart');
 
     buttons.forEach(button => {
-        // Инициализируем счетчик для каждой кнопки
         let count = 0;
 
         button.addEventListener('click', function() {
             count++;
-            if(count === 1) {
-                this.innerHTML = 'В корзине <span class="count">1</span> ✓';
-                this.classList.add('in-cart');
-                this.style.backgroundColor = '#a0a0a0';
-            } else {
-                this.innerHTML = 'В корзине <span class="count">'+count+'</span> ✓';
-            }
 
-            // Анимация
-            this.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
+            // Получаем данные из data-атрибутов кнопки
+            console.log(this.dataset);
+            const productName = this.dataset.name;
+            const productSort = this.dataset.sort;
+            const productColor = this.dataset.color;
+            const productPrice = parseFloat(this.dataset.price);
+
+            // Отправляем данные на сервер
+            fetch('/2weit/order/cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `flower_name=${encodeURIComponent(productName)}&flower_sort=${encodeURIComponent(productSort)}&flower_color=${encodeURIComponent(productColor)}&flower_price=${encodeURIComponent(productPrice)}`
+            })
+            .then(response => {
+                if(response.ok) {
+                    if(count === 1) {
+                        this.innerHTML = 'В корзине <span class="count">1</span> ✓';
+                        this.classList.add('in-cart');
+                        this.style.backgroundColor = '#a0a0a0';
+                    } else {
+                        this.innerHTML = `В корзине <span class="count">${count}</span> ✓`;
+                    }
+
+                    // Анимация
+                    this.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                }
+            });
         });
     });
 });
 </script>
-</head>
-<body>
-    {% include "header.html" %}
-    <main>
-       <div class="flowers-header">
-
-    <h1 class="menu-title">Наше меню</h1>
-    <h2 class="main-description">Ищете свежие цветы? Мы собрали для вас актуальное меню с полным списком доступных сортов. Каждый цветок в нашем ассортименте — это символ красоты и радости. Узнайте, какие цветы доступны сегодня, и сделайте свой выбор, чтобы добавить яркие акценты в вашу жизнь!</h2>
-</div>
-        <div class="flowers-container">
-              {{ param | safe }}
-
-</div>
-    </main>
-    {% include "footer.html" %}
 </body>
 </html>
