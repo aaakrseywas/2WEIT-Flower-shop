@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2weit flower | Наличие </title>
+    <link rel="stylesheet" href="/static/availability.css">
+    <link rel="stylesheet" href="/static/header_admin.css">
+    <link rel="stylesheet" href="/static/footer_admin.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    {% include "header_admin.html" %}
+  <main>
+    <div class="container">
+        <h1>Управление цветами</h1>
+
+        <!-- Секция добавления нового цветка -->
+        <div class="section">
+            <h2>Добавить новый цветок</h2>
+            <div id="add-flower-message" class="message" style="display: none;"></div>
+            <form id="add-flower-form">
+                <div class="form-group">
+                    <label for="name">Название:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="sort">Сорт:</label>
+                    <input type="text" id="sort" name="sort" required>
+                </div>
+                <div class="form-group">
+                    <label for="color">Цвет:</label>
+                    <input type="text" id="color" name="color" required>
+                </div>
+                <div class="form-group">
+                    <label for="date">Дата:</label>
+                    <input type="date" id="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Цена:</label>
+                    <input type="number" id="price" name="price" step="0.01" required>
+                </div>
+                <button type="submit">Добавить цветок</button>
+            </form>
+        </div>
+
+        <!-- Секция изменения цены -->
+        <div class="section">
+            <h2>Изменить цену цветка</h2>
+            <div id="price-message" class="message" style="display: none;"></div>
+            <form id="change-price-form">
+                <div class="form-group">
+                    <label for="flower-id">ID цветка:</label>
+                    <input type="number" id="flower-id" name="id" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-price">Новая цена:</label>
+                    <input type="number" id="new-price" name="price" step="0.01" required>
+                </div>
+                <button type="submit">Обновить цену</button>
+            </form>
+        </div>
+
+        <!-- Секция обновления количества -->
+        <div class="section">
+            <h2>Обновить количество цветов</h2>
+            <div id="quantity-message" class="message" style="display: none;"></div>
+            <button id="update-quantity-btn">Обновить данные о количестве</button>
+        </div>
+
+        <!-- Секция отображения количества -->
+        <div class="section">
+            <h2>Количество цветов в наличии</h2>
+            <div id="show-quantity-message" class="message" style="display: none;"></div>
+            <button id="show-quantity-btn">Показать количество</button>
+            <table id="quantity-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Название</th>
+                        <th>Количество</th>
+                    </tr>
+                </thead>
+                <tbody id="quantity-table-body">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+  </main>
+    {% include "footer_admin.html" %}
+
+    <script>
+        // Обработка формы добавления цветка
+        document.getElementById('add-flower-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const sort = document.getElementById('sort').value;
+            const color = document.getElementById('color').value;
+            const date = document.getElementById('date').value;
+            const price = document.getElementById('price').value;
+
+            fetch('/flower_add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    sort: sort,
+                    color: color,
+                    date: date,
+                    price: price
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById('add-flower-message');
+                messageDiv.style.display = 'block';
+
+                if (data.status === 'OK') {
+                    messageDiv.className = 'message success';
+                    messageDiv.textContent = data.message;
+                    document.getElementById('add-flower-form').reset();
+                } else {
+                    messageDiv.className = 'message error';
+                    messageDiv.textContent = data.message || 'Произошла ошибка';
+                }
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => {
+                const messageDiv = document.getElementById('add-flower-message');
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'message error';
+                messageDiv.textContent = 'Ошибка при отправке данных: ' + error;
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            });
+        });
+
+        // Обработка формы изменения цены
+        document.getElementById('change-price-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const flowerId = document.getElementById('flower-id').value;
+            const newPrice = document.getElementById('new-price').value;
+
+            fetch('/flower_new_price', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: flowerId,
+                    price: newPrice
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById('price-message');
+                messageDiv.style.display = 'block';
+
+                if (data.status === 'OK') {
+                    messageDiv.className = 'message success';
+                    messageDiv.textContent = data.message;
+                    document.getElementById('change-price-form').reset();
+                } else {
+                    messageDiv.className = 'message error';
+                    messageDiv.textContent = data.message || 'Произошла ошибка';
+                }
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => {
+                const messageDiv = document.getElementById('price-message');
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'message error';
+                messageDiv.textContent = 'Ошибка при отправке данных: ' + error;
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            });
+        });
+
+        // Обработка кнопки обновления количества
+        document.getElementById('update-quantity-btn').addEventListener('click', function() {
+            fetch('/flower_quantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById('quantity-message');
+                messageDiv.style.display = 'block';
+
+                if (data.status === 'OK') {
+                    messageDiv.className = 'message success';
+                    messageDiv.textContent = data.message + ` (обновлено записей: ${data.count})`;
+                } else {
+                    messageDiv.className = 'message error';
+                    messageDiv.textContent = data.message || 'Произошла ошибка';
+                }
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => {
+                const messageDiv = document.getElementById('quantity-message');
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'message error';
+                messageDiv.textContent = 'Ошибка при обновлении количества: ' + error;
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            });
+        });
+
+        // Обработка кнопки показа количества
+        document.getElementById('show-quantity-btn').addEventListener('click', function() {
+            fetch('/flower_quantity_show', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const messageDiv = document.getElementById('show-quantity-message');
+                messageDiv.style.display = 'block';
+
+                if (data.status === 'OK') {
+                    messageDiv.className = 'message success';
+                    messageDiv.textContent = 'Данные успешно загружены';
+
+                    const table = document.getElementById('quantity-table');
+                    const tbody = document.getElementById('quantity-table-body');
+
+                    // Очищаем таблицу
+                    tbody.innerHTML = '';
+
+                    // Заполняем таблицу данными
+                    data.flowers.forEach(flower => {
+                        const row = document.createElement('tr');
+
+                        const nameCell = document.createElement('td');
+                        nameCell.textContent = flower.name;
+                        row.appendChild(nameCell);
+
+                        const quantityCell = document.createElement('td');
+                        quantityCell.textContent = flower.quantity;
+                        row.appendChild(quantityCell);
+
+                        tbody.appendChild(row);
+                    });
+
+                    table.style.display = 'table';
+                } else {
+                    messageDiv.className = 'message error';
+                    messageDiv.textContent = data.message || 'Произошла ошибка';
+                }
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            })
+            .catch(error => {
+                const messageDiv = document.getElementById('show-quantity-message');
+                messageDiv.style.display = 'block';
+                messageDiv.className = 'message error';
+                messageDiv.textContent = 'Ошибка при загрузке данных: ' + error;
+
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

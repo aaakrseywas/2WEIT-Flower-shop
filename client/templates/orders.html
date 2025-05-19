@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2weit flower | Управление заказами </title>
+    <link rel="stylesheet" href="/static/orders.css">
+    <link rel="stylesheet" href="/static/header_admin.css">
+    <link rel="stylesheet" href="/static/footer_admin.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    {% include "header_admin.html" %}
+  <main>
+        <div class="main-container">
+            <div class="row">
+                <h1>Список заказов</h1>
+            </div>
+
+            <div class="flowers-grid">
+                {{ param | safe }}
+            </div>
+        </div>
+    </main>
+    {% include "footer_admin.html" %}
+<script>
+       document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.status-buttons').forEach(container => {
+        container.addEventListener('click', async function(e) {
+            if (e.target.classList.contains('status-btn')) {
+                const orderId = this.getAttribute('data-order-id');
+                const newStatus = e.target.getAttribute('data-status');
+                const orderCard = this.closest('.order-card');
+
+                // Удаляем active у всех кнопок в этом контейнере
+                this.querySelectorAll('.status-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Добавляем active к текущей кнопке
+                e.target.classList.add('active');
+
+                // Управляем классом completed
+                if (newStatus === 'completed') {
+                    orderCard.classList.add('completed');
+                } else {
+                    orderCard.classList.remove('completed');
+                }
+
+                try {
+                    // Отправляем новый статус на сервер
+                    const response = await fetch(`/api/orders/${orderId}/status`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            status: newStatus
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Ошибка при обновлении статуса');
+                    }
+
+                    const result = await response.json();
+                    console.log(`Статус заказа ${orderId} изменен на ${newStatus}`, result);
+
+                } catch (error) {
+                    console.error('Ошибка:', error);
+                    alert('Произошла ошибка при обновлении статуса');
+                }
+            }
+        });
+    });
+});
+    </script>
+</body>
+</html>

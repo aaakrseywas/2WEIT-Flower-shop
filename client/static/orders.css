@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.main-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.flowers-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.order-card {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+
+.order-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.order-card h3 {
+    margin-top: 0;
+    color: #2c3e50;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.order-card p {
+    margin: 8px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.items {
+    margin: 12px 0;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.status-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 15px;
+}
+
+.status-btn {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: #e0e0e0;
+    color: #555;
+    flex-grow: 1;
+    text-align: center;
+}
+
+.status-btn:hover {
+    background-color: #d0d0d0;
+}
+
+.status-btn.active {
+    background-color: #CD4662;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+h1 {
+    color: #2c3e50;
+    margin-bottom: 25px;
+    font-size: 28px;
+    grid-column: 1 / -1;
+}
+
+.order-card.completed {
+    opacity: 0.7;
+    background-color: #f0f0f0;
+    border-color: #d0d0d0;
+}
+
+.order-card.completed h3,
+.order-card.completed p,
+.order-card.completed .items {
+    color: #777;
+}

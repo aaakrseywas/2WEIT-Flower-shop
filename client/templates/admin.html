@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2weit flower | Администрирование </title>
+    <link rel="stylesheet" href="/static/admin.css">
+    <link rel="stylesheet" href="/static/header_admin.css">
+    <link rel="stylesheet" href="/static/footer_admin.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    {% include "header_admin.html" %}
+         <main class="admin-dashboard">
+        <section class="welcome-section">
+            <h2>Панель управления персонала</h2>
+        </section>
+
+        <div class="dashboard-grid">
+            <!-- Основные функции -->
+            <a href="{{ url_for('orders_page') }}" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <h3>Заказы</h3>
+                <p>Управление текущими и новыми заказами</p>
+            </a>
+
+            <a href="{{ url_for('feedback_page') }}" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h3>Отзывы</h3>
+                <p>Просмотр и модерация отзывов</p>
+            </a>
+
+            <a href="{{ url_for('availability_page') }}" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <h3>Наличие товаров</h3>
+                <p>Управление складскими запасами</p>
+            </a>
+
+            <a href="{{ url_for('delivery_page') }}" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <h3>Доставка</h3>
+                <p>Отслеживание статусов доставки</p>
+            </a>
+         </main>
+    {% include "footer_admin.html" %}
+</body>
+</html>

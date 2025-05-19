@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>2WEIT flower - Корзина</title>
+    <title>2weit flower | Корзина</title>
     <link rel="stylesheet" href="/static/order.css">
     <link rel="stylesheet" href="/static/header.css">
     <link rel="stylesheet" href="/static/footer.css">
@@ -83,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         <li class="cart-item">
                             <span class="item-name">{{ item.name }}</span>
                             <span class="item-details">({{ item.sort }}, {{ item.color }})</span>
+                            <span class="item-quantity"> {{ item.quantity }}</span>
                             <span class="item-price">{{ item.price }} руб.</span>
                         </li>
                     {% endfor %}

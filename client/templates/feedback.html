@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 2weit flower |Управление отзывами</title>
+    <link rel="stylesheet" href="/static/header_admin.css">
+    <link rel="stylesheet" href="/static/footer_admin.css">
+    <link rel="stylesheet" href="/static/feedback.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Yeseva+One&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap" rel="stylesheet">
+
+</head>
+<body>
+      {% include "header_admin.html" %}
+      <div class="main-container">
+        <div class="reviews-list">
+            <h2>Последние отзывы</h2>
+            <div class="reviews-container">
+                {{ param | safe }}
+            </div>
+        </div>
+      </div>
+      {% include "footer_admin.html" %}
+ <script>
+function toggleReplyForm(button) {
+    const replyForm = button.closest('.review').querySelector('.reply-form');
+    replyForm.style.display = replyForm.style.display === 'none' ? 'block' : 'none';
+}
+
+function deleteReview(reviewId) {
+    if (confirm("Вы уверены, что хотите удалить этот отзыв?")) {
+        fetch(`/delete-review/${reviewId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (response.ok) {
+                // Удалить отзыв из DOM
+                document.getElementById(`review-${reviewId}`).remove();
+                alert("Отзыв успешно удален.");
+            } else {
+                alert("Ошибка при удалении отзыва.");
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert("Ошибка при удалении отзыва.");
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Пример добавления обработчиков событий для кнопок удаления
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(button => {
+        const reviewId = button.getAttribute('data-id'); // Предполагается, что у вас есть data-id
+        button.addEventListener('click', () => deleteReview(reviewId));
+    });
+
+    // Добавление обработчика события для формы отзыва
+    const reviewForm = document.getElementById('reviewForm');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const formData = {
+                username: document.getElementById('username').value,
+                comment: document.getElementById('comment').value
+            };
+
+            fetch('http://192.168.200.1:5000/reviews_add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    alert('Спасибо за ваш отзыв!');
+                    reviewForm.reset();
+                    location.reload();
+                } else {
+                    if (data.error === "Не заполнены обязательные поля") {
+                        alert('Ошибка: Пожалуйста, заполните все обязательные поля - ' + data.missing_fields.join(', '));
+                    } else {
+                        alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Произошла ошибка при отправке отзыва');
+            });
+        });
+    }
+});
+</script>
+
+</body>
+</html>

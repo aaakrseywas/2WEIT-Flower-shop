@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from db import cur
+from db import cur, cnx
 import jwt
 import bcrypt
 
@@ -8,10 +8,12 @@ from datetime import datetime, timedelta, timezone
 app = Flask(__name__)
 @app.after_request
 def after_request(response):
-    response.headers.add('Access-Control-Allow-Origin', '*')  # Разрешить все источники
+    response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
     return response
+
+
 
 @app.route('/')
 def index():
@@ -87,7 +89,7 @@ def login():
                 token = generate_token(user[2])
                 users_id = user[0]
 
-            insert_sql = f'INSERT INTO User_token (users_id, token) VALUES ({users_id}, "{token}")'
+            insert_sql = f'INSERT INTO User_token (users_id, token) VALUES ("{users_id}", "{token}")'
             print(insert_sql)
             try:
                 cur.execute(insert_sql)
@@ -149,6 +151,40 @@ def menu():
         return jsonify({"status": "ERROR", "message": str(e)})
 
 
+def get_db_connection():
+    return cnx  # Возвращаем уже созданное соединение, а не пытаемся его вызвать
+
+
+@app.route('/api/orders', methods=['GET'])
+def orders():
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor(dictionary=True)
+
+        sql = 'SELECT * FROM orders JOIN order_items ON orders.id = order_items.order_id;'
+        cur.execute(sql)
+        orders_list = []
+
+        for row in cur:
+            orders_list.append(row)
+            print(row)
+
+        cur.close()
+        # cnx.close()
+
+        return jsonify({
+            "status": "OK",
+            "count": len(orders_list),
+            "orders": orders_list
+        })
+
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e)})
+
+
+
 @app.route('/flower_new_price', methods=['POST'])
 def flower_new_price():
     data = request.json
@@ -174,28 +210,57 @@ def flower_new_price():
 @app.route('/flower_quantity', methods=['POST'])
 def flower_quantity():
     try:
-        sql_insert = f'''
-             INSERT INTO flowers_quantity (name, quantity, date_delivery)
-             SELECT name, COUNT(*) AS quantity, MAX(date) AS date_delivery
-             FROM flowers
-             GROUP BY name;
-         '''
-        cur.execute(sql_insert)
-        cur._connection.commit()
+        # Сначала получаем актуальные данные о количестве цветов
+        sql_get_flowers = '''
+            SELECT name, COUNT(*) AS quantity, MAX(date) AS date_delivery
+            FROM flowers
+            GROUP BY name;
+        '''
+        cur.execute(sql_get_flowers)
+        current_flowers = cur.fetchall()
 
-        count = cur.rowcount
+        count = 0
+
+        # Для каждого цветка проверяем наличие и обновляем/вставляем
+        for flower in current_flowers:
+            name, quantity, date_delivery = flower
+
+            # Проверяем, существует ли уже запись с таким именем цветка
+            sql_check = "SELECT 1 FROM flowers_quantity WHERE name = %s"
+            cur.execute(sql_check, (name,))
+            exists = cur.fetchone()
+
+            if exists:
+                # Обновляем существующую запись
+                sql_update = '''
+                    UPDATE flowers_quantity 
+                    SET quantity = %s, date_delivery = %s
+                    WHERE name = %s
+                '''
+                cur.execute(sql_update, (quantity, date_delivery, name))
+            else:
+                # Вставляем новую запись
+                sql_insert = '''
+                    INSERT INTO flowers_quantity (name, quantity, date_delivery)
+                    VALUES (%s, %s, %s)
+                '''
+                cur.execute(sql_insert, (name, quantity, date_delivery))
+
+            count += 1
+
+        cur._connection.commit()
 
         return jsonify({
             "status": "OK",
             "count": count,
-            "message": "Данные успешно вставлены!"
+            "message": "Данные успешно обновлены!"
         })
     except Exception as e:
         cur.connection.rollback()
         return jsonify({"status": "ERROR", "message": str(e)})
 
 
-@app.route('/flower_quantity_show', methods=['POST'])
+@app.route('/flower_quantity_show', methods=['GET'])
 def flower_quantity_show():
     try:
         sql_select = f'''
@@ -225,7 +290,7 @@ def reviews_add():
     if not data:
         return jsonify({"error": "Данные не предоставлены"}), 400
 
-    required_fields = ["username", "comment"]
+    required_fields = ["username", "comment", "email"]
     missing_fields = [field for field in required_fields if field not in data or not data[field]]
 
     if missing_fields:
@@ -236,8 +301,9 @@ def reviews_add():
 
     username = data.get('username')
     comment = data.get('comment')
+    email = data.get('email')
 
-    sql = f'INSERT INTO Reviews (username, comment) VALUES ("{username}", "{comment}")'
+    sql = f'INSERT INTO Reviews (username, comment, email) VALUES ("{username}","{comment}", "{email}")'
     print(sql)
     cur.execute(sql)
     cur._connection.commit()
@@ -249,7 +315,7 @@ def reviews_add():
         "message": "review saved successfully"
     }), 201
 
-@app.route('/reviews', methods=['POST', 'GET'])  # Разрешаем оба метода
+@app.route('/reviews', methods=['POST', 'GET'])
 def reviews():
     try:
         sql = 'SELECT * FROM Reviews'

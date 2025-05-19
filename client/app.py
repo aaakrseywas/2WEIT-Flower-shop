@@ -1,12 +1,12 @@
 import datetime
 import sqlite3
 from contextlib import closing
-
+import logging
 import mysql
-from flask import Flask, render_template, request, jsonify, url_for, redirect, session
+from flask import Flask, render_template, request, jsonify, url_for, redirect, session, flash
 import requests
 from mysql.connector import Error
-
+import sys
 from db import cur, cnx
 
 app = Flask(__name__)
@@ -18,6 +18,18 @@ def get_db_connection():
     conn = sqlite3.connect('reviews.db')
     conn.row_factory = sqlite3.Row
     return conn
+
+def check_user_in_db(email, password):
+    conn = sqlite3.connect('Users.db')
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE email = ? AND password = ?",(email, password))
+    user = cursor.fetchone()
+
+    conn.close()
+    return user is not None
+
 
 @app.route("/2weit/registration")
 def registration_page():
@@ -58,9 +70,26 @@ def main_page():
 
 LOGIN_API_URL = "http://127.0.0.1:5000/login"
 
-@app.route("/2weit/login", methods=["GET"])
+
+@app.route("/2weit/login", methods=["GET", "POST"])
 def login_page():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        if email == 'kristina@2weit.ru' and password == '2weit':
+            return redirect(url_for('admin_page'))
+
+        user_exists = check_user_in_db(email, password)
+
+        if user_exists:
+            return redirect(url_for('main_page'))
+        else:
+            flash('Пользователь с такими данными не найден')
+            return render_template("login.html")
+
     return render_template("login.html")
+
 
 @app.route("/2weit/logine", methods=["POST"])
 def logine_user():
@@ -75,21 +104,26 @@ def logine_user():
         if not email or not password:
             return jsonify({"success": False, "message": "Все поля обязательны для заполнения"}), 400
 
-        response = requests.post(
-            "http://127.0.0.1:5000/login",
-            json={"email": email, "password": password}
-        )
+        # Проверяем сначала специальный аккаунт администратора
+        if email == 'kristina@2weit.ru' and password == '2weit':
+            return jsonify({
+                "success": True,
+                "message": "Авторизация администратора прошла успешно!",
+                "redirect": "/2weit/admin",
+                "token": "user_token"  # Здесь должен быть реальный токен
+            })
 
-        if response.status_code == 200:
+        # Проверяем обычного пользователя в БД
+        user_exists = check_user_in_db({"email"}, {"password"})
+        if user_exists:
             return jsonify({
                 "success": True,
                 "message": "Авторизация прошла успешно!",
                 "redirect": "/2weit",
-                "token": response.json().get("token")
+                "token": "user_token"
             })
         else:
-            error_message = response.json().get("message", "Неверный email или пароль")
-            return jsonify({"success": False, "message": error_message}), response.status_code
+            return jsonify({"success": False, "message": "Неверный email или пароль"}), 401
 
     except Exception as e:
         return jsonify({"success": False, "message": f"Ошибка сервера: {str(e)}"}), 500
@@ -127,11 +161,13 @@ def review_user():
 
         username = request_data.get("username")
         comment = request_data.get("comment")
+        email = request_data.get("email")
 
         if not username or not comment:
             missing_fields = []
             if not username: missing_fields.append("username")
             if not comment: missing_fields.append("comment")
+            if not email: missing_fields.append("email")
 
             return jsonify({
                 "success": False,
@@ -139,8 +175,8 @@ def review_user():
                 "missing_fields": missing_fields
             }), 400
 
-        sql = "INSERT INTO Reviews (username, comment) VALUES (%s, %s)"
-        cur.execute(sql, (username, comment))
+        sql = "INSERT INTO Reviews (username, comment, email) VALUES (%s, %s)"
+        cur.execute(sql, (username, comment, email))
         cur._connection.commit()
 
         return jsonify({
@@ -183,6 +219,7 @@ def cart_page():
     flower_sort = request.form.get('flower_sort')
     flower_color = request.form.get('flower_color')
     flower_price = request.form.get('flower_price')
+    quantity = int(request.form.get('quantity', 1))
     print(flower_price)
     try:
         print(flower_price)
@@ -195,12 +232,23 @@ def cart_page():
     if 'cart' not in session:
         session['cart'] = []
 
-    session['cart'].append({
-        'name': flower_name,
-        'sort': flower_sort,
-        'color': flower_color,
-        'price': flower_price
-    })
+    found = False
+    for item in session['cart']:
+        if (item['name'] == flower_name and
+            item['sort'] == flower_sort and
+            item['color'] == flower_color):
+            item['quantity'] += quantity
+            found = True
+            break
+
+    if not found:
+        session['cart'].append({
+            'name': flower_name,
+            'sort': flower_sort,
+            'color': flower_color,
+            'price': flower_price,
+            'quantity': quantity
+        })
 
     session.modified = True
     return redirect(url_for('order_page'))
@@ -275,5 +323,333 @@ def clear_cart():
 def contact_page():
     return render_template("contact.html")
 
+@app.route("/2weit/admin", methods=["GET"])
+def admin_page():
+    return render_template("admin.html")
+
+
+@app.route("/2weit/orders", methods=["GET"])
+def orders_page():
+    try:
+        response = requests.get('http://127.0.0.1:5000/api/orders')
+        response.raise_for_status()
+        param = response.json()
+        print("Ответ API:", param)
+
+        orders = param.get('orders', [])
+        grouped_orders = {}
+        print(len(orders))
+        print(orders)
+        for order in orders:
+
+            try:
+                order_id = order.get('order_id')
+                if not order_id:
+                    continue
+
+                # Если заказ с таким order_id еще не добавлен
+                if order_id not in grouped_orders:
+                    grouped_orders[order_id] = {
+                        'order_info': {
+                            'id': order_id,
+                            'customer_name': order.get('customer_name', 'Не указано'),
+                            'address': order.get('address', 'Не указан'),
+                            'email': order.get('email', 'Не указан'),
+                            'payment_method': order.get('payment_method', 'Не указан'),
+                            'final_amount': order.get('final_amount', 0),
+                            'comment': order.get('comment', 'нет'),
+                            'status': order.get('status', 'new')
+                        },
+                        'order_items': []
+                    }
+
+                # Добавляем элементы заказа, если они есть
+                if 'flower_name' in order and order.get('order_id') == order_id:
+                    grouped_orders[order_id]['order_items'].append({
+                        'flower_name': order.get('flower_name', 'Неизвестный цветок'),
+                        'flower_sort': order.get('flower_sort', 'Не указан'),
+                        'color': order.get('color', 'Не указан'),
+                        'quantity': order.get('quantity', 1),
+                        'price': order.get('price', 0)
+                    })
+                    print(len(grouped_orders[order_id]['order_items']))
+
+            except Exception as e:
+                print(f"Ошибка обработки заказа: {e}")
+                continue
+
+        html = ""
+        for order_id, order_data in grouped_orders.items():
+            main_order = order_data['order_info']
+            items = order_data['order_items']
+
+            status = main_order.get('status', 'new').lower()
+            statuses = {
+                'new': 'Новый',
+                'paid': 'Оплачен',
+                'assembled': 'Собран',
+                'delivery': 'Доставка',
+                'completed': 'Готово'
+            }
+
+
+            html_temp = f"""
+            <div class="order-card {'completed' if status == 'completed' else ''}">
+                <h3>Заказ #{order_id}</h3>
+                <p>Клиент: {main_order['customer_name']}</p>
+                <p>Адрес: {main_order['address']}</p>
+                <p>Email: {main_order['email']}</p>
+                <p>Способ оплаты: {main_order['payment_method']}</p>
+                <p>Сумма: {main_order['final_amount']} руб.</p>
+                <p>Комментарий: {main_order['comment']}</p>
+                <div class="items">
+                    <h4>Состав заказа:</h4>"""
+
+            for item in items:
+                html_temp += f"""
+                    <div class="order-item">
+                        <p>{item['flower_name']} ({item['flower_sort']}, {item['color']})</p>
+                        <p>{item['quantity']} шт. × {item['price']} руб.</p>
+                    </div>"""
+
+            html_temp += f"""
+                </div>
+                <div class="status-buttons" data-order-id="{order_id}">"""
+
+            for key, value in statuses.items():
+                active_class = "active" if key == status else ""
+                html_temp += f"""
+                    <button class="status-btn {key} {active_class}" data-status="{key}">{value}</button>"""
+
+            html_temp += """
+                </div>
+            </div>"""
+            html += html_temp
+
+        return render_template("orders.html", param=html)
+
+    except requests.exceptions.RequestException as e:
+        print(f"Ошибка при запросе к API: {e}")
+        return render_template("error.html", error="Не удалось загрузить данные заказов")
+    except Exception as e:
+        print(f"Неожиданная ошибка: {e}")
+        return render_template("error.html", error="Произошла ошибка при обработке данных")
+
+@app.route("/api/orders/<int:order_id>/status", methods=["POST"])
+def update_order_status(order_id):
+    new_status = request.json.get('status')
+    # Здесь логика обновления статуса в вашей БД
+    # Например:
+    # update_order_status_in_db(order_id, new_status)
+    return jsonify({"success": True, "message": "Статус обновлен"})
+
+@app.route("/2weit/feedback", methods=["GET"])
+def feedback_page():
+    response = requests.get('http://127.0.0.1:5000/reviews')
+    param = response.json()
+    coments = param['Reviews']
+    html = ""
+    for coment in coments:
+        html_temp = f"""
+         <div class="review" id="review-{coment['id']}">
+             <h3>{coment['username']}</h3>
+             <p>{coment['comment']}</p>
+             <small>{coment['date'] if coment['date'] else ''}</small>
+             <div class="review-actions">
+                <button class="action-btn reply-btn" onclick="toggleReplyForm(this)">Ответить</button>
+                <button class="action-btn delete-btn" data-id="8"{coment['id']}">Удалить</button>
+             </div>
+             <div class="reply-form" style="display: none;">
+                <textarea placeholder="Ваш ответ..." rows="3"></textarea>
+                <button class="action-btn submit-reply-btn">Отправить</button>
+                <button class="action-btn cancel-reply-btn" onclick="toggleReplyForm(this)">Отмена</button>
+             </div>
+         </div>
+         """
+        html += html_temp
+    return render_template("feedback.html", param=html)
+
+@app.route('/delete-review/<int:review_id>', methods=['DELETE'])
+def delete_review(review_id):
+    try:
+        # Создаем новый курсор (лучше создавать новый для каждого запроса)
+        cursor = cnx.cursor(dictionary=True)
+
+        # Проверяем существование отзыва
+        cursor.execute("SELECT id FROM Reviews WHERE id = %s", (review_id,))
+        if not cursor.fetchone():
+            cursor.close()
+            return jsonify({"error": "Отзыв не найден."}), 404
+
+        # Удаляем отзыв
+        cursor.execute("DELETE FROM Reviews WHERE id = %s", (review_id,))
+        cnx.commit()
+        cursor.close()
+
+        return jsonify({"message": "Отзыв успешно удален."}), 200
+
+    except mysql.connector.Error as err:
+        logging.error(f"Ошибка MySQL при удалении отзыва с ID {review_id}: {err}")
+        return jsonify({"error": str(err)}), 500
+    except Exception as e:
+        logging.error(f"Общая ошибка при удалении отзыва с ID {review_id}: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/2weit/delivery", methods=["GET"])
+def delivery_page():
+    return render_template("delivery.html")
+
+@app.route("/2weit/availability", methods=["GET"])
+def availability_page():
+    return render_template("availability.html")
+
+
+@app.route('/flower_add', methods=['POST'])
+def flower():
+    data = request.json
+    if not data:
+        return jsonify({"error": "Данные не предоставлены"}), 400
+
+    required_fields = ["name", "sort", "color", "date", "price"]
+    missing_fields = [field for field in required_fields if field not in data or not data[field]]
+
+    if missing_fields:
+        return jsonify({
+            "error": "Не заполнены обязательные поля",
+            "missing_fields": missing_fields
+        }), 400
+
+    name = data.get("name")
+    sort = data.get("sort")
+    color = data.get("color")
+    date = data.get("date")
+    price = data.get("price")
+
+    sql = f'INSERT INTO flowers (name, sort, color, date, price) VALUES ("{name}", "{sort}", "{color}", "{date}", "{price}")'
+    print(sql)
+
+    cur.execute(sql)
+    cur._connection.commit()
+
+    return jsonify({"status": "OK", "message": "Flower added successfully!"})
+
+
+@app.route('/flower_new_price', methods=['POST'])
+def flower_new_price():
+    data = request.json
+    if not data:
+        return jsonify({"error": "Данные не предоставлены"}), 400
+
+    required_fields = ["id", "price"]
+    missing_fields = [field for field in required_fields if field not in data or data[field] is None]
+
+    if missing_fields:
+        return jsonify({
+            "error": "Не заполнены обязательные поля",
+            "missing_fields": missing_fields
+        }), 400
+
+    flower_id = data.get("id")
+    new_price = data.get("price")
+
+    try:
+        sql = f'UPDATE `flowers` SET `price` = "{new_price}" WHERE `id` = {flower_id}'
+        print(sql)
+        print(f"flower_id: {flower_id}, new_price: {new_price}")
+
+        cur.execute(sql)
+        cur._connection.commit()
+
+        return jsonify({"status": "OK", "message": "Цена успешно обновлена!"})
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e)}), 500
+
+
+@app.route('/flower_quantity', methods=['POST'])
+def flower_quantity():
+    # Проверяем, что запрос содержит JSON
+    if not request.is_json:
+        return jsonify({
+            "status": "ERROR",
+            "message": "Запрос должен содержать JSON-данные (Content-Type: application/json)"
+        }), 400
+
+    try:
+        # Получаем актуальные данные о цветах из основной таблицы
+        sql_get_flowers = '''
+            SELECT name, COUNT(*) AS quantity, MAX(date) AS date_delivery
+            FROM flowers
+            GROUP BY name;
+        '''
+        cur.execute(sql_get_flowers)
+        current_flowers = cur.fetchall()
+
+        count_updated = 0
+        count_inserted = 0
+
+        # Очищаем таблицу перед обновлением (альтернатива - использовать UPSERT)
+        cur.execute("TRUNCATE TABLE flowers_quantity")
+
+        # Вставляем актуальные данные
+        sql_insert = '''
+            INSERT INTO flowers_quantity (name, quantity, date_delivery)
+            VALUES (%s, %s, %s)
+        '''
+
+        for flower in current_flowers:
+            name, quantity, date_delivery = flower
+            cur.execute(sql_insert, (name, quantity, date_delivery))
+
+            if cur.rowcount == 1:
+                count_inserted += 1
+
+        cur._connection.commit()
+
+        return jsonify({
+            "status": "OK",
+            "inserted": count_inserted,
+            "message": f"Данные успешно обновлены! Добавлено {count_inserted} записей."
+        })
+
+    except Exception as e:
+        cur._connection.rollback()
+        return jsonify({
+            "status": "ERROR",
+            "message": f"Ошибка при обновлении количества цветов: {str(e)}"
+        }), 500
+
+@app.route('/flower_quantity_show', methods=['GET'])
+def flower_quantity_show():
+    try:
+        sql_select = '''
+             SELECT flowers.name, SUM(flowers_quantity.quantity) AS quantity
+             FROM flowers 
+             JOIN flowers_quantity ON flowers.name = flowers_quantity.name
+             GROUP BY flowers.name;
+         '''
+        print(f"Executing SQL: {sql_select}")
+
+        cur.execute(sql_select)
+        flowers = cur.fetchall()
+
+        flower_list = [{
+            "name": row[0],
+            "quantity": int(row[1])
+        } for row in flowers]
+
+        print(f"Found {len(flower_list)} flower types")
+
+        return jsonify({
+            "status": "OK",
+            "count": len(flower_list),
+            "flowers": flower_list
+        })
+
+    except Exception as e:
+        print(f"Error occurred: {str(e)}")
+        return jsonify({
+            "status": "ERROR",
+            "message": f"Ошибка при получении данных: {str(e)}"
+        }), 500
 if __name__ == '__main__':
     app.run(debug=True, port=5005)

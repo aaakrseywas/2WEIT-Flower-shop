@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> 2WEIT flower - Отзывы</title>
+    <title> 2weit flower | Отзывы</title>
     <link rel="stylesheet" href="/static/header.css">
     <link rel="stylesheet" href="/static/footer.css">
     <link rel="stylesheet" href="/static/reviews.css">
@@ -51,6 +51,10 @@
                 <label for="comment">Ваш отзыв:</label>
                 <textarea id="comment" name="comment" rows="4" required></textarea>
             </div>
+             <div class="form-group">
+                <label for="email">Ваша электронная почта:</label>
+                <input type="text" id="email" name="email" required>
+            </div>
             <button type="submit" class="submit-btn">Отправить отзыв</button>
         </form>
     </div>
@@ -62,7 +66,8 @@
 
         const formData = {
             username: document.getElementById('username').value,
-            comment: document.getElementById('comment').value
+            comment: document.getElementById('comment').value,
+            email: document.getElementById('email').value
         };
 
         fetch('http://192.168.200.1:5000/reviews_add', {
