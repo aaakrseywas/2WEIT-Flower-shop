@@ -1,43 +1,68 @@
- * {
+:root {
+    --primary-color: #CD4662;
+    --secondary-color: #f8f9fa;
+    --accent-color: #ff9a76;
+    --text-color: #2d3748;
+    --light-text: #ffffff;
+    --border-radius: 10px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --border-color: #e2e8f0;
+}
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.main-container{
+ background-color: var(--secondary-color);
 }
 
 .reviews-list {
     max-width: 1200px;
     margin: 0 auto;
     padding: 30px 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+
 }
 
 .reviews-list h2 {
-    color: #2c3e50;
-    font-size: 28px;
+    color: var(--primary-color);
+    font-size: 2.5rem;
     margin-bottom: 30px;
     padding-bottom: 15px;
-    border-bottom: 2px solid #f0f0f0;
     text-align: center;
+    position: relative;
 }
 
-/* Список отзывов */
+.reviews-list h2::after {
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+}
+
 .reviews-container {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 колонки */
+    grid-template-columns: repeat(4, 1fr);
     gap: 25px;
     margin-top: 30px;
 }
 
-/* Карточка отзыва */
 .review {
     background: white;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
     padding: 25px;
-    transition: all 0.3s ease;
+    transition: var(--transition);
     position: relative;
     overflow: hidden;
-    border-top: 4px solid #4c6faf;
+    border-top: 4px solid var(--primary-color);
 }
 
 .review:hover {
@@ -45,38 +70,32 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
-/* Заголовок отзыва */
 .review h3 {
     margin: 0 0 15px 0;
-    color: #2c3e50;
+    color: var(--text-color);
     font-size: 20px;
     font-weight: 600;
     display: flex;
     align-items: center;
 }
 
-
-
-/* Текст отзыва */
 .review p {
-    color: #34495e;
+    color: var(--text-color);
     line-height: 1.6;
     margin: 0 0 15px 0;
     font-size: 15px;
     padding: 0 10px;
 }
 
-/* Дата отзыва */
 .review small {
     display: block;
-    color: #7f8c8d;
+    color: #718096;
     font-size: 13px;
     text-align: right;
     padding-top: 10px;
-    border-top: 1px dashed #eee;
+    border-top: 1px dashed var(--border-color);
 }
 
-/* Кнопки действий для персонала */
 .review-actions {
     display: flex;
     justify-content: flex-end;
@@ -85,55 +104,71 @@
 }
 
 .action-btn {
-    padding: 5px 12px;
+    padding: 8px 12px;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     font-size: 13px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
+    font-weight: 500;
 }
 
 .reply-btn {
-    background-color: #CD4662;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--light-text);
+}
+
+.reply-btn:hover {
+    background-color: #b53a56;
+    transform: translateY(-2px);
 }
 
 .archive-btn {
-    background-color: #95a5a6;
-    color: white;
+    background-color: #a0aec0;
+    color: var(--light-text);
+}
+
+.archive-btn:hover {
+    background-color: #718096;
 }
 
 .reply-form {
     margin-top: 15px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid var(--border-color);
     padding-top: 10px;
 }
 
 .reply-form textarea {
     width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
     padding: 10px;
     resize: none;
+    margin-bottom: 10px;
+    transition: var(--transition);
+}
+
+.reply-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(205, 70, 98, 0.15);
 }
 
 .submit-reply-btn {
-    background-color: #2ecc71;
-    color: white;
+    background-color: var(--primary-color);
+    color: var(--light-text);
+    margin-right: 10px;
+}
+
+.submit-reply-btn:hover {
+    background-color: #b53a56;
 }
 
 .cancel-reply-btn {
-    background-color: #e74c3c;
-    color: white;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
 }
 
-
-/* Анимация появления */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.review {
-    animation: fadeIn 0.5s ease forwards;
+.cancel-reply-btn:hover {
+    background-color: #e2e8f0;
 }

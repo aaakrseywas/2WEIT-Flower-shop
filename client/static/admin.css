@@ -7,7 +7,6 @@
         padding: 2rem 5%;
         background-color: #f8f9fa;
         min-height: calc(87vh - 150px);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     /* Секция приветствия */
@@ -17,12 +16,27 @@
         border-bottom: 1px solid #e0e0e0;
     }
 
-    .welcome-section h2 {
-        color: #2c3e50;
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-        font-weight: 600;
-    }
+   h1 {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin: 20px 0 40px;
+    color: #CD4662;
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    position: relative;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    border-radius: 2px;
+}
 
     .last-login {
         color: #7f8c8d;
@@ -52,7 +66,7 @@
         color: #34495e;
         position: relative;
         overflow: hidden;
-        border-top: 3px solid #5099bf;
+        border-top: 3px solid #bf5088;
     }
 
     .dashboard-card:hover {

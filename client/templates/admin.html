@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>2weit flower | Администрирование </title>
+    <title>2WEIT flower | Администрирование </title>
     <link rel="stylesheet" href="/static/admin.css">
     <link rel="stylesheet" href="/static/header_admin.css">
     <link rel="stylesheet" href="/static/footer_admin.css">
@@ -16,7 +16,7 @@
     {% include "header_admin.html" %}
          <main class="admin-dashboard">
         <section class="welcome-section">
-            <h2>Панель управления персонала</h2>
+            <h1>Панель управления персонала</h1>
         </section>
 
         <div class="dashboard-grid">
@@ -43,14 +43,6 @@
                 </div>
                 <h3>Наличие товаров</h3>
                 <p>Управление складскими запасами</p>
-            </a>
-
-            <a href="{{ url_for('delivery_page') }}" class="dashboard-card">
-                <div class="card-icon">
-                    <i class="fas fa-truck"></i>
-                </div>
-                <h3>Доставка</h3>
-                <p>Отслеживание статусов доставки</p>
             </a>
          </main>
     {% include "footer_admin.html" %}

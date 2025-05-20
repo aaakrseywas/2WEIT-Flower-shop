@@ -202,6 +202,21 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: var(--transition);
+    position: relative; /* Добавлено для правильного позиционирования ссылки */
+}
+
+.add-to-cart a {
+    color: white;
+    text-decoration: none;
+    display: block; /* Чтобы ссылка занимала всю площадь кнопки */
+    position: absolute; /* Растягиваем на всю область кнопки */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .add-to-cart:hover {

@@ -1,103 +1,159 @@
+ :root {
+    --primary-color: #CD4662;
+    --secondary-color: #f8f9fa;
+    --accent-color: #ff9a76;
+    --text-color: #2d3748;
+    --light-text: #ffffff;
+    --border-radius: 10px;
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --border-color: #e2e8f0;
+    --error-color: #e53e3e;
+    --success-color: #38a169;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+body {
+    background-color: #f5f7fa;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
 .main-container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    margin-bottom: 3em;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0 40px;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    position: relative;
+}
+
+h1::after {
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+    border-radius: 2px;
 }
 
 .flowers-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 30px;
 }
 
 .order-card {
-    border: 1px solid #e0e0e0;
-    padding: 15px;
-    border-radius: 10px;
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    transition: transform 0.2s;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 24px;
+    transition: var(--transition);
+    border: 1px solid var(--border-color);
+    position: relative;
 }
 
 .order-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
 }
 
 .order-card h3 {
-    margin-top: 0;
-    color: #2c3e50;
-    font-size: 18px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+    margin: 0 0 15px 0;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .order-card p {
     margin: 8px 0;
-    color: #555;
-    font-size: 14px;
+    color: var(--text-color);
+    font-size: 0.95rem;
+    line-height: 1.5;
 }
 
-.items {
-    margin: 12px 0;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 6px;
-    font-size: 13px;
+.order-card .items {
+    margin: 16px 0;
+    padding: 12px;
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    border: 1px dashed var(--border-color);
 }
 
 .status-buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 15px;
+    gap: 8px;
+    margin-top: 20px;
 }
 
 .status-btn {
-    padding: 6px 10px;
+    padding: 8px 12px;
     border: none;
-    border-radius: 5px;
-    font-size: 12px;
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
     cursor: pointer;
-    transition: all 0.2s;
-    background-color: #e0e0e0;
-    color: #555;
+    transition: var(--transition);
+    background-color: var(--secondary-color);
+    color: var(--text-color);
     flex-grow: 1;
     text-align: center;
+    font-weight: 500;
 }
 
 .status-btn:hover {
-    background-color: #d0d0d0;
+    background-color: #e2e8f0;
 }
 
 .status-btn.active {
-    background-color: #CD4662;
-    color: white;
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-h1 {
-    color: #2c3e50;
-    margin-bottom: 25px;
-    font-size: 28px;
-    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--primary-color), #e33982);
+    color: var(--light-text);
+    box-shadow: 0 2px 8px rgba(93, 155, 123, 0.3);
 }
 
 .order-card.completed {
-    opacity: 0.7;
-    background-color: #f0f0f0;
-    border-color: #d0d0d0;
+    opacity: 0.85;
+    background-color: #f8faf9;
 }
 
 .order-card.completed h3,
 .order-card.completed p,
 .order-card.completed .items {
-    color: #777;
+    color: #718096;
+}
+
+.order-card.completed::after {
+    content: '✓ Выполнен';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: var(--success-color);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.order-card.cancelled::after {
+    content: '✕ Отменен';
+    background-color: var(--error-color);
 }

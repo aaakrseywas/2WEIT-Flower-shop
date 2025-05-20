@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>2weit flower | Наличие </title>
+    <title>2WEIT flower | Наличие </title>
     <link rel="stylesheet" href="/static/availability.css">
     <link rel="stylesheet" href="/static/header_admin.css">
     <link rel="stylesheet" href="/static/footer_admin.css">
@@ -41,28 +41,27 @@
                 </div>
                 <div class="form-group">
                     <label for="price">Цена:</label>
-                    <input type="number" id="price" name="price" step="0.01" required>
+                    <input type="text" id="price" name="price" step="0.01" required>
                 </div>
                 <button type="submit">Добавить цветок</button>
             </form>
         </div>
 
-        <!-- Секция изменения цены -->
         <div class="section">
-            <h2>Изменить цену цветка</h2>
-            <div id="price-message" class="message" style="display: none;"></div>
-            <form id="change-price-form">
-                <div class="form-group">
-                    <label for="flower-id">ID цветка:</label>
-                    <input type="number" id="flower-id" name="id" required>
-                </div>
-                <div class="form-group">
-                    <label for="new-price">Новая цена:</label>
-                    <input type="number" id="new-price" name="price" step="0.01" required>
-                </div>
-                <button type="submit">Обновить цену</button>
-            </form>
+    <h2>Изменить цену цветка по названию</h2>
+    <div id="price-message" class="message" style="display: none;"></div>
+    <form id="change-price-by-name-form">
+        <div class="form-group">
+            <label for="flower-name">Название цветка:</label>
+            <input type="text" id="flower-name" name="name" required>
         </div>
+        <div class="form-group">
+            <label for="new-price">Новая цена:</label>
+            <input type="number" id="new-price" name="price" step="0.01" required>
+        </div>
+        <button type="submit">Обновить цену</button>
+    </form>
+</div>
 
         <!-- Секция обновления количества -->
         <div class="section">
@@ -93,105 +92,105 @@
     {% include "footer_admin.html" %}
 
     <script>
-        // Обработка формы добавления цветка
-        document.getElementById('add-flower-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+     document.getElementById('add-flower-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const messageDiv = document.getElementById('add-flower-message');
+    messageDiv.style.display = 'block';
 
-            const name = document.getElementById('name').value;
-            const sort = document.getElementById('sort').value;
-            const color = document.getElementById('color').value;
-            const date = document.getElementById('date').value;
-            const price = document.getElementById('price').value;
+    try {
+        const formData = {
+            name: document.getElementById('name').value.trim(),
+            sort: document.getElementById('sort').value.trim(),
+            color: document.getElementById('color').value.trim(),
+            date: document.getElementById('date').value.trim(),
+            price: parseFloat(document.getElementById('price').value.trim()) // Преобразуем в число
+        };
 
-            fetch('/flower_add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: name,
-                    sort: sort,
-                    color: color,
-                    date: date,
-                    price: price
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                const messageDiv = document.getElementById('add-flower-message');
-                messageDiv.style.display = 'block';
+        // Валидация на клиенте
+        if (!formData.name || !formData.sort || !formData.color || !formData.date || isNaN(formData.price)) {
+            throw new Error('Все поля обязательны для заполнения, а цена должна быть числом');
+        }
 
-                if (data.status === 'OK') {
-                    messageDiv.className = 'message success';
-                    messageDiv.textContent = data.message;
-                    document.getElementById('add-flower-form').reset();
-                } else {
-                    messageDiv.className = 'message error';
-                    messageDiv.textContent = data.message || 'Произошла ошибка';
-                }
-
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 5000);
-            })
-            .catch(error => {
-                const messageDiv = document.getElementById('add-flower-message');
-                messageDiv.style.display = 'block';
-                messageDiv.className = 'message error';
-                messageDiv.textContent = 'Ошибка при отправке данных: ' + error;
-
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 5000);
-            });
+        const response = await fetch('http://127.0.0.1:5005/flower_add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
         });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'Ошибка сервера');
+        }
+
+        messageDiv.className = 'message success';
+        messageDiv.textContent = data.message;
+        document.getElementById('add-flower-form').reset();
+
+    } catch (error) {
+        messageDiv.className = 'message error';
+        messageDiv.textContent = 'Ошибка: ' + error.message;
+        console.error('Error:', error);
+    } finally {
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 5000);
+    }
+});
 
         // Обработка формы изменения цены
-        document.getElementById('change-price-form').addEventListener('submit', function(e) {
-            e.preventDefault();
 
-            const flowerId = document.getElementById('flower-id').value;
-            const newPrice = document.getElementById('new-price').value;
+         document.getElementById('change-price-by-name-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-            fetch('/flower_new_price', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    id: flowerId,
-                    price: newPrice
-                })
+    const flowerName = document.getElementById('flower-name').value;
+    const newPrice = document.getElementById('new-price').value;
+    const messageDiv = document.getElementById('price-message');
+
+    try {
+        const response = await fetch('/flower_new_price', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: flowerName,
+                price: newPrice
             })
-            .then(response => response.json())
-            .then(data => {
-                const messageDiv = document.getElementById('price-message');
-                messageDiv.style.display = 'block';
-
-                if (data.status === 'OK') {
-                    messageDiv.className = 'message success';
-                    messageDiv.textContent = data.message;
-                    document.getElementById('change-price-form').reset();
-                } else {
-                    messageDiv.className = 'message error';
-                    messageDiv.textContent = data.message || 'Произошла ошибка';
-                }
-
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 5000);
-            })
-            .catch(error => {
-                const messageDiv = document.getElementById('price-message');
-                messageDiv.style.display = 'block';
-                messageDiv.className = 'message error';
-                messageDiv.textContent = 'Ошибка при отправке данных: ' + error;
-
-                setTimeout(() => {
-                    messageDiv.style.display = 'none';
-                }, 5000);
-            });
         });
+
+        // Проверяем content-type ответа
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            const errorText = await response.text();
+            throw new Error(`Ожидался JSON, но получен: ${errorText.substring(0, 100)}...`);
+        }
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.message || 'Ошибка сервера');
+        }
+
+        // Успешный случай
+        messageDiv.style.display = 'block';
+        messageDiv.className = 'message success';
+        messageDiv.textContent = data.message;
+        document.getElementById('change-price-by-name-form').reset();
+
+    } catch (error) {
+        // Обработка ошибок
+        messageDiv.style.display = 'block';
+        messageDiv.className = 'message error';
+        messageDiv.textContent = error.message || 'Неизвестная ошибка';
+        console.error('Ошибка:', error);
+    }
+
+    // Скрываем сообщение через 5 секунд
+    setTimeout(() => {
+        messageDiv.style.display = 'none';
+    }, 5000);
+});
 
         // Обработка кнопки обновления количества
         document.getElementById('update-quantity-btn').addEventListener('click', function() {
@@ -208,7 +207,7 @@
 
                 if (data.status === 'OK') {
                     messageDiv.className = 'message success';
-                    messageDiv.textContent = data.message + ` (обновлено записей: ${data.count})`;
+                    messageDiv.textContent = data.message + ``;
                 } else {
                     messageDiv.className = 'message error';
                     messageDiv.textContent = data.message || 'Произошла ошибка';

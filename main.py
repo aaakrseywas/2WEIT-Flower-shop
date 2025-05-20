@@ -13,8 +13,6 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
     return response
 
-
-
 @app.route('/')
 def index():
     return jsonify({"status": "OK"})
@@ -116,7 +114,7 @@ def login():
 
 @app.route('/flower_add', methods=['POST'])
 def flower():
-    data = request.json
+    data = request.get_json()
 
     name = data.get("name")
     sort = data.get("sort")
@@ -132,15 +130,28 @@ def flower():
 
     return jsonify({"status": "OK", "message": "Flower added successfully!"})
 
-@app.route('/menu', methods=['GET'])
+
+@app.route('/api/menu', methods=['GET'])
 def menu():
     try:
-        sql='SELECT * FROM flowers'
+        sql = '''
+        SELECT f.id, f.name, f.sort, f.color, f.price, fq.quantity 
+        FROM flowers f 
+        JOIN flowers_quantity fq ON f.name = fq.name
+        '''
         cur.execute(sql)
-        flowers=[]
+
+        flowers = []
         for row in cur:
-            flowers.append(row)
-            print(row)
+            flower = {
+                'id': row[0],
+                'name': row[1],
+                'sort': row[2],
+                'color': row[3],
+                'price': row[4],
+                'quantity': row[5]
+            }
+            flowers.append(flower)
 
         return jsonify({
             "status": "OK",
@@ -148,11 +159,11 @@ def menu():
             "flowers": flowers
         })
     except Exception as e:
-        return jsonify({"status": "ERROR", "message": str(e)})
+        return jsonify({"status": "ERROR", "message": str(e)}), 500
 
 
 def get_db_connection():
-    return cnx  # Возвращаем уже созданное соединение, а не пытаемся его вызвать
+    return cnx
 
 
 @app.route('/api/orders', methods=['GET'])
@@ -188,21 +199,21 @@ def orders():
 @app.route('/flower_new_price', methods=['POST'])
 def flower_new_price():
     data = request.json
-    flower_id = data.get("id")
+    flower_name = data.get("name")
     new_price = data.get("price")
 
-    if flower_id is None or new_price is None:
-        return jsonify({"status": "ERROR", "message": "ID и цена обязательны."}), 400
+    if flower_name is None or new_price is None:
+        return jsonify({"status": "ERROR", "message": "Название и цена обязательны."}), 400
 
     try:
-        sql = f'UPDATE `flowers` SET `price` = "{new_price}" WHERE `id` = {flower_id}'
-        print(sql)
-
-        print(f"flower_id: {flower_id}, new_price: {new_price}")
-        cur.execute(sql)
+        sql = 'UPDATE flowers SET price = %s WHERE name = %s'
+        cur.execute(sql, (new_price, flower_name))
         cur._connection.commit()
 
-        return jsonify({"status": "OK", "message": "Цена успешно обновлена!"})
+        return jsonify({
+            "status": "OK",
+            "message": f"Цена всех цветов '{flower_name}' обновлена на {new_price}"
+        })
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e)})
 
@@ -210,7 +221,6 @@ def flower_new_price():
 @app.route('/flower_quantity', methods=['POST'])
 def flower_quantity():
     try:
-        # Сначала получаем актуальные данные о количестве цветов
         sql_get_flowers = '''
             SELECT name, COUNT(*) AS quantity, MAX(date) AS date_delivery
             FROM flowers
@@ -221,17 +231,13 @@ def flower_quantity():
 
         count = 0
 
-        # Для каждого цветка проверяем наличие и обновляем/вставляем
-        for flower in current_flowers:
-            name, quantity, date_delivery = flower
-
-            # Проверяем, существует ли уже запись с таким именем цветка
+        for name, quantity, date_delivery in current_flowers:
             sql_check = "SELECT 1 FROM flowers_quantity WHERE name = %s"
             cur.execute(sql_check, (name,))
             exists = cur.fetchone()
 
             if exists:
-                # Обновляем существующую запись
+                #
                 sql_update = '''
                     UPDATE flowers_quantity 
                     SET quantity = %s, date_delivery = %s
@@ -239,7 +245,6 @@ def flower_quantity():
                 '''
                 cur.execute(sql_update, (quantity, date_delivery, name))
             else:
-                # Вставляем новую запись
                 sql_insert = '''
                     INSERT INTO flowers_quantity (name, quantity, date_delivery)
                     VALUES (%s, %s, %s)
@@ -248,7 +253,7 @@ def flower_quantity():
 
             count += 1
 
-        cur._connection.commit()
+        cur.connection.commit()
 
         return jsonify({
             "status": "OK",
@@ -258,7 +263,6 @@ def flower_quantity():
     except Exception as e:
         cur.connection.rollback()
         return jsonify({"status": "ERROR", "message": str(e)})
-
 
 @app.route('/flower_quantity_show', methods=['GET'])
 def flower_quantity_show():
@@ -281,7 +285,6 @@ def flower_quantity_show():
     except Exception as e:
         cur._connection.rollback()
         return jsonify({"status": "ERROR", "message": str(e)})
-
 
 @app.route('/reviews_add', methods=['POST'])
 def reviews_add():
@@ -307,8 +310,6 @@ def reviews_add():
     print(sql)
     cur.execute(sql)
     cur._connection.commit()
-
-
 
     return jsonify({
         "status": "success",

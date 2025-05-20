@@ -190,27 +190,41 @@ def review_user():
             "success": False,
             "message": f"Ошибка сервера при добавлении отзыва: {str(e)}"
         }), 500
+
+
 @app.route("/2weit/menu", methods=["GET"])
 def menu_page():
-    response = requests.get('http://127.0.0.1:5000/menu')
+    response = requests.get('http://127.0.0.1:5000/api/menu')
     param = response.json()
-    flowers = param['flowers']
+    print("Ответ API:", param)
+
+    # Группируем цветы по имени, суммируя количество
+    flowers_dict = {}
+    for flower in param['flowers']:
+        name = flower['name']
+        if name in flowers_dict:
+            flowers_dict[name]['quantity'] = flower['quantity']
+        else:
+            flowers_dict[name] = flower.copy()  # Создаем копию, чтобы не изменять оригинал
+
     html = ""
-    for flower in flowers:
+    for flower in flowers_dict.values():
         html_temp = f"""
             <div class="flower">
-                <h3>{flower[1]}</h3>  
-                <p>Сорт: {flower[2]}</p>  
-                <p>Цвет: {flower[3]}</p>  
-               <p> Цена: {flower[5]} за штуку.</p>  
-                <button class="add-to-cart" data-name={flower[1]}
-                data-sort={flower[2]}
-                data-color={flower[3]}
-                data-price={flower[5]}>
+                <h3>{flower['name']}</h3>  
+                <p>Сорт: {flower['sort']}</p>  
+                <p>Цвет: {flower['color']}</p>  
+                <p>Цена: {flower['price']} за штуку.</p>
+                <p>В наличии: {flower['quantity']} шт.</p>
+                <button class="add-to-cart" data-name="{flower['name']}"
+                data-sort="{flower['sort']}"
+                data-color="{flower['color']}"
+                data-price="{flower['price']}">
                 Добавить в корзину</button>
             </div>
             """
         html += html_temp
+
     return render_template("menu.html", param=html)
 
 @app.route('/2weit/order/cart', methods=['POST'])
@@ -507,17 +521,6 @@ def availability_page():
 @app.route('/flower_add', methods=['POST'])
 def flower():
     data = request.json
-    if not data:
-        return jsonify({"error": "Данные не предоставлены"}), 400
-
-    required_fields = ["name", "sort", "color", "date", "price"]
-    missing_fields = [field for field in required_fields if field not in data or not data[field]]
-
-    if missing_fields:
-        return jsonify({
-            "error": "Не заполнены обязательные поля",
-            "missing_fields": missing_fields
-        }), 400
 
     name = data.get("name")
     sort = data.get("sort")
@@ -531,101 +534,150 @@ def flower():
     cur.execute(sql)
     cur._connection.commit()
 
-    return jsonify({"status": "OK", "message": "Flower added successfully!"})
+    return jsonify({"status": "OK", "message": "Цветок добавлен"})
+
+
+@app.route('/menu', methods=['GET'])
+def menu():
+    try:
+        sql = 'SELECT * FROM flowers'
+        cur.execute(sql)
+        flowers = []
+        for row in cur:
+            flowers.append(row)
+            print(row)
+
+        return jsonify({
+            "status": "OK",
+            "count": len(flowers),
+            "flowers": flowers
+        })
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e)})
+
+
+def get_db_connection():
+    return cnx  # Возвращаем уже созданное соединение, а не пытаемся его вызвать
+
+
+@app.route('/api/orders', methods=['GET'])
+def orders():
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        cur = conn.cursor(dictionary=True)
+
+        sql = 'SELECT * FROM orders JOIN order_items ON orders.id = order_items.order_id;'
+        cur.execute(sql)
+        orders_list = []
+
+        for row in cur:
+            orders_list.append(row)
+            print(row)
+
+        cur.close()
+        # cnx.close()
+
+        return jsonify({
+            "status": "OK",
+            "count": len(orders_list),
+            "orders": orders_list
+        })
+
+    except Exception as e:
+        return jsonify({"status": "ERROR", "message": str(e)})
 
 
 @app.route('/flower_new_price', methods=['POST'])
 def flower_new_price():
-    data = request.json
-    if not data:
-        return jsonify({"error": "Данные не предоставлены"}), 400
+    # Проверяем, что запрос содержит JSON
+    if not request.is_json:
+        return jsonify({"status": "ERROR", "message": "Запрос должен быть в формате JSON"}), 400
 
-    required_fields = ["id", "price"]
-    missing_fields = [field for field in required_fields if field not in data or data[field] is None]
-
-    if missing_fields:
-        return jsonify({
-            "error": "Не заполнены обязательные поля",
-            "missing_fields": missing_fields
-        }), 400
-
-    flower_id = data.get("id")
+    data = request.get_json()
+    flower_name = data.get("name")
     new_price = data.get("price")
 
-    try:
-        sql = f'UPDATE `flowers` SET `price` = "{new_price}" WHERE `id` = {flower_id}'
-        print(sql)
-        print(f"flower_id: {flower_id}, new_price: {new_price}")
+    if flower_name is None or new_price is None:
+        return jsonify({"status": "ERROR", "message": "Название и цена обязательны."}), 400
 
-        cur.execute(sql)
+    try:
+        # Безопасный запрос с параметрами
+        sql = "UPDATE `flowers` SET `price` = %s WHERE `name` = %s"
+        print(f"Executing: {sql} with params: ({new_price}, {flower_name})")
+
+        cur.execute(sql, (new_price, flower_name))
         cur._connection.commit()
 
-        return jsonify({"status": "OK", "message": "Цена успешно обновлена!"})
+        return jsonify({
+            "status": "OK",
+            "message": f"Цена цветов '{flower_name}' успешно обновлена!",
+            "affected_rows": cur.rowcount
+        })
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e)}), 500
 
 
 @app.route('/flower_quantity', methods=['POST'])
 def flower_quantity():
-    # Проверяем, что запрос содержит JSON
-    if not request.is_json:
-        return jsonify({
-            "status": "ERROR",
-            "message": "Запрос должен содержать JSON-данные (Content-Type: application/json)"
-        }), 400
-
     try:
-        # Получаем актуальные данные о цветах из основной таблицы
+        # Сначала получаем актуальные данные о количестве цветов
         sql_get_flowers = '''
-            SELECT name, COUNT(*) AS quantity, MAX(date) AS date_delivery
-            FROM flowers
-            GROUP BY name;
-        '''
+             SELECT name, COUNT(*) AS quantity, MAX(date) AS date_delivery
+             FROM flowers
+             GROUP BY name;
+         '''
         cur.execute(sql_get_flowers)
         current_flowers = cur.fetchall()
 
-        count_updated = 0
-        count_inserted = 0
+        count = 0
 
-        # Очищаем таблицу перед обновлением (альтернатива - использовать UPSERT)
-        cur.execute("TRUNCATE TABLE flowers_quantity")
-
-        # Вставляем актуальные данные
-        sql_insert = '''
-            INSERT INTO flowers_quantity (name, quantity, date_delivery)
-            VALUES (%s, %s, %s)
-        '''
-
+        # Для каждого цветка проверяем наличие и обновляем/вставляем
         for flower in current_flowers:
             name, quantity, date_delivery = flower
-            cur.execute(sql_insert, (name, quantity, date_delivery))
 
-            if cur.rowcount == 1:
-                count_inserted += 1
+            # Проверяем, существует ли уже запись с таким именем цветка
+            sql_check = "SELECT 1 FROM flowers_quantity WHERE name = %s"
+            cur.execute(sql_check, (name,))
+            exists = cur.fetchone()
+
+            if exists:
+                # Обновляем существующую запись
+                sql_update = '''
+                     UPDATE flowers_quantity 
+                     SET quantity = %s, date_delivery = %s
+                     WHERE name = %s
+                 '''
+                cur.execute(sql_update, (quantity, date_delivery, name))
+            else:
+                # Вставляем новую запись
+                sql_insert = '''
+                     INSERT INTO flowers_quantity (name, quantity, date_delivery)
+                     VALUES (%s, %s, %s)
+                 '''
+                cur.execute(sql_insert, (name, quantity, date_delivery))
+
+            count = 1
 
         cur._connection.commit()
 
         return jsonify({
             "status": "OK",
-            "inserted": count_inserted,
-            "message": f"Данные успешно обновлены! Добавлено {count_inserted} записей."
+            "count": count,
+            "message": "Данные успешно обновлены!"
         })
-
     except Exception as e:
-        cur._connection.rollback()
-        return jsonify({
-            "status": "ERROR",
-            "message": f"Ошибка при обновлении количества цветов: {str(e)}"
-        }), 500
+        cur.connection.rollback()
+        return jsonify({"status": "ERROR", "message": str(e)})
+
 
 @app.route('/flower_quantity_show', methods=['GET'])
 def flower_quantity_show():
     try:
         sql_select = '''
-             SELECT flowers.name, SUM(flowers_quantity.quantity) AS quantity
-             FROM flowers 
-             JOIN flowers_quantity ON flowers.name = flowers_quantity.name
-             GROUP BY flowers.name;
+             SELECT name, quantity, date_delivery
+             FROM flowers_quantity;
          '''
         print(f"Executing SQL: {sql_select}")
 
@@ -634,7 +686,8 @@ def flower_quantity_show():
 
         flower_list = [{
             "name": row[0],
-            "quantity": int(row[1])
+            "quantity": int(row[1]),
+            "date_delivery": row[2].strftime('%Y-%m-%d') if row[2] else None
         } for row in flowers]
 
         print(f"Found {len(flower_list)} flower types")
@@ -651,5 +704,6 @@ def flower_quantity_show():
             "status": "ERROR",
             "message": f"Ошибка при получении данных: {str(e)}"
         }), 500
+
 if __name__ == '__main__':
     app.run(debug=True, port=5005)

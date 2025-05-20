@@ -1,5 +1,5 @@
 :root {
-    --primary-color: #5d9b7b;
+    --primary-color: #CD4662;
     --secondary-color: #f8f9fa;
     --accent-color: #ff9a76;
     --text-color: #2d3748;
@@ -14,7 +14,6 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 body {
@@ -70,6 +69,7 @@ h2 {
     padding: 28px;
     transition: var(--transition);
     border: 1px solid var(--border-color);
+    margin-bottom: 1em;
 }
 
 .section:hover {
@@ -115,7 +115,7 @@ textarea:focus {
 }
 
 button {
-    background: linear-gradient(135deg, var(--primary-color), #4a8a6a);
+    background: linear-gradient(135deg, var(--primary-color),var(--primary-color) );
     color: var(--light-text);
     border: none;
     padding: 14px 28px;
@@ -133,7 +133,7 @@ button {
 }
 
 button:hover {
-    background: linear-gradient(135deg, #4a8a6a, var(--primary-color));
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color));
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(93, 155, 123, 0.25);
 }
@@ -177,7 +177,7 @@ th, td {
 }
 
 th {
-    background: linear-gradient(135deg, var(--primary-color), #4a8a6a);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-color));
     color: var(--light-text);
     font-weight: 600;
     text-transform: uppercase;
