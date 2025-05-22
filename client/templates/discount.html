@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>2WEIT flower | Скидки </title>
+    <link rel="stylesheet" href="/static/discount.css">
+    <link rel="stylesheet" href="/static/header_admin.css">
+    <link rel="stylesheet" href="/static/footer_admin.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    {% include "header_admin.html" %}
+  <main>
+    <div class="container">
+        <h1 class="mb-4">Добавление скидки</h1>
+
+        <div class="card">
+            <div class="card-body">
+                <form id="discountForm">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Имя пользователя</label>
+                        <input type="text" class="form-control" id="name" required>
+                        <div id="nameError" class="error-message"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="discount" class="form-label">Процент скидки</label>
+                        <input type="number" class="form-control" id="discount" min="0" max="100" step="0.1" required>
+                        <div id="discountError" class="error-message"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Добавить скидку</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="resultContainer" class="result-container card mt-4">
+            <div class="card-body">
+                <h5 class="card-title">Результат</h5>
+                <div id="resultContent"></div>
+            </div>
+        </div>
+    </div>
+  </main>
+    {% include "footer_admin.html" %}
+    <script>
+        document.getElementById('discountForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Сброс сообщений об ошибках
+            document.getElementById('nameError').textContent = '';
+            document.getElementById('discountError').textContent = '';
+            document.getElementById('resultContainer').style.display = 'none';
+
+            // Получение данных из формы
+            const name = document.getElementById('name').value.trim();
+            const discount = document.getElementById('discount').value;
+
+            // Валидация
+            let isValid = true;
+
+            if (!name) {
+                document.getElementById('nameError').textContent = 'Пожалуйста, введите имя пользователя';
+                isValid = false;
+            }
+
+            if (!discount || isNaN(discount) || discount < 0 || discount > 100) {
+                document.getElementById('discountError').textContent = 'Пожалуйста, введите корректный процент скидки (0-100)';
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // Отправка данных на сервер
+            fetch('/add_discount', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: name,
+                    discount_percent: parseFloat(discount)
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            })
+            .then(data => {
+                const resultContainer = document.getElementById('resultContainer');
+                const resultContent = document.getElementById('resultContent');
+
+                if (data.error) {
+                    resultContent.innerHTML = `
+                        <div class="alert alert-danger">
+                            <strong>Ошибка:</strong> ${data.error}
+                            ${data.missing_fields ? `<br>Отсутствуют поля: ${data.missing_fields.join(', ')}` : ''}
+                            ${data.details ? `<br>Детали: ${data.details}` : ''}
+                        </div>
+                    `;
+                } else {
+                    resultContent.innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>Успешно!</strong> ${data.message}
+                            <br>ID пользователя: ${data.user_id}
+                            <br>Процент скидки: ${data.discount_percent}%
+                        </div>
+                    `;
+                }
+
+                resultContainer.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('resultContent').innerHTML = `
+                    <div class="alert alert-danger">
+                        <strong>Ошибка:</strong> ${error.error || 'Неизвестная ошибка'}
+                        ${error.details ? `<br>Детали: ${error.details}` : ''}
+                    </div>
+                `;
+                document.getElementById('resultContainer').style.display = 'block';
+            });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

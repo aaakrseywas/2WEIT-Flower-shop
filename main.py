@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, request, jsonify
 from db import cur, cnx
 import jwt
@@ -405,6 +406,7 @@ def apply_discount():
             "error": "Ошибка при обработке запроса",
             "details": str(e)
         }), 500
+
 
 @app.route('/add_discount', methods=['POST'])
 def add_discount():

@@ -229,4 +229,66 @@ main {
     background: #fef0f0;
 }
 
+ .discount-section {
+        margin: 20px 0;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+    }
+
+    .discount-form {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    #discount-name {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .discount-btn {
+        padding: 10px 15px;
+        background-color: #CD4662;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .discount-btn:hover {
+        background-color: #cc2162;
+    }
+
+    .discount-message {
+        margin-top: 10px;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    .discount-message.success {
+        color: #155724;
+        background-color: #d4edda;
+    }
+
+    .discount-message.error {
+        color: #721c24;
+        background-color: #f8d7da;
+    }
+
+    .discount-info {
+        color: #6c757d;
+        margin: 5px 0;
+    }
+
+    .final-price {
+        font-weight: bold;
+        color: #28a745;
+        font-size: 1.1em;
+    }
+
 

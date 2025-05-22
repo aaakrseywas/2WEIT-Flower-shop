@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     {% for item in cart %}
                         <li class="cart-item">
                             <span class="item-name">{{ item.name }}</span>
-                            <span class="item-details">({{ item.sort }}, {{ item.color }})</span>
+                            <span class="item-details">{{ item.sort }} {{ item.color }}</span>
                             <span class="item-quantity"> {{ item.quantity }}</span>
                             <span class="item-price">{{ item.price }} руб.</span>
                         </li>

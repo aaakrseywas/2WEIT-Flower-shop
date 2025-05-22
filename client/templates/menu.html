@@ -18,9 +18,9 @@
 </head>
 <body>
     {% include "header.html" %}
-    <main>
+<main>
     <div class="hero-section">
-        <img src="/static/12.png" alt="Цветочная композиция" class="hero-image">
+        <img src="/static/photo/12.png" alt="Цветочная композиция" class="hero-image">
         <div class="hero-content">
             <h1 class="hero-title">СОБЕРИТЕ БУКЕТ САМИ ИЛИ ВОЗЬМИТЕ ГОТОВЫЙ!</h1>
             <p class="hero-description">Не бойтесь экспериментировать и добавлять свои любимые элементы — будь то зелень, сухоцветы или необычные аксессуары. Создайте свой идеальный букет, который станет не только украшением вашего дома, но и прекрасным подарком для близких!</p>
@@ -31,9 +31,216 @@
         <p>Выберите цветы из которых хотите собрать букет, а наши сотрудники соберут и украсят ваш букет.</p>
     </div>
 
-    <div class="flowers-grid">
+    <div class="products-grid">
         {{ param | safe }}
     </div>
+
+    <div class="title">
+        <h1>Букеты из свежих цветов</h1>
+        <p class="subtitle">Выберите идеальный букет для любого случая</p>
+    </div>
+
+    <div class="products-grid bouquets-menu">
+        <!-- Букет 1 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Розовый рай.png" alt="Розовый рай" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Розовый рай</h3>
+                <p class="product-description">Нежный букет из розовых роз и эустомы с зеленью</p>
+                <p class="product-price">3 500 ₽</p>
+                            <form class="bouquet-form">
+                <input type="hidden" name="bouquet_name" value="Розовый рай">
+                <input type="hidden" name="bouquet_price" value="3500">
+                <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+            </form>
+            </div>
+        </div>
+
+        <!-- Букет 2 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Весенняя мечта.png" alt="Весенняя мечта" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Весенняя мечта</h3>
+                <p class="product-description">Яркие ромашки и лапчатка индийская в весенней композиции</p>
+                <p class="product-price">2 800 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Весенняя мечта">
+                    <input type="hidden" name="bouquet_price" value="2800">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Букет 3 -->
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Королевский.png" alt="Королевский" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Королевский</h3>
+                <p class="product-description">Роскошные красные розы в обрамлении гипсофилы</p>
+                <p class="product-price">4 200 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Королевский">
+                    <input type="hidden" name="bouquet_price" value="4200">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+         <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Нежность.png" alt="Нежность" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Нежность</h3>
+                <p class="product-description">Белые пионы и розы в облаке зелени</p>
+                <p class="product-price">3 900 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Нежность">
+                    <input type="hidden" name="bouquet_price" value="3900">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+
+           <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Экзотика.png" alt="Экзотика" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Экзотика</h3>
+                <p class="product-description">Орхидеи, протеи и другие экзотические цветы</p>
+                <p class="product-price">5 500 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Экзотика">
+                    <input type="hidden" name="bouquet_price" value="5500">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Свадебный.png" alt="Свадебный" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Свадебный</h3>
+                <p class="product-description">Нежные белые цветы для невесты в кружевной упаковке</p>
+                <p class="product-price">8 800 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Свадебный">
+                    <input type="hidden" name="bouquet_price" value="8800">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Яркое солнце.png" alt="Яркое солнце" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Яркое солнце</h3>
+                <p class="product-description">Желтые цветы в крафтовой бумаге</p>
+                <p class="product-price">4 600 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Яркое солнце">
+                    <input type="hidden" name="bouquet_price" value="4600">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Алый.png" alt="Алый" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Алый</h3>
+                <p class="product-description">Алый букет из роз и других ярких цветов</p>
+                <p class="product-price">5 200 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Алый">
+                    <input type="hidden" name="bouquet_price" value="5200">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Клубника и голубика.png" alt="Клубника и голубика" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Клубника и голубика</h3>
+                <p class="product-description">Красные пионы и незабудки создают эффект ягод в букете</p>
+                <p class="product-price">6 500 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Клубника и голубика">
+                    <input type="hidden" name="bouquet_price" value="6500">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Небесный дождь.png" alt="Небесный дождь" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Небесный дождь</h3>
+                <p class="product-description">Нежные голубые гипсофилы</p>
+                <p class="product-price">5 900 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Небесный дождь">
+                    <input type="hidden" name="bouquet_price" value="5900">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Пляжный.png" alt="Пляжный" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Пляжный</h3>
+                <p class="product-description">Добавленная в букет плюмерия в букет создает атмосфера пляжа</p>
+                <p class="product-price">4 700 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Пляжный">
+                    <input type="hidden" name="bouquet_price" value="4700">
+                    <button type="button" class="action-btn order-btn add-bouquet">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <div class="product-image-container">
+                <img src="/static/photo/Букет из лилии.png" alt="Букет из Лилии" class="product-image">
+            </div>
+            <div class="product-info">
+                <h3 class="product-name">Букет из Лилии</h3>
+                <p class="product-description">Простой, но интересный букет из Лилий </p>
+                <p class="product-price">3 100 ₽</p>
+                <form class="bouquet-form">
+                    <input type="hidden" name="bouquet_name" value="Букет из Лилии">
+                    <input type="hidden" name="bouquet_price" value="3100">
+                    <button type="button" class="action-btn order-btn add-bouquet" onclick="updateButtonAppearance(this)">Заказать</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+
+
 
     <div class="cart-footer">
         <a href="/2weit/order" class="checkout-btn">Оформить заказ</a>
@@ -41,49 +248,130 @@
 </main>
     {% include "footer.html" %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.add-to-cart');
+ document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация корзины в localStorage
+    if (!localStorage.getItem('cart')) {
+        localStorage.setItem('cart', JSON.stringify([]));
+    }
 
-    buttons.forEach(button => {
-        let count = 0;
+    // Обработчики для кнопок с классом add-to-cart (цветы)
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        let count = parseInt(button.dataset.count) || 0;
 
         button.addEventListener('click', function() {
             count++;
 
-            // Получаем данные из data-атрибутов кнопки
-            console.log(this.dataset);
-            const productName = this.dataset.name;
-            const productSort = this.dataset.sort;
-            const productColor = this.dataset.color;
-            const productPrice = parseFloat(this.dataset.price);
+            const productData = {
+                name: this.dataset.name,
+                sort: this.dataset.sort,
+                color: this.dataset.color,
+                price: parseFloat(this.dataset.price),
+                count: count
+            };
 
-            // Отправляем данные на сервер
-            fetch('/2weit/order/cart', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `flower_name=${encodeURIComponent(productName)}&flower_sort=${encodeURIComponent(productSort)}&flower_color=${encodeURIComponent(productColor)}&flower_price=${encodeURIComponent(productPrice)}`
-            })
-            .then(response => {
-                if(response.ok) {
-                    if(count === 1) {
-                        this.innerHTML = 'В корзине <span class="count">1</span> ✓';
-                        this.classList.add('in-cart');
-                        this.style.backgroundColor = '#a0a0a0';
-                    } else {
-                        this.innerHTML = `В корзине <span class="count">${count}</span> ✓`;
-                    }
+            // Обновляем сервер
+            updateServerCart(productData, this);
 
-                    // Анимация
-                    this.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
-                }
-            });
+            // Обновляем локальную корзину
+            updateLocalCart(productData);
+
+            // Обновляем вид кнопки
+            updateButtonAppearance(this, count);
         });
     });
+
+    // Обработчики для кнопок с классом add-bouquet (букеты)
+    document.querySelectorAll('.add-bouquet').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('form');
+            const productData = {
+                name: form.querySelector('input[name="bouquet_name"]').value,
+                price: parseFloat(form.querySelector('input[name="bouquet_price"]').value),
+                count: 1
+            };
+
+            // Обновляем сервер
+            updateServerCart(productData, this);
+
+            // Обновляем локальную корзину
+            updateLocalCart(productData);
+
+            // Обновляем вид кнопки
+            updateButtonAppearance(this, 1);
+        });
+    });
+
+    // Функция для обновления корзины на сервере
+    function updateServerCart(productData, buttonElement) {
+        fetch('/2weit/order/cart', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `flower_name=${encodeURIComponent(productData.name)}` +
+                  `&flower_sort=${encodeURIComponent(productData.sort || '')}` +
+                  `&flower_color=${encodeURIComponent(productData.color || '')}` +
+                  `&flower_price=${encodeURIComponent(productData.price)}` +
+                  `&flower_count=${encodeURIComponent(productData.count || 1)}`
+        }).then(response => {
+            if (!response.ok) {
+                console.error('Ошибка при обновлении корзины на сервере');
+            }
+        }).catch(error => {
+            console.error('Ошибка сети:', error);
+        });
+    }
+
+    // Функция для обновления локальной корзины
+    function updateLocalCart(productData) {
+        const cart = JSON.parse(localStorage.getItem('cart'));
+
+        // Ищем товар в корзине
+        const existingItemIndex = cart.findIndex(item =>
+            item.name === productData.name &&
+            (item.sort || '') === (productData.sort || '') &&
+            (item.color || '') === (productData.color || '')
+        );
+
+        if (existingItemIndex >= 0) {
+            // Обновляем существующий товар
+            cart[existingItemIndex].count = productData.count || cart[existingItemIndex].count + 1;
+        } else {
+            // Добавляем новый товар
+            cart.push({
+                name: productData.name,
+                sort: productData.sort || '',
+                color: productData.color || '',
+                price: productData.price,
+                count: productData.count || 1
+            });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    // Функция для обновления вида кнопки
+    function updateButtonAppearance(button, count) {
+        if (count === 1) {
+            button.innerHTML = 'В корзине <span class="count">1</span> ✓';
+            button.classList.add('in-cart');
+            button.style.backgroundColor = '#a0a0a0';
+        } else {
+            button.innerHTML = `В корзине <span class="count">${count}</span> ✓`;
+        }
+
+        // Анимация
+        button.style.transform = 'scale(1.05)';
+        setTimeout(() => {
+            button.style.transform = 'scale(1)';
+        }, 200);
+    }
+
+    // Функция для парсинга цены (удаляет всё, кроме цифр)
+    function parsePrice(priceString) {
+        return parseFloat(priceString.replace(/[^\d.]/g, ''));
+    }
 });
 </script>
 </body>

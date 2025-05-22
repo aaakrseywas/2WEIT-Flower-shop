@@ -210,18 +210,20 @@ def menu_page():
     html = ""
     for flower in flowers_dict.values():
         html_temp = f"""
-            <div class="flower">
-                <h3>{flower['name']}</h3>  
-                <p>Сорт: {flower['sort']}</p>  
-                <p>Цвет: {flower['color']}</p>  
-                <p>Цена: {flower['price']} за штуку.</p>
-                <p>В наличии: {flower['quantity']} шт.</p>
-                <button class="add-to-cart" data-name="{flower['name']}"
-                data-sort="{flower['sort']}"
-                data-color="{flower['color']}"
-                data-price="{flower['price']}">
-                Добавить в корзину</button>
-            </div>
+            <div class="product-card">
+                <div class="product-info">
+                    <h3 class="product-name">{flower['name']}</h3>  
+                    <p class="product-description">Сорт: {flower['sort']}</p>  
+                    <p class="product-description">Цвет: {flower['color']}</p> 
+                    <p class="product-description">В наличии: {flower['quantity']} шт.</p> 
+                    <p class="product-price"> {flower['price']}₽ за штуку.</p>
+                    <button class="action-btn add-to-cart" data-name="{flower['name']}"
+                    data-sort="{flower['sort']}"
+                    data-color="{flower['color']}"
+                    data-price="{flower['price']}">
+                    Добавить в корзину</button>
+                </div>
+            </div> 
             """
         html += html_temp
 
@@ -345,23 +347,22 @@ def admin_page():
 @app.route("/2weit/orders", methods=["GET"])
 def orders_page():
     try:
+
         response = requests.get('http://127.0.0.1:5000/api/orders')
         response.raise_for_status()
         param = response.json()
         print("Ответ API:", param)
 
-        orders = param.get('orders', [])
+        # Создаем словарь для группировки заказов
         grouped_orders = {}
-        print(len(orders))
-        print(orders)
-        for order in orders:
 
+        for order in param.get('orders', []):
             try:
                 order_id = order.get('order_id')
                 if not order_id:
                     continue
 
-                # Если заказ с таким order_id еще не добавлен
+                # Инициализируем заказ, если его еще нет
                 if order_id not in grouped_orders:
                     grouped_orders[order_id] = {
                         'order_info': {
@@ -370,28 +371,32 @@ def orders_page():
                             'address': order.get('address', 'Не указан'),
                             'email': order.get('email', 'Не указан'),
                             'payment_method': order.get('payment_method', 'Не указан'),
-                            'final_amount': order.get('final_amount', 0),
+                            'final_amount': float(order.get('final_amount', 0)),
                             'comment': order.get('comment', 'нет'),
-                            'status': order.get('status', 'new')
+                            'status': order.get('status', 'new').lower()
                         },
                         'order_items': []
                     }
 
-                # Добавляем элементы заказа, если они есть
-                if 'flower_name' in order and order.get('order_id') == order_id:
+                # Добавляем товары в заказ
+                if order.get('flower_name') or order.get('bouquet_name'):
+                    item_name = order.get('flower_name') or order.get('bouquet_name')
+                    item_type = 'flower' if order.get('flower_name') else 'bouquet'
+
                     grouped_orders[order_id]['order_items'].append({
-                        'flower_name': order.get('flower_name', 'Неизвестный цветок'),
-                        'flower_sort': order.get('flower_sort', 'Не указан'),
-                        'color': order.get('color', 'Не указан'),
-                        'quantity': order.get('quantity', 1),
-                        'price': order.get('price', 0)
+                        'name': item_name,
+                        'type': item_type,
+                        'sort': order.get('flower_sort', 'Не указан') if item_type == 'flower' else 'Букет',
+                        'color': order.get('color', 'Не указан') if item_type == 'flower' else '',
+                        'quantity': int(order.get('quantity', 1)),
+                        'price': float(order.get('price', 0))
                     })
-                    print(len(grouped_orders[order_id]['order_items']))
 
             except Exception as e:
-                print(f"Ошибка обработки заказа: {e}")
+                print(f"Ошибка обработки заказа {order.get('order_id')}: {str(e)}")
                 continue
 
+        # Генерация HTML
         html = ""
         for order_id, order_data in grouped_orders.items():
             main_order = order_data['order_info']
@@ -406,25 +411,39 @@ def orders_page():
                 'completed': 'Готово'
             }
 
+        for order_id, order_data in grouped_orders.items():
+            main_order = order_data['order_info']
+            items = order_data['order_items']
+            current_status = main_order['status']
 
             html_temp = f"""
-            <div class="order-card {'completed' if status == 'completed' else ''}">
-                <h3>Заказ #{order_id}</h3>
-                <p>Клиент: {main_order['customer_name']}</p>
-                <p>Адрес: {main_order['address']}</p>
-                <p>Email: {main_order['email']}</p>
-                <p>Способ оплаты: {main_order['payment_method']}</p>
-                <p>Сумма: {main_order['final_amount']} руб.</p>
-                <p>Комментарий: {main_order['comment']}</p>
-                <div class="items">
+            <div class="order-card {current_status}">
+                <div class="order-header">
+                    <h3>Заказ #{order_id}</h3>
+                </div>
+                <div class="order-details">
+                    <p><strong>Клиент:</strong> {main_order['customer_name']}</p>
+                    <p><strong>Адрес:</strong> {main_order['address']}</p>
+                    <p><strong>Email:</strong> {main_order['email']}</p>
+                    <p><strong>Способ оплаты:</strong> {main_order['payment_method']}</p>
+                    <p><strong>Сумма:</strong> {main_order['final_amount']:.2f} руб.</p>
+                    <p><strong>Комментарий:</strong> {main_order['comment']}</p>
+                </div>
+                <div class="order-items">
                     <h4>Состав заказа:</h4>"""
 
             for item in items:
+                item_type = "Цветок" if item['sort'] else "Букет"
                 html_temp += f"""
                     <div class="order-item">
-                        <p>{item['flower_name']} ({item['flower_sort']}, {item['color']})</p>
-                        <p>{item['quantity']} шт. × {item['price']} руб.</p>
+                        <p>{item['name']} ({item_type}{', ' + item['sort'] if item['sort'] else ''}{', ' + item['color'] if item['color'] else ''})</p>
+                        <p>{item['quantity']} шт. × {item['price']:.2f} руб. = {item['quantity'] * item['price']:.2f} руб.</p>
                     </div>"""
+
+            html_temp += f"""
+                </div>
+                <div class="status-actions" data-order-id="{order_id}">
+                    <p>Изменить статус:</p>"""
 
             html_temp += f"""
                 </div>
@@ -443,10 +462,10 @@ def orders_page():
         return render_template("orders.html", param=html)
 
     except requests.exceptions.RequestException as e:
-        print(f"Ошибка при запросе к API: {e}")
+        print(f"Ошибка при запросе к API: {str(e)}")
         return render_template("error.html", error="Не удалось загрузить данные заказов")
     except Exception as e:
-        print(f"Неожиданная ошибка: {e}")
+        print(f"Неожиданная ошибка: {str(e)}")
         return render_template("error.html", error="Произошла ошибка при обработке данных")
 
 @app.route("/api/orders/<int:order_id>/status", methods=["POST"])
@@ -516,6 +535,63 @@ def delivery_page():
 @app.route("/2weit/availability", methods=["GET"])
 def availability_page():
     return render_template("availability.html")
+
+@app.route("/2weit/discount", methods=["GET"])
+def discount_page():
+    return render_template("discount.html")
+
+@app.route('/add_discount', methods=['POST'])
+def add_discount():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Данные не предоставлены"}), 400
+
+    required_fields = ["name", "discount_percent"]
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        return jsonify({
+            "error": "Не заполнены обязательные поля",
+            "missing_fields": missing_fields
+        }), 400
+
+    name = data["name"]
+    try:
+        discount_percent = float(data["discount_percent"])
+    except ValueError:
+        return jsonify({"error": "Некорректное значение скидки"}), 400
+
+    try:
+        sql_user = "SELECT User_ID FROM Users WHERE name = %s"
+        cur.execute(sql_user, (name,))
+        user_result = cur.fetchone()
+
+        if not user_result:
+            return jsonify({"error": "Пользователь не найден"}), 404
+
+        user_id = user_result[0]  # Используем числовой индекс для доступа к User_ID
+
+        sql_discount = """
+            INSERT INTO discounts (user_id, discount_percent) 
+            VALUES (%s, %s) 
+            ON DUPLICATE KEY UPDATE discount_percent = %s
+        """
+        cur.execute(sql_discount, (user_id, discount_percent, discount_percent))
+        cur._connection.commit()
+
+        return jsonify({
+            "status": "success",
+            "message": "Скидка добавлена или обновлена",
+            "user_id": user_id,
+            "discount_percent": discount_percent
+        })
+
+    except Exception as e:
+        return jsonify({
+            "error": "Ошибка при выполнении запроса",
+            "details": str(e)
+        }), 500
 
 
 @app.route('/flower_add', methods=['POST'])

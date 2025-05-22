@@ -37,6 +37,13 @@
                 <p>Просмотр и модерация отзывов</p>
             </a>
 
+            <a href="{{ url_for('discount_page') }}" class="dashboard-card">
+                <div class="card-icon">
+                    <i class="fas fa-boxes"></i>
+                </div>
+                <h3>Скидки клиентов</h3>
+                <p>Управление скидками</p>
+
             <a href="{{ url_for('availability_page') }}" class="dashboard-card">
                 <div class="card-icon">
                     <i class="fas fa-boxes"></i>
@@ -44,6 +51,7 @@
                 <h3>Наличие товаров</h3>
                 <p>Управление складскими запасами</p>
             </a>
+
          </main>
     {% include "footer_admin.html" %}
 </body>
