@@ -27,7 +27,7 @@ body {
 /* Герой-секция */
 .hero-section {
     position: relative;
-    height: 500px;
+    height: 700px;
     margin-bottom: 40px;
     overflow: hidden;
     border-radius: 0 0 var(--border-radius) var(--border-radius);

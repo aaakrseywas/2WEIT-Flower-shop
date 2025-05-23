@@ -15,25 +15,105 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
 
+<body>
+    {% include "header.html" %}
+<main>
+    <div class="cart-container">
+        <h1 class="cart-title">КОРЗИНА</h1>
+        <div class="cart-content">
+            <h3 class="cart-subtitle">Ваши заказы:</h3>
+            {% if cart %}
+                <ul class="cart-items">
+                    {% for item in cart %}
+                        <li class="cart-item">
+                            <span class="item-name">{{ item.name }}</span>
+                            <span class="item-details">{{ item.sort }} {{ item.color }}</span>
+                            <span class="item-quantity"> {{ item.quantity }}</span>
+                            <span class="item-price">{{ item.price }} руб.</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="cart-total">
+                    <p>Итоговая сумма: <span id="totalPrice">{{ total_price }}</span> руб.</p>
+                    <p id="discountInfo" style="display: none;">
+                        Скидка: <span id="discountAmount">0</span> руб.
+                        Итого со скидкой: <span id="finalAmount">{{ total_price }}</span> руб.
+                    </p>
+                </div>
+            {% else %}
+                <div class="empty-cart">
+                    <p>Ваша корзина пуста</p>
+                    <a href="/2weit/menu" class="continue-shopping-btn">Выбрать цветы</a>
+                </div>
+            {% endif %}
+
+            {% if cart %}
+                <div class="cart-actions">
+                    <a href="/2weit/menu" class="add-more-btn">Добавить еще цветы</a>
+                    <button id="openDiscountModalBtn" class="apply-discount-btn">Применить скидку</button>
+
+                    <!-- Форма оформления заказа -->
+                    <form class="checkout-form" action="/2weit/order" method="post">
+                        <h4>Оформление заказа</h4>
+                        <input type="hidden" id="finalPriceInput" name="final_price" value="{{ total_price }}">
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Ваше имя" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="comment" placeholder="Комментарий(необязательно)">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="address" placeholder="Адрес доставки" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <select name="payment_method" required>
+                                <option value="" disabled selected>Выберите способ оплаты</option>
+                                <option value="card">Банковская карта</option>
+                                <option value="cash">Наличные при получении</option>
+                            </select>
+                        </div>
+                        <div class="form-buttons">
+                            <button type="submit" class="checkout-btn">Подтвердить заказ</button>
+                            <button type="submit" formaction="/2weit/order/clear_cart" class="clear-cart-btn">Очистить корзину</button>
+                        </div>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Модальное окно для скидки -->
+    <div id="discountModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Применить скидку</h3>
+            <div class="form-group">
+                <input type="text" id="userName" placeholder="Код или имя пользователя" required>
+            </div>
+            <button id="applyDiscountBtn" class="apply-discount-btn">Применить</button>
+            <div id="discountMessage" class="discount-message"></div>
+        </div>
+    </div>
+</main>
+    {% include "footer.html" %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const buttons = document.querySelectorAll('.add-to-cart');
 
     buttons.forEach(button => {
-        // Инициализируем счетчик для каждой кнопки
         let count = 0;
 
         button.addEventListener('click', function() {
             count++;
-
-            // Получаем данные о товаре из формы
             const form = this.closest('form');
             const productName = form.querySelector('input[name="flower_name"]').value;
-            const productType = form.querySelector('input[name="flower_sort"]').value;
+            const productSort = form.querySelector('input[name="flower_sort"]').value;
             const productColor = form.querySelector('input[name="flower_color"]').value;
             const productPrice = parseFloat(form.querySelector('input[name="flower_price"]').value);
 
-            // Отправляем данные на сервер
             fetch('/add_to_cart', {
                 method: 'POST',
                 headers: {
@@ -59,7 +139,6 @@ document.addEventListener('DOMContentLoaded', function() {
                         this.innerHTML = `В корзине <span class="count">${count}</span> ✓`;
                     }
 
-                    // Анимация
                     this.style.transform = 'scale(1.05)';
                     setTimeout(() => {
                         this.style.transform = 'scale(1)';
@@ -68,70 +147,129 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     });
-});
-</script>
-<body>
-    {% include "header.html" %}
-     <main>
-    <div class="cart-container">
-        <h1 class="cart-title">КОРЗИНА</h1>
-        <div class="cart-content">
-            <h3 class="cart-subtitle">Ваши заказы:</h3>
-            {% if cart %}
-                <ul class="cart-items">
-                    {% for item in cart %}
-                        <li class="cart-item">
-                            <span class="item-name">{{ item.name }}</span>
-                            <span class="item-details">{{ item.sort }} {{ item.color }}</span>
-                            <span class="item-quantity"> {{ item.quantity }}</span>
-                            <span class="item-price">{{ item.price }} руб.</span>
-                        </li>
-                    {% endfor %}
-                </ul>
-                <div class="cart-total">
-                    <p>Итоговая сумма: <span>{{ total_price }} руб.</span></p>
-                </div>
-            {% else %}
-                <div class="empty-cart">
-                    <p>Ваша корзина пуста</p>
-                    <a href="/2weit/menu" class="continue-shopping-btn">Выбрать цветы</a>
-                </div>
-            {% endif %}
 
-            {% if cart %}
-                <div class="cart-actions">
-                    <a href="/2weit/menu" class="add-more-btn">Добавить еще цветы</a>
-                    <form class="checkout-form" action="/2weit/order" method="post">
-                        <h4>Оформление заказа</h4>
-                        <div class="form-group">
-                            <input type="text" name="name" placeholder="Ваше имя" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="comment" placeholder="Комментарий(необязательно)" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" name="address" placeholder="Адрес доставки" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" name="email" placeholder="Email" required>
-                        </div>
-                        <div class="form-group">
-                            <select name="payment_method" required>
-                                <option value="" disabled selected>Выберите способ оплаты</option>
-                                <option value="card">Банковская карта</option>
-                                <option value="cash">Наличные при получении</option>
-                            </select>
-                        </div>
-                        <div class="form-buttons">
-                            <button type="submit" class="checkout-btn">Подтвердить заказ</button>
-                            <button type="submit" formaction="/2weit/order/clear_cart" class="clear-cart-btn">Очистить корзину</button>
-                        </div>
-                    </form>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</main>
-    {% include "footer.html" %}
+    // Обработчик для кнопки применения скидки
+    document.getElementById('applyDiscountBtn').addEventListener('click', function() {
+        const userName = document.getElementById('userName').value.trim();
+        const originalAmount = parseFloat(document.getElementById('totalPrice').textContent);
+        const discountMessage = document.getElementById('discountMessage');
+
+        if (!userName) {
+            discountMessage.textContent = 'Пожалуйста, введите ваше имя';
+            discountMessage.style.color = 'red';
+            return;
+        }
+
+        fetch('/apply_discount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_name: userName,
+                original_amount: originalAmount
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                discountMessage.textContent = data.error;
+                discountMessage.style.color = 'red';
+                return;
+            }
+
+            if (data.status === 'no_discount') {
+                discountMessage.textContent = data.message;
+                discountMessage.style.color = 'orange';
+                return;
+            }
+
+            discountMessage.textContent = data.message;
+            discountMessage.style.color = 'green';
+            document.getElementById('discountAmount').textContent = data.discount_amount.toFixed(2);
+            document.getElementById('finalAmount').textContent = data.final_amount.toFixed(2);
+            document.getElementById('finalPriceInput').value = data.final_amount.toFixed(2);
+            document.getElementById('discountInfo').style.display = 'block';
+        })
+        .catch(error => {
+            discountMessage.textContent = 'Ошибка при применении скидки';
+            discountMessage.style.color = 'red';
+            console.error('Error:', error);
+        });
+    }); // Closing for applyDiscountBtn click handler
+}); // Closing for DOMContentLoaded
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('discountModal');
+        const openBtn = document.getElementById('openDiscountModalBtn');
+        const closeBtn = document.querySelector('.close-modal');
+        const applyBtn = document.getElementById('applyDiscountBtn');
+
+        // Открытие модального окна
+        openBtn.addEventListener('click', function() {
+            modal.style.display = 'block';
+        });
+
+        // Закрытие модального окна
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Закрытие при клике вне окна
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Применение скидки
+        applyBtn.addEventListener('click', function() {
+            const userName = document.getElementById('userName').value;
+            const discountCode = document.getElementById('discountCode').value;
+            const discountMessage = document.getElementById('discountMessage');
+
+            if (!userName) {
+                discountMessage.textContent = 'Пожалуйста, введите ваше имя';
+                discountMessage.style.color = 'red';
+                return;
+            }
+
+            // Здесь должна быть логика проверки скидки
+            // Примерная реализация:
+            let discount = 0;
+            if (discountCode === 'FLOWER10') {
+                discount = 10;
+            } else if (discountCode === 'FLOWER20') {
+                discount = 20;
+            } else if (discountCode) {
+                discountMessage.textContent = 'Неверный код скидки';
+                discountMessage.style.color = 'red';
+                return;
+            }
+
+            if (discount > 0) {
+                const totalPrice = parseFloat(document.getElementById('totalPrice').textContent);
+                const discountAmount = (totalPrice * discount / 100).toFixed(2);
+                const finalAmount = (totalPrice - discountAmount).toFixed(2);
+
+                document.getElementById('discountAmount').textContent = discountAmount;
+                document.getElementById('finalAmount').textContent = finalAmount;
+                document.getElementById('finalPriceInput').value = finalAmount;
+                document.getElementById('discountInfo').style.display = 'block';
+
+                discountMessage.textContent = `Скидка ${discount}% успешно применена!`;
+                discountMessage.style.color = 'green';
+
+                // Закрываем модальное окно через 2 секунды
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 2000);
+            } else {
+                discountMessage.textContent = 'Введите код скидки для получения скидки';
+                discountMessage.style.color = 'blue';
+            }
+        });
+    });
+</script>
 </body>
 </html>

@@ -14,121 +14,164 @@
 </head>
 <body>
     {% include "header_admin.html" %}
-  <main>
-    <div class="container">
-        <h1 class="mb-4">Добавление скидки</h1>
+    <main>
+        <div class="container">
+            <h1 class="mb-4">Добавление скидки</h1>
 
-        <div class="card">
-            <div class="card-body">
-                <form id="discountForm">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Имя пользователя</label>
-                        <input type="text" class="form-control" id="name" required>
-                        <div id="nameError" class="error-message"></div>
+            <div class="card">
+                <div class="card-body">
+                    <form id="discountForm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Имя пользователя</label>
+                            <input type="text" class="form-control" id="name" required>
+                            <div id="nameError" class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="discount" class="form-label">Процент скидки</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="discount" min="0" max="100" step="0.1" required>
+                                <span class="input-group-text"></span>
+                            </div>
+                            <div id="discountError" class="invalid-feedback"></div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <span id="submitText">Добавить скидку</span>
+                            <span id="spinner" class="spinner-border spinner-border-sm d-none" role="status"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="resultContainer" class="mt-4" style="display: none;">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="resultContent"></div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="discount" class="form-label">Процент скидки</label>
-                        <input type="number" class="form-control" id="discount" min="0" max="100" step="0.1" required>
-                        <div id="discountError" class="error-message"></div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Добавить скидку</button>
-                </form>
+                </div>
             </div>
         </div>
-
-        <div id="resultContainer" class="result-container card mt-4">
-            <div class="card-body">
-                <h5 class="card-title">Результат</h5>
-                <div id="resultContent"></div>
-            </div>
-        </div>
-    </div>
-  </main>
+    </main>
     {% include "footer_admin.html" %}
     <script>
-        document.getElementById('discountForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        document.getElementById('discountForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
 
-            // Сброс сообщений об ошибках
-            document.getElementById('nameError').textContent = '';
-            document.getElementById('discountError').textContent = '';
-            document.getElementById('resultContainer').style.display = 'none';
+    // Элементы формы
+    const form = e.target;
+    const nameInput = document.getElementById('name');
+    const discountInput = document.getElementById('discount'); // Исправлено здесь
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const submitText = document.getElementById('submitText');
+    const spinner = document.getElementById('spinner');
 
-            // Получение данных из формы
-            const name = document.getElementById('name').value.trim();
-            const discount = document.getElementById('discount').value;
+    // Сброс состояния
+    nameInput.classList.remove('is-invalid');
+    discountInput.classList.remove('is-invalid');
+    document.getElementById('nameError').textContent = '';
+    document.getElementById('discountError').textContent = '';
+    document.getElementById('resultContainer').style.display = 'none';
+
+    // Получение данных
+    const formData = {
+        name: nameInput.value.trim(),
+        discount_percent: parseFloat(discountInput.value)
+    };
 
             // Валидация
             let isValid = true;
 
-            if (!name) {
-                document.getElementById('nameError').textContent = 'Пожалуйста, введите имя пользователя';
+            if (!formData.name) {
+                nameInput.classList.add('is-invalid');
+                document.getElementById('nameError').textContent = 'Введите имя пользователя';
                 isValid = false;
             }
 
-            if (!discount || isNaN(discount) || discount < 0 || discount > 100) {
-                document.getElementById('discountError').textContent = 'Пожалуйста, введите корректный процент скидки (0-100)';
+            if (isNaN(formData.discount_percent)) {  // Добавлена закрывающая скобка
+                discountInput.classList.add('is-invalid');
+                document.getElementById('discountError').textContent = 'Введите число';
+                isValid = false;
+            } else if (formData.discount_percent < 0 || formData.discount_percent > 100) {
+                discountInput.classList.add('is-invalid');
+                document.getElementById('discountError').textContent = 'Скидка должна быть от 0 до 100%';
                 isValid = false;
             }
 
             if (!isValid) return;
 
-            // Отправка данных на сервер
-            fetch('/add_discount', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    name: name,
-                    discount_percent: parseFloat(discount)
-                })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => { throw err; });
-                }
-                return response.json();
-            })
-            .then(data => {
+            // Показать спиннер
+            submitText.textContent = 'Обработка...';
+            spinner.classList.remove('d-none');
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/add_discount', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
                 const resultContainer = document.getElementById('resultContainer');
                 const resultContent = document.getElementById('resultContent');
 
-                if (data.error) {
-                    resultContent.innerHTML = `
+                if (!response.ok) {
+                    let errorHtml = `
                         <div class="alert alert-danger">
-                            <strong>Ошибка:</strong> ${data.error}
-                            ${data.missing_fields ? `<br>Отсутствуют поля: ${data.missing_fields.join(', ')}` : ''}
-                            ${data.details ? `<br>Детали: ${data.details}` : ''}
-                        </div>
+                            <h5 class="alert-heading">Ошибка</h5>
+                            <p>${data.error || 'Неизвестная ошибка'}</p>
                     `;
+
+                    if (data.missing_fields) {
+                        errorHtml += `<p>Отсутствующие поля: ${data.missing_fields.join(', ')}</p>`;
+                    }
+
+                    if (data.details) {
+                        errorHtml += `<hr><p class="mb-0"><small>${data.details}</small></p>`;
+                    }
+
+                    errorHtml += `</div>`;
+                    resultContent.innerHTML = errorHtml;
                 } else {
                     resultContent.innerHTML = `
                         <div class="alert alert-success">
-                            <strong>Успешно!</strong> ${data.message}
-                            <br>ID пользователя: ${data.user_id}
-                            <br>Процент скидки: ${data.discount_percent}%
+                            <h5 class="alert-heading">Успешно!</h5>
+                            <p>${data.message}</p>
+                            <hr>
+                            <p class="mb-0">
+                                Пользователь: <strong>${data.user_name}</strong><br>
+                                ID: ${data.user_id}<br>
+                                Скидка: <strong>${data.discount_percent}%</strong>
+                            </p>
                         </div>
                     `;
+
+                    // Очистка формы после успешного добавления
+                    form.reset();
                 }
 
                 resultContainer.style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Error:', error);
+
+            } catch (error) {
+                console.error('Ошибка:', error);
                 document.getElementById('resultContent').innerHTML = `
                     <div class="alert alert-danger">
-                        <strong>Ошибка:</strong> ${error.error || 'Неизвестная ошибка'}
-                        ${error.details ? `<br>Детали: ${error.details}` : ''}
+                        <h5 class="alert-heading">Ошибка сети</h5>
+                        <p>Не удалось подключиться к серверу</p>
                     </div>
                 `;
                 document.getElementById('resultContainer').style.display = 'block';
-            });
+            } finally {
+                // Скрыть спиннер
+                submitText.textContent = 'Добавить скидку';
+                spinner.classList.add('d-none');
+                submitBtn.disabled = false;
+            }
         });
     </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

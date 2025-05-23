@@ -325,6 +325,63 @@ def order_page():
 
     return render_template('order.html', cart=cart, total_price=total_price)
 
+
+@app.route('/apply_discount', methods=['POST'])
+def apply_discount():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Данные не предоставлены"}), 400
+
+    required_fields = ["user_name", "original_amount"]
+    missing_fields = [field for field in required_fields if field not in data]
+
+    if missing_fields:
+        return jsonify({
+            "error": "Не заполнены обязательные поля",
+            "missing_fields": missing_fields
+        }), 400
+
+    user_name = data["user_name"]
+    original_amount = float(data["original_amount"])
+
+    try:
+        sql = "SELECT discount_percent FROM discounts WHERE user_name = %s"
+        cur.execute(sql, (user_name,))
+        result = cur.fetchone()
+
+        if not result:
+            return jsonify({
+                "status": "no_discount",
+                "message": "Пользователь не найден или скидка не назначена",
+                "original_amount": original_amount
+            })
+
+        discount_percent = float(result[0])
+
+        if discount_percent < 0 or discount_percent > 100:
+            return jsonify({
+                "error": "Некорректный размер скидки",
+                "discount_percent": discount_percent
+            }), 400
+
+        discount_amount = (original_amount * discount_percent) / 100
+        final_amount = original_amount - discount_amount
+
+        return jsonify({
+            "status": "success",
+            "message": "Скидка применена",
+            "discount_percent": discount_percent,
+            "discount_amount": discount_amount,
+            "final_amount": final_amount
+        })
+
+    except Exception as e:
+        return jsonify({
+            "error": "Ошибка при обработке запроса",
+            "details": str(e)
+        }), 500
+
 @app.route("/order/success/<int:order_id>")
 def order_success(order_id):
     return render_template('order_success.html', order_id=order_id)
@@ -540,6 +597,7 @@ def availability_page():
 def discount_page():
     return render_template("discount.html")
 
+
 @app.route('/add_discount', methods=['POST'])
 def add_discount():
     data = request.get_json()
@@ -556,34 +614,37 @@ def add_discount():
             "missing_fields": missing_fields
         }), 400
 
-    name = data["name"]
-    try:
-        discount_percent = float(data["discount_percent"])
-    except ValueError:
-        return jsonify({"error": "Некорректное значение скидки"}), 400
+    user_name = data["name"]
+    discount_percent = float(data["discount_percent"])
 
     try:
+        cur = cnx.cursor(dictionary=True)  # <-- Важное изменение!
+
         sql_user = "SELECT User_ID FROM Users WHERE name = %s"
-        cur.execute(sql_user, (name,))
+        cur.execute(sql_user, (user_name,))
         user_result = cur.fetchone()
 
         if not user_result:
-            return jsonify({"error": "Пользователь не найден"}), 404
+            return jsonify({
+                "error": "Пользователь не найден",
+                "user_name": user_name
+            }), 404
 
-        user_id = user_result[0]  # Используем числовой индекс для доступа к User_ID
+        user_id = user_result["User_ID"]  # Теперь работает
 
         sql_discount = """
-            INSERT INTO discounts (user_id, discount_percent) 
+            INSERT INTO discounts (user_name, discount_percent) 
             VALUES (%s, %s) 
             ON DUPLICATE KEY UPDATE discount_percent = %s
         """
-        cur.execute(sql_discount, (user_id, discount_percent, discount_percent))
+        cur.execute(sql_discount, (user_name, discount_percent, discount_percent))
         cur._connection.commit()
 
         return jsonify({
             "status": "success",
-            "message": "Скидка добавлена или обновлена",
+            "message": "Скидка успешно добавлена/обновлена",
             "user_id": user_id,
+            "user_name": user_name,
             "discount_percent": discount_percent
         })
 
