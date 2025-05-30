@@ -3,20 +3,21 @@
     padding: 0;
     box-sizing: border-box;
 }
-    .admin-dashboard {
-        padding: 2rem 5%;
-        background-color: #f8f9fa;
-        min-height: calc(87vh - 150px);
-    }
 
-    /* Секция приветствия */
-    .welcome-section {
-        margin-bottom: 2.5rem;
-        padding-bottom: 1.5rem;
-        border-bottom: 1px solid #e0e0e0;
-    }
+.admin-dashboard {
+    padding: 2rem 5%;
+    background-color: #efe8e0;
+    min-height: calc(87vh - 150px);
+}
 
-   h1 {
+/* Секция приветствия */
+.welcome-section {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid #94c2da;
+}
+
+h1 {
     grid-column: 1 / -1;
     text-align: center;
     margin: 20px 0 40px;
@@ -25,94 +26,102 @@
     font-weight: 700;
     letter-spacing: -0.5px;
     position: relative;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
-h1::after {
-    content: '';
+.last-login {
+    color: #4e7cb2;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+/* Сетка карточек */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.8rem;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+/* Стили карточек */
+.dashboard-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 1.8rem;
+    box-shadow: 0 5px 15px rgba(32, 63, 154, 0.1);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: #203f9a;
+    position: relative;
+    overflow: hidden;
+    border-top: 3px solid #e84797;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 8px 25px rgba(232, 71, 151, 0.2);
+    background: linear-gradient(135deg, #ffffff, #faedf5);
+}
+
+.card-icon {
+    font-size: 2.2rem;
+    color: #4e7cb2;
+    margin-bottom: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover .card-icon {
+    transform: scale(1.1);
+    color: #203f9a;
+}
+
+.dashboard-card h3 {
+    margin: 0 0 0.8rem 0;
+    color: #203f9a;
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.dashboard-card p {
+    color: #4e7cb2;
+    font-size: 0.95rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Бейдж уведомлений */
+.notification-badge {
     position: absolute;
-    bottom: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
-    border-radius: 2px;
+    top: 1.2rem;
+    right: 1.2rem;
+    background: #e84797;
+    color: white;
+    border-radius: 50%;
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(232, 71, 151, 0.3);
 }
 
-    .last-login {
-        color: #7f8c8d;
-        font-size: 0.95rem;
-        font-style: italic;
+/* Адаптивные стили */
+@media (max-width: 768px) {
+    .admin-dashboard {
+        padding: 1.5rem;
     }
 
-    /* Сетка карточек */
+    h1 {
+        font-size: 2rem;
+        margin: 15px 0 30px;
+    }
+
     .dashboard-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.8rem;
-        margin: 0 auto;
-        max-width: 1200px;
+        grid-template-columns: 1fr;
     }
-
-    /* Стили карточек */
-    .dashboard-card {
-        background: #ffffff;
-        border-radius: 12px;
-        padding: 1.8rem;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        display: flex;
-        flex-direction: column;
-        text-decoration: none;
-        color: #34495e;
-        position: relative;
-        overflow: hidden;
-        border-top: 3px solid #bf5088;
-    }
-
-    .dashboard-card:hover {
-        transform: translateY(-7px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .card-icon {
-        font-size: 2.2rem;
-        color: #5099bf;
-        margin-bottom: 1.2rem;
-        transition: transform 0.3s ease;
-    }
-
-    .dashboard-card:hover .card-icon {
-        transform: scale(1.1);
-    }
-
-    .dashboard-card h3 {
-        margin: 0 0 0.8rem 0;
-        color: #2c3e50;
-        font-size: 1.4rem;
-        font-weight: 600;
-    }
-
-    .dashboard-card p {
-        color: #7f8c8d;
-        font-size: 0.95rem;
-        margin: 0;
-        line-height: 1.5;
-    }
-
-    /* Бейдж уведомлений */
-    .notification-badge {
-        position: absolute;
-        top: 1.2rem;
-        right: 1.2rem;
-        background: #ed82c2;
-        color: white;
-        border-radius: 50%;
-        width: 46px;
-        height: 46px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 10px;
-        font-weight: bold;
-        box-shadow: 0 2px 5px rgba(237, 130, 194, 0.3);
-    }
+}

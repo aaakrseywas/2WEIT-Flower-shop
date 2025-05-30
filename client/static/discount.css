@@ -1,7 +1,15 @@
-* {
+ * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+body {
+    background-color: #efe8e0;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 .container {
@@ -23,7 +31,7 @@
     left: 0;
     right: 0;
     height: 6px;
-    background: linear-gradient(90deg, #ee438d, #a30c5a);
+    background: linear-gradient(90deg, #203f9a, #94c2da);
 }
 
 h1 {
@@ -35,16 +43,6 @@ h1 {
     padding-bottom: 10px;
 }
 
-h1::after {
-
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 60px;
-    height: 4px;
-    background: linear-gradient(90deg, #ee438d, #a30c5a);
-    border-radius: 2px;
-}
 
 .card {
     border: none;
@@ -61,7 +59,6 @@ h1::after {
 
 .card-body {
     padding: 25px;
-    background-color: #f9fafb;
 }
 
 .form-label {
@@ -75,7 +72,7 @@ h1::after {
 .form-control {
     width: 100%;
     padding: 12px 15px;
-    border: 2px solid #e2e8f0;
+    border: 2px solid #94c2da;
     border-radius: 8px;
     transition: all 0.3s ease;
     font-size: 15px;
@@ -83,13 +80,13 @@ h1::after {
 }
 
 .form-control:focus {
-    border-color: #ee438d;
+    border-color: #203f9a;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    box-shadow: 0 0 0 3px rgba(32, 63, 154, 0.2);
 }
 
 .btn {
-    background: linear-gradient(135deg, #ee438d, #a30c5a);
+    background: linear-gradient(135deg, #e84797, #CD4662);
     color: white;
     border: none;
     padding: 12px 24px;
@@ -105,13 +102,13 @@ h1::after {
 }
 
 .btn:hover {
-    background: linear-gradient(135deg, #a30c5a, #ee438d);
+    background: linear-gradient(135deg, #CD4662, #e84797);
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .error-message {
-    color: #e63946;
+    color: #CD4662;
     font-size: 0.875em;
     margin-top: 8px;
     font-weight: 500;
@@ -132,7 +129,7 @@ h1::after {
     margin-top: 30px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     overflow: hidden;
-    background-color: #f9fafb;
+    background-color: #efe8e0;
 }
 
 .card-title {
@@ -149,7 +146,7 @@ h1::after {
     display: inline-block;
     width: 8px;
     height: 20px;
-    background: #ee4390;
+    background: #4e7cb2;
     margin-right: 10px;
     border-radius: 4px;
 }

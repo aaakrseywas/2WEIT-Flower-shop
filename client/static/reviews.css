@@ -1,4 +1,4 @@
- * {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -7,8 +7,8 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: #333; /* Изменено на более универсальный цвет */
-    background-color: #f5f7fa;
+    color: #333;
+    background-color: #efe8e0;
     padding: 0;
     margin: 0;
 }
@@ -23,107 +23,175 @@ body {
     text-align: center;
     margin-bottom: 3rem;
     animation: fadeIn 1s ease-out;
+    background: linear-gradient(145deg, #e84797  0%, #e7a0cc 100%);
+    padding: 2rem;
+    border-radius: 16px;
+    color: white;
+    box-shadow: 0 10px 30px rgba(32, 63, 154, 0.2);
 }
 
 .menu-name h1 {
-    font-size: 2.5rem;
-    color: #CD4662; /* Цвет заголовка */
+    font-size: 2.8rem;
+    color: #fff;
     margin-bottom: 1rem;
     font-weight: 700;
     font-family: "Unbounded", sans-serif;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .menu-name p {
-    font-size: 1.1rem;
-    color: #555; /* Цвет текста */
+    font-size: 1.2rem;
+    color: #203f9a;
     margin-bottom: 0.5rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.reviews-list, .add-review-form {
+.reviews-list,
+.add-review-form {
     background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Улучшенная тень */
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(32, 63, 154, 0.08);
     margin-bottom: 3rem;
+    border: 1px solid rgba(148, 194, 218, 0.3);
 }
 
-.reviews-list h2, .add-review-form h2 {
-    color: #CD4662; /* Цвет заголовка секции */
-    margin-bottom: 1.5rem;
-    font-size: 1.8rem;
+.reviews-list h2,
+.add-review-form h2 {
+    color: #203f9a;
+    margin-bottom: 1.8rem;
+    font-size: 2rem;
+    font-family: "Unbounded", sans-serif;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.reviews-list h2::after,
+.add-review-form h2::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #e84797 0%, #94c2da 100%);
+    border-radius: 3px;
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.8rem;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
     font-weight: 600;
-    color: #333; /* Цвет меток */
+    color: #203f9a;
+    font-size: 1.1rem;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 0.8rem 1rem;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
+    padding: 1rem;
+    border: 2px solid #94c2da;
+    border-radius: 10px;
     font-size: 1rem;
-    transition: border-color 0.3s; /* Плавный переход цвета границы */
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-    border-color: #0056b3; /* Цвет границы при фокусе */
+    border-color: #e84797;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    box-shadow: 0 0 0 3px rgba(232, 71, 151, 0.2);
+    background-color: white;
 }
 
 .form-group textarea {
-    min-height: 150px;
+    min-height: 180px;
     resize: vertical;
 }
 
 button[type="submit"] {
-    background-color: #00008b; /* Цвет кнопки */
+    background: linear-gradient(135deg, #e84797 0%, #CD4662 100%);
     color: white;
     border: none;
-    padding: 12px 24px;
-    font-size: 1rem;
-    border-radius: 14px;
+    padding: 14px 28px;
+    font-size: 1.1rem;
+    border-radius: 12px;
     cursor: pointer;
     font-weight: 600;
     width: 100%;
-    max-width: 200px;
+    max-width: 220px;
     margin-top: 1rem;
-    transition: background-color 0.3s; /* Плавный переход цвета кнопки */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(232, 71, 151, 0.3);
 }
 
 button[type="submit"]:hover {
-    background-color: #0056b3; /* Цвет кнопки при наведении */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(232, 71, 151, 0.4);
+    background: linear-gradient(135deg, #CD4662 0%, #e84797 100%);
 }
 
 .review {
-    padding: 1.5rem 0;
-    border-bottom: 1px solid #e9ecef;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(148, 194, 218, 0.5);
+    position: relative;
 }
 
 .review:last-child {
     border-bottom: none;
 }
 
+.review::before {
+    content: "“";
+    position: absolute;
+    top: 0;
+    left: -15px;
+    font-size: 4rem;
+    color: #e7a0cc;
+    opacity: 0.3;
+    font-family: Georgia, serif;
+    line-height: 1;
+}
+
 .review-content {
-    color: #555; /* Цвет текста отзыва */
-    line-height: 1.7;
+    color: #555;
+    line-height: 1.8;
+    font-size: 1.05rem;
+    padding-left: 1.5rem;
 }
 
 .error-message {
-    padding: 10px;
+    padding: 15px;
     background-color: #ffebee;
     color: #c62828;
     border: 1px solid #ef9a9a;
-    border-radius: 4px;
-    margin-bottom: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Дополнительные декоративные элементы */
+.reviews-list::after {
+    content: "";
+    display: block;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(232, 71, 151, 0.1) 0%, transparent 70%);
+    position: absolute;
+    right: -50px;
+    top: -50px;
+    z-index: -1;
 }

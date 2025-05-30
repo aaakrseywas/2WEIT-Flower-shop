@@ -1,5 +1,5 @@
-header {
-    background: #94C2DA;
+ header {
+    background: #94C2DA; /* Основной синий цвет для фона */
     color: white;
     padding: 1rem 2rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -9,14 +9,13 @@ header {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-
 header h1 {
     margin: 0;
     font-size: 2.5rem;
     font-weight: 700;
     letter-spacing: 3px;
     text-transform: uppercase;
-    background: #203F9A;
+    background: linear-gradient(to right, #203F9A,  #4e7cb2); /* Градиент из светлого синего к розовому */
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -26,9 +25,8 @@ header h1 {
 
 header h1:hover {
     transform: scale(1.05);
-    text-shadow: 0 0 10px rgba(0, 180, 219, 0.3);
+    text-shadow: 0 0 10px rgba(148, 194, 218, 0.3); /* Тень светлого синего цвета */
 }
-
 
 header ul {
     display: flex;
@@ -44,14 +42,13 @@ header li {
 }
 
 header a {
-    color: #e6e6e6;
+    color:  #203F9A; /* Светлый синий для обычных ссылок */
     text-decoration: none;
     font-weight: 500;
     font-size: 1.1rem;
     transition: all 0.3s ease;
     padding: 0.5rem 0;
 }
-
 
 header a:hover {
     color: white;
@@ -64,7 +61,7 @@ header a::after {
     height: 2px;
     bottom: 0;
     left: 0;
-    background-color: #ed82c2;
+    background-color: #E84797; /* Яркий розовый для подчеркивания */
     transition: width 0.3s ease;
 }
 
@@ -73,15 +70,16 @@ header a:hover::after {
 }
 
 header li:last-child a {
-    background:;
+    background: #E84797; /* Яркий розовый для кнопки */
+    color: white;
     padding: 0.5rem 1.5rem;
     border-radius: 25px;
-    border: 1px solid #ed82c2;
+    border: 1px solid #E84797;
     transition: all 0.3s ease;
 }
 
 header li:last-child a:hover {
-    background: #5099bf;
+    background: #E7A0CC; /* Светлый розовый при наведении */
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 180, 219, 0.2);
+    box-shadow: 0 4px 8px rgba(232, 71, 151, 0.2); /* Тень розового цвета */
 }

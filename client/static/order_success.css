@@ -1,96 +1,116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #efe8e0; /* Основной фоновый цвет */
+    color: #e84797; /* Основной цвет текста */
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            color: #333;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 20px;
+    background-color: #efe8e0; /* Светлый бежевый фон */
+}
 
-        main {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex: 1;
-            padding: 20px;
-            background-color: #EFE8E0;
-        }
+.success-container {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(30, 63, 154, 0.15); /* Тень с синим оттенком */
+    padding: 40px;
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+    margin: 20px;
+    border: 1px solid #94c2da; /* Светло-голубая граница */
+}
 
-        .success-container {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            padding: 40px;
-            text-align: center;
-            max-width: 500px;
-            width: 100%;
-            margin: 20px;
-        }
+.success-icon {
+    font-size: 70px;
+    color: #e84797; /* Яркий розовый для иконки */
+    margin-bottom: 20px;
+    font-weight: bold;
+}
 
-        .success-icon {
-            font-size: 70px;
-            color:  #3437c9;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #e84797; /* Темно-синий для заголовка */
+}
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
-            color: #333;
-        }
+.order-info {
+    margin-bottom: 20px;
+    text-align: left;
+    padding: 15px;
+    background-color: rgba(148, 194, 218, 0.2); /* Полупрозрачный светло-голубой */
+    border-radius: 5px;
+    border-left: 4px solid #4e7cb2; /* Акцентная полоса */
+}
 
-        .order-info {
-            margin-bottom: 20px;
-            text-align: left;
-            padding: 15px;
-            background-color: rgba(244, 244, 244, 0.5);
-            border-radius: 5px;
-        }
+.order-info p {
+    margin-bottom: 10px;
+    color: #203f9a; /* Темно-синий текст */
+}
 
-        .order-info p {
-            margin-bottom: 10px;
-        }
+.order-number {
+    font-weight: bold;
+    color: #e84797; /* Яркий розовый для номера заказа */
+}
 
-        .order-number {
-            font-weight: bold;
-            color: #F140A9; /* Ваш фирменный розовый вместо зеленого */
-        }
+.action-buttons {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
 
-        .action-buttons {
-            margin-top: 25px;
-        }
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
 
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            background-color: #F140A9; /* Ваш фирменный розовый */
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: all 0.3s;
-            font-weight: bold;
-            border: none;
-            cursor: pointer;
-        }
+.btn-primary {
+    background-color: #e84797; /* Темно-синяя кнопка */
+}
 
-        .btn:hover {
-            background-color: #d93697; /* Темнее розовый при наведении */
-            transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
+.btn-primary:hover {
+    background-color: #1a357f;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 10px rgba(30, 63, 154, 0.3);
+}
 
-        /* Мелкие улучшения для соответствия вашему стилю */
-        strong {
-            color: #333;
-        }
+.btn-secondary {
+    background-color: #e84797; /* Розовая кнопка */
+}
 
+.btn-secondary:hover {
+    background-color: #d43d87;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 10px rgba(232, 71, 151, 0.3);
+}
 
+/* Акцентные элементы */
+strong {
+    color: #4e7cb2; /* Синий для выделенного текста */
+}
+
+.highlight {
+    color: #CD4662; /* Темно-розовый для особых акцентов */
+}

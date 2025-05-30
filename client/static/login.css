@@ -1,42 +1,51 @@
  body {
     font-family: 'Arial', sans-serif;
-    background-color: #f4f4f4;
+    background-color: #efe8e0;
     margin: 0;
     padding: 0;
 }
 
+
 h2 {
     color: #203F9A;
-    font-size: 28px;
+    font-size: 32px;
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    font-family: "Unbounded", sans-serif;
+    position: relative;
+    padding-bottom: 10px;
 }
 
+
+
 main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 70vh;
+    width: 100%;
+    padding: 50px;
 }
 
 form {
     background-color: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    width: 350px;
-    transition: transform 0.3s ease;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(32, 63, 154, 0.15);
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(148, 194, 218, 0.3);
 }
 
 form:hover {
-    transform: scale(1.02);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(32, 63, 154, 0.2);
 }
 
 label {
     display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #333; /* Темный цвет для лучшей читаемости */
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #203F9A;
+    font-size: 15px;
 }
 
 input[type="text"],
@@ -44,66 +53,118 @@ input[type="email"],
 input[type="tel"],
 input[type="password"] {
     width: 100%;
-    padding: 12px; /* Увеличено для удобства ввода */
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 14px;
+    margin-bottom: 20px;
+    border: 2px solid #94c2da;
+    border-radius: 8px;
     box-sizing: border-box;
-    font-size: 14px; /* Увеличен размер шрифта */
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: #f8fafc;
 }
 
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="tel"]:focus,
 input[type="password"]:focus {
-    border-color: #203F9A;
+    border-color: #e84797;
     outline: none;
-    box-shadow: 0 0 5px rgba(32, 63, 154, 0.5); /* Добавлена тень при фокусе */
+    box-shadow: 0 0 0 3px rgba(232, 71, 151, 0.2);
+    background-color: white;
 }
 
 button {
-    background-color: #203F9A;
+    background: linear-gradient(135deg, #203F9A 0%, #4e7cb2 100%);
     color: white;
-    padding: 12px; /* Увеличено для удобства */
+    padding: 15px;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     width: 100%;
     font-size: 16px;
-    transition: background-color 0.3s ease, transform 0.2s ease; /* Добавлен эффект при наведении */
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin-top: 10px;
+    box-shadow: 0 4px 15px rgba(32, 63, 154, 0.3);
 }
 
 button:hover {
-    background-color: #ed6fba;
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, #4e7cb2 0%, #203F9A 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(32, 63, 154, 0.4);
 }
 
 .error-message {
-    color: #d9534f;
-    margin: 5px 0;
+    color: #CD4662;
+    margin: 8px 0 15px 0;
     font-size: 14px;
+    font-weight: 500;
+    padding-left: 5px;
 }
 
 .success-message {
-    color: #5cb85c;
-    margin: 5px 0;
+    color: #4e7cb2;
+    margin: 8px 0 15px 0;
     font-size: 14px;
+    font-weight: 500;
 }
 
 .register-link {
     text-align: center;
-    margin-top: 20px;
+    margin-top: 25px;
     color: #666;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .register-link a {
-    color: #CD4662;
+    color: #e84797;
     text-decoration: none;
-    transition: color 0.3s ease;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
 }
 
 .register-link a:hover {
-    color: #000000;
-    text-decoration: underline; /* Добавлено подчеркивание при наведении */
+    color: #CD4662;
+}
+
+.register-link a::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #e84797 0%, #94c2da 100%);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.register-link a:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Декоративные элементы */
+form::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(232, 71, 151, 0.1) 0%, transparent 70%);
+    z-index: -1;
+}
+
+form::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: -10px;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(32, 63, 154, 0.1) 0%, transparent 70%);
+    z-index: -1;
 }

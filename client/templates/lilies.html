@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 2WEIT flower | Лилии </title>
+    <link rel="stylesheet" href="/static/flower.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+      {% include "header.html" %}
+<main>
+    <div class="flower-container">
+        <div class="flower-section">
+            <div class="flower-image">
+                <img src="/static/photo/лилии.jpg" alt="Лилии">
+            </div>
+            <div class="flower-content">
+                 <h1>Лилии - Благородные Цветы</h1>
+                <p>Утонченная элегантность и изысканный аромат, которые очаровывают с первого взгляда</p>
+                <p>Лилия - один из самых древних и почитаемых цветков, символ чистоты, благородства и возрождения. Эти цветы выращиваются уже более 3000 лет и занимают особое место в культуре и искусстве многих народов.</p>
+                <p>Современные лилии представлены множеством видов и сортов, отличающихся формой цветка, окраской, ароматом и условиями выращивания. Они могут быть азиатскими, восточными, трубчатыми и другими гибридами.</p>
+
+                <div class="flower-features">
+                    <div class="feature-card">
+                        <h3>Символика</h3>
+                        <p>Белые - чистота, оранжевые - страсть, розовые - нежность, желтые - радость</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Аромат</h3>
+                        <p>От легкого ненавязчивого до насыщенного сладкого, особенно у восточных гибридов</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Цветение</h3>
+                        <p>С июня по сентябрь в зависимости от вида и климатических условий</p>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('menu_page') }}" class="btn">Перейти в меню</a>
+            </div>
+        </div>
+
+         <h2 style="text-align: center; color: #e84797; margin: 60px 0 30px;">Популярные виды гипсофилы</h2>
+
+        <div class="flower-types">
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/азиатские.jpeg" alt="Азиатские лилии">
+                </div>
+                <div class="type-info">
+                    <h3>Азиатские</h3>
+                    <p>Самые неприхотливые и разнообразные по окраске. Не имеют сильного аромата.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/Восточные.jpg" alt="Восточные лилии">
+                </div>
+                <div class="type-info">
+                    <h3>Восточные</h3>
+                    <p>Крупные ароматные цветы экзотической красоты. Требуют особого ухода.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/трубчатые.jpg" alt="Трубчатые лилии">
+                </div>
+                <div class="type-info">
+                    <h3>Трубчатые</h3>
+                    <p>Элегантные цветы с сильным ароматом. Отличаются вытянутой формой бутона.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+      {% include "footer.html" %}
+</body>
+</html>

@@ -1,13 +1,16 @@
 :root {
-    --primary-color: #CD4662;
-    --secondary-color: #f8f9fa;
-    --accent-color: #ff9a76;
-    --text-color: #2d3748;
-    --light-text: #ffffff;
+    --primary-color: #203f9a; /* Основной синий */
+    --secondary-color: #efe8e0; /* Светлый фон */
+    --accent-color: #e84797; /* Акцентный розовый */
+    --accent-light: #e7a0cc; /* Светлый розовый */
+    --accent-secondary: #CD4662; /* Вторичный акцент (бордовый) */
+    --text-color: #2d3748; /* Основной текст */
+    --light-text: #ffffff; /* Светлый текст */
     --border-radius: 10px;
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --border-color: #e2e8f0;
+    --border-color: #94c2da; /* Голубая граница */
+    --info-color: #4e7cb2; /* Информационный синий */
 }
 
 * {
@@ -16,16 +19,14 @@
     box-sizing: border-box;
 }
 
-.main-container{
- background-color: var(--secondary-color);
+.main-container {
+    background-color: var(--secondary-color);
 }
 
 .reviews-list {
     max-width: 1200px;
     margin: 0 auto;
     padding: 30px 20px;
-
-
 }
 
 .reviews-list h2 {
@@ -35,16 +36,6 @@
     padding-bottom: 15px;
     text-align: center;
     position: relative;
-}
-
-.reviews-list h2::after {
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 2px;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
 }
 
 .reviews-container {
@@ -62,7 +53,7 @@
     transition: var(--transition);
     position: relative;
     overflow: hidden;
-    border-top: 4px solid var(--primary-color);
+    border-top: 4px solid var(--accent-secondary);
 }
 
 .review:hover {
@@ -89,7 +80,7 @@
 
 .review small {
     display: block;
-    color: #718096;
+    color: var(--info-color);
     font-size: 13px;
     text-align: right;
     padding-top: 10px;
@@ -114,22 +105,23 @@
 }
 
 .reply-btn {
-    background-color: var(--primary-color);
+    background-color: var(--accent-color);
     color: var(--light-text);
 }
 
 .reply-btn:hover {
-    background-color: #b53a56;
+    background-color: var(--accent-secondary);
     transform: translateY(-2px);
 }
 
 .archive-btn {
-    background-color: #a0aec0;
-    color: var(--light-text);
+    background-color: var(--border-color);
+    color: var(--primary-color);
 }
 
 .archive-btn:hover {
-    background-color: #718096;
+    background-color: var(--info-color);
+    color: var(--light-text);
 }
 
 .reply-form {
@@ -151,24 +143,25 @@
 .reply-form textarea:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(205, 70, 98, 0.15);
+    box-shadow: 0 0 0 3px rgba(32, 63, 154, 0.15);
 }
 
 .submit-reply-btn {
-    background-color: var(--primary-color);
+    background-color: var(--accent-color);
     color: var(--light-text);
     margin-right: 10px;
 }
 
 .submit-reply-btn:hover {
-    background-color: #b53a56;
+    background-color: var(--accent-secondary);
 }
 
 .cancel-reply-btn {
     background-color: var(--secondary-color);
     color: var(--text-color);
+    border: 1px solid var(--border-color);
 }
 
 .cancel-reply-btn:hover {
-    background-color: #e2e8f0;
+    background-color: var(--border-color);
 }

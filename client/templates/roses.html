@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 2WEIT flower | Розы </title>
+    <link rel="stylesheet" href="/static/flower.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+      {% include "header.html" %}
+<main>
+
+    <div class="flower-container">
+        <div class="flower-section">
+            <div class="flower-image">
+                <img src="/static/photo/Розы.jpg" alt="Розы">
+            </div>
+            <div class="flower-content">
+                 <h1>Розы - Королевы Цветов</h1>
+                <p>Утонченная красота и неповторимый аромат, которые покоряют сердца</p>
+                <p>Роза - один из самых древних и благородных цветков, символ любви, красоты и совершенства. Эти цветы выращиваются уже более 5000 лет и имеют богатую историю в культуре многих народов.</p>
+                <p>Современные розы представлены тысячами сортов, отличающихся формой бутона, цветом, ароматом и условиями выращивания. Они могут быть кустовыми, плетистыми, почвопокровными и даже миниатюрными.</p>
+
+                <div class="flower-features">
+                    <div class="feature-card">
+                        <h3>Символика</h3>
+                        <p>Красные - любовь, белые - чистота, желтые - дружба, розовые - благодарность</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Аромат</h3>
+                        <p>От нежного фруктового до насыщенного классического розового</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Цветение</h3>
+                        <p>С мая по октябрь в зависимости от сорта и климата</p>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('menu_page') }}" class="btn">Перейти в меню</a>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; color: #e84797; margin: 60px 0 30px;">Популярные виды роз</h2>
+
+        <div class="flower-types">
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/чайно-гибритные.jpg" alt="Чайно-гибридные розы">
+                </div>
+                <div class="type-info">
+                    <h3>Чайно-гибридные</h3>
+                    <p>Классические розы с крупными бутонами на длинных стеблях. Идеальны для букетов.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/Плетистые.jpg" alt="Плетистые розы">
+                </div>
+                <div class="type-info">
+                    <h3>Плетистые</h3>
+                    <p>Длинные гибкие побеги, требующие опоры. Прекрасно украшают арки и стены.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/Почвопокровные.JPEG" alt="Почвопокровные розы">
+                </div>
+                <div class="type-info">
+                    <h3>Почвопокровные</h3>
+                    <p>Низкорослые кусты, образующие цветущий ковер. Неприхотливы в уходе.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+      {% include "footer.html" %}
+</body>
+</html>

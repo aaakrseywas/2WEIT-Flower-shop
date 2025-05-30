@@ -191,7 +191,6 @@ def review_user():
             "message": f"Ошибка сервера при добавлении отзыва: {str(e)}"
         }), 500
 
-
 @app.route("/2weit/menu", methods=["GET"])
 def menu_page():
     response = requests.get('http://127.0.0.1:5000/api/menu')
@@ -271,39 +270,47 @@ def cart_page():
 
 @app.route("/2weit/order", methods=['GET', 'POST'])
 def order_page():
+    # Fetch the cart from the session
     cart = session.get('cart', [])
     total_price = sum(item['price'] * item.get('quantity', 1) for item in cart)
 
     if request.method == 'POST':
         try:
+            # Get form data
             name = request.form['name']
             address = request.form['address']
             email = request.form['email']
             payment_method = request.form['payment_method']
             comment = request.form.get('comment', '')
+
+            # Get discount information from form
             discount_percent = float(request.form.get('discount_percent', 0))
-            final_amount = total_price
+            final_price = float(request.form.get('final_price', total_price))
+            discount_amount = total_price - final_price
+            discount_id = request.form.get('discount_id', '').strip() or None
 
-            # Проверяем соединение с MySQL
-            if not cnx.is_connected():
-                cnx.reconnect()
-
-            # Создаем заказ
+            # Save the order to the database with all discount information
             cur.execute("""
-                 INSERT INTO orders (
-                     customer_name, comment, address, email, 
-                     payment_method, total_price, final_amount
-                 ) VALUES (%s, %s, %s, %s, %s, %s, %s)
-                 """, (name, comment, address, email, payment_method, total_price, final_amount))
+                INSERT INTO orders (
+                    customer_name, address, email, payment_method,
+                    comment, total_price, discount_percent,
+                    discount_amount, final_amount, discount_id
+                ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (
+                name, address, email, payment_method,
+                comment, total_price, discount_percent,
+                discount_amount, final_price, discount_id
+            ))
 
             order_id = cur.lastrowid
 
+            # Save each item in the cart to the order_items table
             for item in cart:
                 cur.execute("""
-                     INSERT INTO order_items (
-                         order_id, flower_name, flower_sort, color, quantity, price
-                     ) VALUES (%s, %s, %s, %s, %s, %s)
-                     """, (
+                    INSERT INTO order_items (
+                        order_id, flower_name, flower_sort, color, quantity, price
+                    ) VALUES (%s, %s, %s, %s, %s, %s)
+                    """, (
                     order_id,
                     item['name'],
                     item.get('sort', ''),
@@ -312,27 +319,31 @@ def order_page():
                     item['price']
                 ))
 
+            # Commit the transaction
             cnx.commit()
+
+            # Clear the cart from the session
             session.pop('cart', None)
+
+            # Redirect to the order success page
             return redirect(url_for('order_success', order_id=order_id))
 
         except Exception as e:
-            print(f"Ошибка при сохранении заказа: {e}")
-            return render_template('order.html',
-                                   cart=cart,
-                                   total_price=total_price,
-                                   error="Ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз.")
+            # Handle exceptions (e.g., log the error, show an error message)
+            cnx.rollback()  # Rollback in case of error
+            return "An error occurred while processing your order: {}".format(str(e)), 500
 
+    # If GET request, render the order page
     return render_template('order.html', cart=cart, total_price=total_price)
-
 
 @app.route('/apply_discount', methods=['POST'])
 def apply_discount():
+    if not request.is_json:
+        return jsonify({"error": "Request must be JSON"}), 400
+
     data = request.get_json()
 
-    if not data:
-        return jsonify({"error": "Данные не предоставлены"}), 400
-
+    # Проверяем обязательные поля
     required_fields = ["user_name", "original_amount"]
     missing_fields = [field for field in required_fields if field not in data]
 
@@ -342,29 +353,50 @@ def apply_discount():
             "missing_fields": missing_fields
         }), 400
 
+    try:
+        original_amount = float(data["original_amount"])
+    except (ValueError, TypeError):
+        return jsonify({
+            "error": "original_amount должен быть числом"
+        }), 400
+
     user_name = data["user_name"]
-    original_amount = float(data["original_amount"])
 
     try:
-        sql = "SELECT discount_percent FROM discounts WHERE user_name = %s"
+        cur = cnx.cursor()  # Используем ваше соединение cnx
+
+        # Исправленный запрос - убедитесь, что таблица и поля существуют
+        sql = """
+        SELECT discount_percent, discount_id  # Изменил id на discount_id
+        FROM discounts  # Убедитесь, что таблица называется именно так
+        WHERE user_name = %s
+        """
         cur.execute(sql, (user_name,))
         result = cur.fetchone()
 
         if not result:
             return jsonify({
-                "status": "no_discount",
-                "message": "Пользователь не найден или скидка не назначена",
+                "status": "invalid",
+                "message": "Скидка для данного пользователя не найдена",
                 "original_amount": original_amount
-            })
+            }), 404
+
+        # Проверяем, что результат содержит оба ожидаемых значения
+        if len(result) < 2:
+            return jsonify({
+                "error": "Некорректные данные скидки в базе"
+            }), 500
 
         discount_percent = float(result[0])
+        discount_id = result[1]
 
+        # Проверка корректности процента скидки
         if discount_percent < 0 or discount_percent > 100:
             return jsonify({
-                "error": "Некорректный размер скидки",
-                "discount_percent": discount_percent
+                "error": "Некорректный размер скидки (должен быть от 0 до 100)"
             }), 400
 
+        # Рассчитываем скидку
         discount_amount = (original_amount * discount_percent) / 100
         final_amount = original_amount - discount_amount
 
@@ -373,19 +405,25 @@ def apply_discount():
             "message": "Скидка применена",
             "discount_percent": discount_percent,
             "discount_amount": discount_amount,
-            "final_amount": final_amount
+            "final_amount": final_amount,
+            "user_name": user_name,
+            "discount_id": discount_id
         })
 
     except Exception as e:
+        print(f"Ошибка в apply_discount: {str(e)}")
         return jsonify({
-            "error": "Ошибка при обработке запроса",
+            "error": "Внутренняя ошибка сервера",
             "details": str(e)
         }), 500
+
+    finally:
+        if 'cur' in locals():
+            cur.close()
 
 @app.route("/order/success/<int:order_id>")
 def order_success(order_id):
     return render_template('order_success.html', order_id=order_id)
-
 
 @app.route("/2weit/order/clear_cart", methods=['POST'])
 def clear_cart():
@@ -404,7 +442,6 @@ def admin_page():
 @app.route("/2weit/orders", methods=["GET"])
 def orders_page():
     try:
-
         response = requests.get('http://127.0.0.1:5000/api/orders')
         response.raise_for_status()
         param = response.json()
@@ -421,6 +458,11 @@ def orders_page():
 
                 # Инициализируем заказ, если его еще нет
                 if order_id not in grouped_orders:
+                    total_price = float(order.get('total_price', 0))
+                    final_amount = float(order.get('final_amount', total_price))
+                    discount_percent = float(order.get('discount_percent', 0))
+                    discount_amount = float(order.get('discount_amount', 0))
+
                     grouped_orders[order_id] = {
                         'order_info': {
                             'id': order_id,
@@ -428,7 +470,10 @@ def orders_page():
                             'address': order.get('address', 'Не указан'),
                             'email': order.get('email', 'Не указан'),
                             'payment_method': order.get('payment_method', 'Не указан'),
-                            'final_amount': float(order.get('final_amount', 0)),
+                            'total_price': total_price,
+                            'final_amount': final_amount,
+                            'discount_percent': discount_percent,
+                            'discount_amount': discount_amount,
                             'comment': order.get('comment', 'нет'),
                             'status': order.get('status', 'new').lower()
                         },
@@ -455,23 +500,31 @@ def orders_page():
 
         # Генерация HTML
         html = ""
-        for order_id, order_data in grouped_orders.items():
-            main_order = order_data['order_info']
-            items = order_data['order_items']
-
-            status = main_order.get('status', 'new').lower()
-            statuses = {
-                'new': 'Новый',
-                'paid': 'Оплачен',
-                'assembled': 'Собран',
-                'delivery': 'Доставка',
-                'completed': 'Готово'
-            }
+        statuses = {
+            'new': 'Новый',
+            'paid': 'Оплачен',
+            'assembled': 'Собран',
+            'delivery': 'Доставка',
+            'completed': 'Готово'
+        }
 
         for order_id, order_data in grouped_orders.items():
             main_order = order_data['order_info']
             items = order_data['order_items']
             current_status = main_order['status']
+
+            # Формируем информацию о скидке
+            discount_info = ""
+            if main_order['discount_percent'] > 0:
+                discount_info = f"""
+                    <p><strong>Скидка:</strong> {main_order['discount_percent']:.0f}% (-{main_order['discount_amount']:.2f} руб.)</p>
+                    <p><strong>Сумма без скидки:</strong> {main_order['total_price']:.2f} руб.</p>
+                    <p><strong>Итого со скидкой:</strong> {main_order['final_amount']:.2f} руб.</p>
+                """
+            else:
+                discount_info = f"""
+                    <p><strong>Сумма:</strong> {main_order['final_amount']:.2f} руб.</p>
+                """
 
             html_temp = f"""
             <div class="order-card {current_status}">
@@ -483,7 +536,7 @@ def orders_page():
                     <p><strong>Адрес:</strong> {main_order['address']}</p>
                     <p><strong>Email:</strong> {main_order['email']}</p>
                     <p><strong>Способ оплаты:</strong> {main_order['payment_method']}</p>
-                    <p><strong>Сумма:</strong> {main_order['final_amount']:.2f} руб.</p>
+                    {discount_info}
                     <p><strong>Комментарий:</strong> {main_order['comment']}</p>
                 </div>
                 <div class="order-items">
@@ -500,14 +553,12 @@ def orders_page():
             html_temp += f"""
                 </div>
                 <div class="status-actions" data-order-id="{order_id}">
-                    <p>Изменить статус:</p>"""
-
-            html_temp += f"""
+                    <p>Изменить статус:</p>
                 </div>
                 <div class="status-buttons" data-order-id="{order_id}">"""
 
             for key, value in statuses.items():
-                active_class = "active" if key == status else ""
+                active_class = "active" if key == current_status else ""
                 html_temp += f"""
                     <button class="status-btn {key} {active_class}" data-status="{key}">{value}</button>"""
 
@@ -841,6 +892,34 @@ def flower_quantity_show():
             "status": "ERROR",
             "message": f"Ошибка при получении данных: {str(e)}"
         }), 500
+
+@app.route("/2weit/roses", methods=['POST', 'GET'])
+def roses_page():
+        return render_template("roses.html")
+
+@app.route("/2weit/tulips", methods=['POST', 'GET'])
+def tulips_page():
+        return render_template("tulips.html")
+
+@app.route("/2weit/lilies", methods=['POST', 'GET'])
+def lilies_page():
+        return render_template("lilies.html")
+
+@app.route("/2weit/gerberas", methods=['POST', 'GET'])
+def gerberas_page():
+        return render_template("gerberas.html")
+
+@app.route("/2weit/peonies", methods=['POST', 'GET'])
+def peonies_page():
+        return render_template("peonies.html")
+
+@app.route("/2weit/lavender", methods=['POST', 'GET'])
+def lavender_page():
+        return render_template("lavender.html")
+
+@app.route("/2weit/gypsophila", methods=['POST', 'GET'])
+def gypsophila_page():
+        return render_template("gypsophila.html")
 
 if __name__ == '__main__':
     app.run(debug=True, port=5005)

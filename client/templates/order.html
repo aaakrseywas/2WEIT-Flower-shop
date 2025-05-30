@@ -17,7 +17,7 @@
 
 <body>
     {% include "header.html" %}
-<main>
+ <main>
     <div class="cart-container">
         <h1 class="cart-title">КОРЗИНА</h1>
         <div class="cart-content">
@@ -55,7 +55,9 @@
                     <!-- Форма оформления заказа -->
                     <form class="checkout-form" action="/2weit/order" method="post">
                         <h4>Оформление заказа</h4>
-                        <input type="hidden" id="finalPriceInput" name="final_price" value="{{ total_price }}">
+                                <input type="hidden" id="finalPriceInput" name="final_price" value="{{ total_price }}">
+                                <input type="hidden" id="discountIdInput" name="discount_id" value="">
+                                <input type="hidden" id="discountPercentInput" name="discount_percent" value="0">
                         <div class="form-group">
                             <input type="text" name="name" placeholder="Ваше имя" required>
                         </div>
@@ -86,12 +88,13 @@
     </div>
 
     <!-- Модальное окно для скидки -->
-    <div id="discountModal" class="modal">
+    <div id="discountModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <h3>Применить скидку</h3>
             <div class="form-group">
-                <input type="text" id="userName" placeholder="Код или имя пользователя" required>
+                <input type="text" id="userNameInput" placeholder="Введите ваше имя пользователя">
+                <input type="hidden" id="userNameHiddenInput" name="user_name">
             </div>
             <button id="applyDiscountBtn" class="apply-discount-btn">Применить</button>
             <div id="discountMessage" class="discount-message"></div>
@@ -100,176 +103,114 @@
 </main>
     {% include "footer.html" %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const buttons = document.querySelectorAll('.add-to-cart');
+  document.addEventListener('DOMContentLoaded', function() {
+    // Элементы модального окна скидки
+    const modal = document.getElementById('discountModal');
+    const openBtn = document.getElementById('openDiscountModalBtn');
+    const closeBtn = document.querySelector('.close-modal');
+    const applyBtn = document.getElementById('applyDiscountBtn');
+    const userNameInput = document.getElementById('userNameInput'); // Изменено с discountCode
+    const discountMessage = document.getElementById('discountMessage');
 
-    buttons.forEach(button => {
-        let count = 0;
+    // Элементы корзины
+    const totalPriceElement = document.getElementById('totalPrice');
+    const discountInfoElement = document.getElementById('discountInfo');
+    const discountAmountElement = document.getElementById('discountAmount');
+    const finalAmountElement = document.getElementById('finalAmount');
+    const finalPriceInput = document.getElementById('finalPriceInput');
+    const userNameHiddenInput = document.getElementById('userNameHiddenInput'); // Изменено с discountIdInput
+    const discountPercentInput = document.getElementById('discountPercentInput');
 
-        button.addEventListener('click', function() {
-            count++;
-            const form = this.closest('form');
-            const productName = form.querySelector('input[name="flower_name"]').value;
-            const productSort = form.querySelector('input[name="flower_sort"]').value;
-            const productColor = form.querySelector('input[name="flower_color"]').value;
-            const productPrice = parseFloat(form.querySelector('input[name="flower_price"]').value);
+    // Открытие модального окна
+    if (openBtn && modal) {
+        openBtn.addEventListener('click', function() {
+            modal.style.display = 'block';
+            if (userNameInput) userNameInput.value = ''; // Очищаем поле при открытии
+            if (discountMessage) discountMessage.textContent = '';
+        });
+    }
 
-            fetch('/add_to_cart', {
+    // Закрытие модального окна
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    }
+
+    // Закрытие при клике вне окна
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Применение скидки
+    if (applyBtn && userNameInput && totalPriceElement) {
+        applyBtn.addEventListener('click', function() {
+            const userName = userNameInput.value.trim();
+            const originalAmount = parseFloat(totalPriceElement.textContent);
+
+            if (!userName) {
+                if (discountMessage) {
+                    discountMessage.textContent = 'Пожалуйста, введите имя пользователя';
+                    discountMessage.style.color = 'red';
+                }
+                return;
+            }
+
+            fetch('/apply_discount', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
                 },
                 body: JSON.stringify({
-                    name: productName,
-                    sort: productSort,
-                    color: productColor,
-                    price: productPrice,
-                    quantity: count
+                    user_name: userName, // Изменено с discount_id
+                    original_amount: originalAmount
                 })
             })
             .then(response => response.json())
             .then(data => {
-                if(data.success) {
-                    if(count === 1) {
-                        this.innerHTML = 'В корзине <span class="count">1</span> ✓';
-                        this.classList.add('in-cart');
-                        this.style.backgroundColor = '#a0a0a0';
-                    } else {
-                        this.innerHTML = `В корзине <span class="count">${count}</span> ✓`;
-                    }
+                if (!discountMessage) return;
 
-                    this.style.transform = 'scale(1.05)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
+                if (data.error) {
+                    discountMessage.textContent = data.error;
+                    discountMessage.style.color = 'red';
+                    return;
                 }
-            });
-        });
-    });
 
-    // Обработчик для кнопки применения скидки
-    document.getElementById('applyDiscountBtn').addEventListener('click', function() {
-        const userName = document.getElementById('userName').value.trim();
-        const originalAmount = parseFloat(document.getElementById('totalPrice').textContent);
-        const discountMessage = document.getElementById('discountMessage');
+                if (data.status === 'invalid' || data.status === 'no_discount') {
+                    discountMessage.textContent = data.message || 'Скидка не найдена для данного пользователя';
+                    discountMessage.style.color = 'orange';
+                    return;
+                }
 
-        if (!userName) {
-            discountMessage.textContent = 'Пожалуйста, введите ваше имя';
-            discountMessage.style.color = 'red';
-            return;
-        }
-
-        fetch('/apply_discount', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                user_name: userName,
-                original_amount: originalAmount
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                discountMessage.textContent = data.error;
-                discountMessage.style.color = 'red';
-                return;
-            }
-
-            if (data.status === 'no_discount') {
-                discountMessage.textContent = data.message;
-                discountMessage.style.color = 'orange';
-                return;
-            }
-
-            discountMessage.textContent = data.message;
-            discountMessage.style.color = 'green';
-            document.getElementById('discountAmount').textContent = data.discount_amount.toFixed(2);
-            document.getElementById('finalAmount').textContent = data.final_amount.toFixed(2);
-            document.getElementById('finalPriceInput').value = data.final_amount.toFixed(2);
-            document.getElementById('discountInfo').style.display = 'block';
-        })
-        .catch(error => {
-            discountMessage.textContent = 'Ошибка при применении скидки';
-            discountMessage.style.color = 'red';
-            console.error('Error:', error);
-        });
-    }); // Closing for applyDiscountBtn click handler
-}); // Closing for DOMContentLoaded
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById('discountModal');
-        const openBtn = document.getElementById('openDiscountModalBtn');
-        const closeBtn = document.querySelector('.close-modal');
-        const applyBtn = document.getElementById('applyDiscountBtn');
-
-        // Открытие модального окна
-        openBtn.addEventListener('click', function() {
-            modal.style.display = 'block';
-        });
-
-        // Закрытие модального окна
-        closeBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
-
-        // Закрытие при клике вне окна
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-
-        // Применение скидки
-        applyBtn.addEventListener('click', function() {
-            const userName = document.getElementById('userName').value;
-            const discountCode = document.getElementById('discountCode').value;
-            const discountMessage = document.getElementById('discountMessage');
-
-            if (!userName) {
-                discountMessage.textContent = 'Пожалуйста, введите ваше имя';
-                discountMessage.style.color = 'red';
-                return;
-            }
-
-            // Здесь должна быть логика проверки скидки
-            // Примерная реализация:
-            let discount = 0;
-            if (discountCode === 'FLOWER10') {
-                discount = 10;
-            } else if (discountCode === 'FLOWER20') {
-                discount = 20;
-            } else if (discountCode) {
-                discountMessage.textContent = 'Неверный код скидки';
-                discountMessage.style.color = 'red';
-                return;
-            }
-
-            if (discount > 0) {
-                const totalPrice = parseFloat(document.getElementById('totalPrice').textContent);
-                const discountAmount = (totalPrice * discount / 100).toFixed(2);
-                const finalAmount = (totalPrice - discountAmount).toFixed(2);
-
-                document.getElementById('discountAmount').textContent = discountAmount;
-                document.getElementById('finalAmount').textContent = finalAmount;
-                document.getElementById('finalPriceInput').value = finalAmount;
-                document.getElementById('discountInfo').style.display = 'block';
-
-                discountMessage.textContent = `Скидка ${discount}% успешно применена!`;
+                // Успешное применение скидки
+                discountMessage.textContent = data.message || 'Скидка успешно применена';
                 discountMessage.style.color = 'green';
+
+                // Обновляем значения на странице
+                if (finalPriceInput) finalPriceInput.value = data.final_amount;
+                if (discountPercentInput) discountPercentInput.value = data.discount_percent;
+                if (userNameHiddenInput) userNameHiddenInput.value = data.user_name; // Изменено с discount_id
+                if (discountAmountElement) discountAmountElement.textContent = data.discount_amount.toFixed(2);
+                if (finalAmountElement) finalAmountElement.textContent = data.final_amount.toFixed(2);
+                if (discountInfoElement) discountInfoElement.style.display = 'block';
 
                 // Закрываем модальное окно через 2 секунды
                 setTimeout(() => {
-                    modal.style.display = 'none';
+                    if (modal) modal.style.display = 'none';
                 }, 2000);
-            } else {
-                discountMessage.textContent = 'Введите код скидки для получения скидки';
-                discountMessage.style.color = 'blue';
-            }
+            })
+            .catch(error => {
+                if (discountMessage) {
+                    discountMessage.textContent = 'Ошибка при применении скидки';
+                    discountMessage.style.color = 'red';
+                }
+                console.error('Error:', error);
+            });
         });
-    });
+    }
+});
 </script>
 </body>
 </html>

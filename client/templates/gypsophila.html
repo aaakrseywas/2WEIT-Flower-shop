@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 2WEIT flower | Гипсофила </title>
+    <link rel="stylesheet" href="/static/flower.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+      {% include "header.html" %}
+<main>
+    <div class="flower-container">
+        <div class="flower-section">
+            <div class="flower-image">
+                <img src="/static/photo/гипсофила.jpg" alt="Гипсофила">
+            </div>
+            <div class="flower-content">
+                 <h1>Гипсофила - Воздушное Облако Цветов</h1>
+                <p>Нежные мелкие цветки, создающие эффект лёгкости и воздушности в любом букете</p>
+                <p>Гипсофила, также известная как "дыхание ребёнка" - скромный, но очаровательный цветок, который выращивают уже более 200 лет. Её название происходит от греческих слов "gypsos" (гипс) и "philos" (любящий), что указывает на предпочтение известковых почв.</p>
+                <p>Этот изящный цветок особенно ценится флористами за способность придавать букетам объем и воздушность. Несмотря на кажущуюся хрупкость, гипсофила удивительно устойчива после срезки.</p>
+
+                <div class="flower-features">
+                    <div class="feature-card">
+                        <h3>Символика</h3>
+                        <p>Чистота, невинность, искренность, лёгкость бытия и новая жизнь</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Аромат</h3>
+                        <p>Очень лёгкий, едва уловимый свежий аромат, почти нейтральный</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Цветение</h3>
+                        <p>Июнь-август, при благоприятных условиях может цвести до сентября</p>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('menu_page') }}" class="btn">Перейти в меню</a>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; color: #e84797; margin: 60px 0 30px;">Популярные виды гипсофилы</h2>
+
+        <div class="flower-types">
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/метельчатая.jpg" alt="Гипсофила метельчатая">
+                </div>
+                <div class="type-info">
+                    <h3>Метельчатая</h3>
+                    <p>Самый распространённый вид с мелкими белыми цветками, образует пышные кусты.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/ползучая.jpg" alt="Гипсофила ползучая">
+                </div>
+                <div class="type-info">
+                    <h3>Ползучая</h3>
+                    <p>Низкорослый вид, идеален для альпийских горок и бордюров.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/махровая.jpg" alt="Гипсофила махровая">
+                </div>
+                <div class="type-info">
+                    <h3>Махровая</h3>
+                    <p>Декоративная форма с более плотными и пышными соцветиями.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+      {% include "footer.html" %}
+</body>
+</html>

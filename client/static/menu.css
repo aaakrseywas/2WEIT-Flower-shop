@@ -1,11 +1,14 @@
 :root {
-    --primary-color: #CD4662;
-    --secondary-color: #A53A56;
-    --accent-color: #006AFF;
-    --dark-color: #4a2c2a;
-    --light-color: #fff;
-    --text-color: #333;
-    --background-color: #fff;
+    --primary-dark: #203F9A;       /* Темно-синий */
+    --primary-light: #94C2DA;      /* Светло-голубой */
+    --accent-dark: #E84797;        /* Ярко-розовый */
+    --accent-light: #E7A0CC;       /* Светло-розовый */
+    --secondary-accent: #CD4662;   /* Темно-розовый/красный */
+    --light-bg: #EFE8E0;           /* Светлый бежевый фон */
+    --secondary-blue: #4E7CB2;     /* Средний синий */
+
+    --text-dark: #333333;
+    --text-light: #FFFFFF;
     --border-radius: 16px;
     --box-shadow: 0 6px 18px rgba(0,0,0,0.08);
     --transition: all 0.3s ease;
@@ -19,9 +22,9 @@
 
 body {
     font-family: 'Unbounded', sans-serif;
-    color: var(--text-color);
+    color: var(--text-dark);
     line-height: 1.6;
-    background-color: var(--background-color);
+    background-color: var(--light-bg);
 }
 
 /* Герой-секция */
@@ -32,13 +35,13 @@ body {
     overflow: hidden;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
     box-shadow: var(--box-shadow);
+    background: linear-gradient(135deg, var(--primary-dark), var(--secondary-blue));
 }
 
 .hero-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(0.9);
     transition: transform 0.5s ease;
 }
 
@@ -54,45 +57,42 @@ body {
     width: 90%;
     max-width: 1200px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(239, 232, 224, 0.9);
     padding: 40px;
     border-radius: var(--border-radius);
-    box-shadow: 0 8px 32px rgba(205, 70, 98, 0.15);
+    box-shadow: 0 8px 32px rgba(32, 63, 154, 0.15);
     backdrop-filter: blur(2px);
     transition: var(--transition);
 }
 
 .hero-content:hover {
     backdrop-filter: blur(4px);
-    box-shadow: 0 8px 32px rgba(205, 70, 98, 0.25);
+    box-shadow: 0 8px 32px rgba(32, 63, 154, 0.25);
 }
 
 .hero-title {
     font-family: 'Unbounded', sans-serif;
     font-size: 2.8rem;
     font-weight: 700;
-    color: var(--primary-color);
+    color: var(--secondary-accent);
     margin-bottom: 20px;
     line-height: 1.2;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
 }
 
 .hero-description {
     font-size: 1.2rem;
     max-width: 800px;
     margin: 0 auto;
-    color: #555;
+    color: var(--text-dark);
 }
 
 /* Вводный текст */
 .flowers-intro {
     text-align: center;
-    padding: 4rem 1rem;
+
     font-size: 1.8rem;
-    color: #000000;
+    color: var(--text-dark);
     margin: 2rem 0;
-    clip-path: polygon(0 15%, 100% 0, 100% 85%, 0% 100%);
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 /* Заголовок секции */
@@ -104,7 +104,7 @@ body {
 
 .title h1 {
     font-size: 2.5rem;
-    color: var(--dark-color);
+    color: var( --secondary-accent);
     margin-bottom: 0.5rem;
     position: relative;
     display: inline-block;
@@ -119,13 +119,13 @@ body {
     transform: translateX(-50%);
     width: 100px;
     height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+
     border-radius: 2px;
 }
 
 .subtitle {
     font-size: 1.2rem;
-    color: var(--dark-color);
+    color: var(--secondary-accent);
     opacity: 0.8;
     max-width: 600px;
     margin: 0 auto;
@@ -142,20 +142,20 @@ body {
 }
 
 .product-card {
-    background: var(--light-color);
+    background: var(--text-light);
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--box-shadow);
     transition: var(--transition);
-    border: 1px solid rgba(205, 70, 98, 0.1);
+    border: 1px solid rgba(78, 124, 178, 0.1);
     display: flex;
     flex-direction: column;
 }
 
 .product-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 25px rgba(205, 70, 98, 0.15);
-    border-color: rgba(205, 70, 98, 0.2);
+    box-shadow: 0 15px 25px rgba(78, 124, 178, 0.15);
+    border-color: rgba(78, 124, 178, 0.3);
 }
 
 .product-image-container {
@@ -184,7 +184,7 @@ body {
 
 .product-name {
     font-size: 1.5rem;
-    color: var(--dark-color);
+    color: var(--primary-dark);
     margin-bottom: 12px;
     font-weight: 600;
     font-family: 'Unbounded', sans-serif;
@@ -200,7 +200,7 @@ body {
 
 .product-price {
     font-size: 1.4rem;
-    color: var(--primary-color);
+    color: var(--secondary-accent);
     font-weight: bold;
     margin: 15px 0;
     display: flex;
@@ -215,8 +215,8 @@ body {
     display: block;
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--light-color);
+    background: linear-gradient(135deg, var(--primary-dark), #4A63AD);
+    color: var(--text-light);
     border: none;
     font-size: 1.05rem;
     font-weight: 500;
@@ -229,8 +229,8 @@ body {
 }
 
 .action-btn:hover {
-    background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
-    box-shadow: 0 4px 12px rgba(205, 70, 98, 0.3);
+    background: linear-gradient(135deg, #4A63AD, var(--primary-dark));
+    box-shadow: 0 4px 12px rgba(32, 63, 154, 0.3);
 }
 
 /* Кнопка оформления заказа */
@@ -244,28 +244,28 @@ body {
 .checkout-btn {
     display: inline-block;
     padding: 15px 40px;
-    background: linear-gradient(135deg, var(--accent-color), #0056CF);
-    color: var(--light-color);
+    background: linear-gradient(135deg, var(--accent-dark), var(--secondary-accent));
+    color: var(--text-light);
     text-decoration: none;
     font-size: 1.1rem;
     font-weight: 500;
     border-radius: 50px;
     transition: var(--transition);
-    box-shadow: 0 4px 15px rgba(0, 106, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(232, 71, 151, 0.3);
     font-family: 'Unbounded', sans-serif;
 }
 
 .checkout-btn:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 106, 255, 0.4);
-    background: linear-gradient(135deg, #0056CF, var(--accent-color));
+    box-shadow: 0 6px 20px rgba(232, 71, 151, 0.4);
+    background: linear-gradient(135deg, var(--secondary-accent), var(--accent-dark));
 }
 
 /* Декоративные элементы */
 .flower-icon {
     display: inline-block;
     margin: 0 8px;
-    color: var(--primary-color);
+    color: var(--accent-dark);
     font-size: 1.2em;
     vertical-align: middle;
     transition: var(--transition);

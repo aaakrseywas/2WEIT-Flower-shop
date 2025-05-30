@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 2WEIT flower | Тюльпаны </title>
+    <link rel="stylesheet" href="/static/flower.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+      {% include "header.html" %}
+<main>
+    <div class="flower-container">
+        <div class="flower-section">
+            <div class="flower-image">
+                <img src="/static/photo/Тюльпаны.JPG" alt="Тюльпаны">
+            </div>
+            <div class="flower-content">
+                <h2>Тюльпаны</h2>
+                <p>Тюльпаны - одни из самых популярных весенних цветов, символизирующие приход тепла и возрождение природы. Эти элегантные цветы родом из Центральной Азии, но стали символом Нидерландов.</p>
+                <p>Существует более 150 видов тюльпанов и тысячи сортов, различающихся по форме, цвету и срокам цветения.</p>
+
+                <div class="flower-features">
+                    <div class="feature-card">
+                        <h3>Символика</h3>
+                        <p>Символизируют любовь, счастье и начало новой жизни</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Цветение</h3>
+                        <p>Ранней весной, с марта по май в зависимости от сорта</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Особенность</h3>
+                        <p>Продолжают расти после срезки, могут изгибаться к свету</p>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('menu_page') }}" class="btn">Перейти в меню</a>
+            </div>
+        </div>
+
+         <h2 style="text-align: center; color: #e84797; margin: 60px 0 30px;">Популярные виды гипсофилы</h2>
+
+        <div class="flower-types">
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/Простые ранние.jpg" alt="Простые ранние тюльпаны">
+                </div>
+                <div class="type-info">
+                    <h3>Простые ранние</h3>
+                    <p>Классические чашевидные цветки на невысоких стеблях. Зацветают первыми в сезоне.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/Бахромчатые.jpg" alt="Бахромчатые тюльпаны">
+                </div>
+                <div class="type-info">
+                    <h3>Бахромчатые</h3>
+                    <p>Изысканные цветки с игольчатой бахромой по краям лепестков. Очень декоративны.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/Попугайные.webp" alt="Попугайные тюльпаны">
+                </div>
+                <div class="type-info">
+                    <h3>Попугайные</h3>
+                    <p>Экзотические тюльпаны с волнистыми, изрезанными лепестками ярких расцветок.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+      {% include "footer.html" %}
+</body>
+</html>

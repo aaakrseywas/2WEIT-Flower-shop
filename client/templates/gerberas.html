@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 2WEIT flower | Герберы </title>
+    <link rel="stylesheet" href="/static/flower.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+      {% include "header.html" %}
+<main>
+    <div class="flower-container">
+        <div class="flower-section">
+            <div class="flower-image">
+                <img src="/static/photo/герберы.webp" alt="Герберы">
+            </div>
+            <div class="flower-content">
+                 <h1>Герберы - Солнечные Улыбки</h1>
+                <p>Яркие краски и жизнерадостность, которые дарят позитив и хорошее настроение</p>
+                <p>Гербера - популярный цветок семейства астровых, символ радости, оптимизма и простоты. Эти цветы были открыты в Южной Африке в 18 веке и быстро завоевали любовь флористов всего мира.</p>
+                <p>Современные герберы представлены огромным разнообразием расцветок и форм - от классических до махровых и игольчатых. Они отличаются крупными соцветиями на длинных прямых стеблях.</p>
+
+                <div class="flower-features">
+                    <div class="feature-card">
+                        <h3>Символика</h3>
+                        <p>Красные - страсть, желтые - дружба, розовые - восхищение, белые - невинность</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Аромат</h3>
+                        <p>Практически отсутствует, что делает их идеальными для аллергиков</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Цветение</h3>
+                        <p>При правильном уходе могут цвести круглый год в оранжереях</p>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('menu_page') }}" class="btn">Перейти в меню</a>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; color: #e84797; margin: 60px 0 30px;">Популярные виды гербер</h2>
+
+        <div class="flower-types">
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/классические.jpg" alt="Классические герберы">
+                </div>
+                <div class="type-info">
+                    <h3>Классические</h3>
+                    <p>Стандартная форма с одним рядом лепестков. Самые распространенные в букетах.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/махровые.jpg" alt="Махровые герберы">
+                </div>
+                <div class="type-info">
+                    <h3>Махровые</h3>
+                    <p>Пышные цветы с множеством рядов лепестков, напоминающие хризантемы.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/игольчатые.jpg" alt="Игольчатые герберы">
+                </div>
+                <div class="type-info">
+                    <h3>Игольчатые</h3>
+                    <p>Экзотические сорта с узкими скрученными лепестками, похожими на иголки.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+      {% include "footer.html" %}
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> 2WEIT flower | Пионы </title>
+    <link rel="stylesheet" href="/static/flower.css">
+    <link rel="stylesheet" href="/static/header.css">
+    <link rel="stylesheet" href="/static/footer.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400;1,700&family=Overpass+Mono:wght@300..700&display=swap" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+      {% include "header.html" %}
+ <main>
+    <div class="flower-container">
+        <div class="flower-section">
+            <div class="flower-image">
+                <img src="/static/photo/пионы.jpg" alt="Пионы">
+            </div>
+            <div class="flower-content">
+                 <h1>Пионы - Императоры Цветочного Царства</h1>
+                <p>Роскошные объемные бутоны и нежный аромат, символизирующие процветание и счастливую жизнь</p>
+                <p>Пион - один из самых древних и почитаемых цветков в мире, культивируемый более 2000 лет. В Китае он считается национальным цветком и символом императорской власти, а в Европе стал олицетворением богатства и удачи.</p>
+                <p>Современные пионы делятся на травянистые и древовидные, с различными формами цветка - от классических до махровых и японских. Их палитра включает все оттенки от белоснежного до темно-бордового.</p>
+
+                <div class="flower-features">
+                    <div class="feature-card">
+                        <h3>Символика</h3>
+                        <p>Розовые - романтика, красные - страсть, белые - чистота, желтые - богатство</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Аромат</h3>
+                        <p>От нежного цветочного до насыщенного сладковатого, особенно у розовых сортов</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Цветение</h3>
+                        <p>Короткий, но яркий период с мая по июль в зависимости от сорта</p>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('menu_page') }}" class="btn">Перейти в меню</a>
+            </div>
+        </div>
+
+        <h2 style="text-align: center; color: #e84797; margin: 60px 0 30px;">Популярные виды пионов</h2>
+
+        <div class="flower-types">
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/травянистые.jpg" alt="Травянистые пионы">
+                </div>
+                <div class="type-info">
+                    <h3>Травянистые</h3>
+                    <p>Классические садовые пионы с пышными цветами. Отмирают на зиму и возрождаются весной.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/древовидные.jpeg" alt="Древовидные пионы">
+                </div>
+                <div class="type-info">
+                    <h3>Древовидные</h3>
+                    <p>Кустарники с одревесневающими побегами. Цветы крупнее, цветение раньше.</p>
+                </div>
+            </div>
+
+            <div class="type-card">
+                <div class="type-image">
+                    <img src="/static/photo/Ито-гибриды.webp" alt="Ито-гибриды">
+                </div>
+                <div class="type-info">
+                    <h3>Ито-гибриды</h3>
+                    <p>Гибрид травянистых и древовидных пионов с необычными желтыми оттенками.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+      {% include "footer.html" %}
+</body>
+</html>

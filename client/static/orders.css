@@ -1,15 +1,15 @@
  :root {
-    --primary-color: #CD4662;
-    --secondary-color: #f8f9fa;
-    --accent-color: #ff9a76;
-    --text-color: #2d3748;
-    --light-text: #ffffff;
-    --border-radius: 10px;
-    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    --border-color: #e2e8f0;
-    --error-color: #e53e3e;
-    --success-color: #38a169;
+    --primary-color: #203f9a; /* Основной цвет */
+    --secondary-color: #94c2da; /* Вторичный цвет */
+    --accent-color: #e84797; /* Акцентный цвет */
+    --text-color: #2d3748; /* Цвет текста */
+    --light-text: #ffffff; /* Светлый текст */
+    --border-radius: 10px; /* Радиус границ */
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Тень */
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Переходы */
+    --border-color: #e2e8f0; /* Цвет границы */
+    --error-color: #e53e3e; /* Цвет ошибки */
+    --success-color: #38a169; /* Цвет успеха */
 }
 
 * {
@@ -19,141 +19,141 @@
 }
 
 body {
-    background-color: #f5f7fa;
-    color: var(--text-color);
-    line-height: 1.6;
+    background-color: #efe8e0; /* Цвет фона */
+    color: var(--text-color); /* Цвет текста */
+    line-height: 1.6; /* Межстрочный интервал */
 }
 
 .main-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    margin-bottom: 3em;
+    max-width: 1400px; /* Максимальная ширина контейнера */
+    margin: 0 auto; /* Центрирование */
+    margin-bottom: 3em; /* Отступ снизу */
 }
 
 h1 {
-    text-align: center;
-    margin: 20px 0 40px;
-    color: var(--primary-color);
-    font-size: 2.5rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    position: relative;
+    text-align: center; /* Выравнивание заголовка */
+    margin: 20px 0 40px; /* Отступы */
+    color: #CD4662; /* Цвет заголовка */
+    font-size: 2.5rem; /* Размер шрифта */
+    font-weight: 700; /* Жирность шрифта */
+    letter-spacing: -0.5px; /* Межбуквенный интервал */
+    position: relative; /* Позиционирование */
 }
 
 h1::after {
-    position: absolute;
-    bottom: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
-    border-radius: 2px;
+    position: absolute; /* Абсолютное позиционирование */
+    bottom: -12px; /* Отступ снизу */
+    left: 50%; /* Центрирование */
+    transform: translateX(-50%); /* Сдвиг для центрирования */
+    width: 80px; /* Ширина линии */
+    height: 4px; /* Высота линии */
+    background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); /* Градиент */
+    border-radius: 2px; /* Радиус границ линии */
 }
 
 .flowers-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-    gap: 24px;
-    margin-top: 30px;
+    display: grid; /* Сетка */
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Колонки */
+    gap: 24px; /* Промежутки между элементами */
+    margin-top: 30px; /* Отступ сверху */
 }
 
 .order-card {
-    background: white;
-    border-radius: var(--border-radius);
-    box-shadow: var(--box-shadow);
-    padding: 24px;
-    transition: var(--transition);
-    border: 1px solid var(--border-color);
-    position: relative;
+    background: white; /* Цвет фона карточки */
+    border-radius: var(--border-radius); /* Радиус границ */
+    box-shadow: var(--box-shadow); /* Тень */
+    padding: 24px; /* Отступы внутри карточки */
+    transition: var(--transition); /* Переходы */
+    border: 1px solid var(--border-color); /* Граница */
+    position: relative; /* Позиционирование */
 }
 
 .order-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    transform: translateY(-5px); /* Подъем карточки при наведении */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12); /* Тень при наведении */
 }
 
 .order-card h3 {
-    margin: 0 0 15px 0;
-    color: var(--primary-color);
-    font-size: 1.2rem;
-    font-weight: 600;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border-color);
+    margin: 0 0 15px 0; /* Отступы */
+    color: var(--primary-color); /* Цвет заголовка карточки */
+    font-size: 1.2rem; /* Размер шрифта */
+    font-weight: 600; /* Жирность шрифта */
+    padding-bottom: 12px; /* Отступ снизу */
+    border-bottom: 1px solid var(--border-color); /* Граница снизу */
 }
 
 .order-card p {
-    margin: 8px 0;
-    color: var(--text-color);
-    font-size: 0.95rem;
-    line-height: 1.5;
+    margin: 8px 0; /* Отступы */
+    color: var(--text-color); /* Цвет текста */
+    font-size: 0.95rem; /* Размер шрифта */
+    line-height: 1.5; /* Межстрочный интервал */
 }
 
 .order-card .items {
-    margin: 16px 0;
-    padding: 12px;
-    background-color: var(--secondary-color);
-    border-radius: var(--border-radius);
-    font-size: 0.9rem;
-    border: 1px dashed var(--border-color);
+    margin: 16px 0; /* Отступы */
+    padding: 12px; /* Отступы внутри */
+    background-color: var(--secondary-color); /* Цвет фона для элементов */
+        border-radius: var(--border-radius); /* Радиус границ */
+    font-size: 0.9rem; /* Размер шрифта */
+    border: 1px dashed var(--border-color); /* Пунктирная граница */
 }
 
 .status-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 20px;
+    display: flex; /* Flex-контейнер */
+    flex-wrap: wrap; /* Перенос элементов */
+    gap: 8px; /* Промежутки между кнопками */
+    margin-top: 20px; /* Отступ сверху */
 }
 
 .status-btn {
-    padding: 8px 12px;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: var(--transition);
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    flex-grow: 1;
-    text-align: center;
-    font-weight: 500;
+    padding: 8px 12px; /* Отступы внутри кнопки */
+    border: none; /* Без границы */
+    border-radius: var(--border-radius); /* Радиус границ */
+    font-size: 0.85rem; /* Размер шрифта */
+    cursor: pointer; /* Курсор при наведении */
+    transition: var(--transition); /* Переходы */
+    background-color: var(--secondary-color); /* Цвет фона кнопки */
+    color: var(--text-color); /* Цвет текста кнопки */
+    flex-grow: 1; /* Растяжение кнопки */
+    text-align: center; /* Выравнивание текста */
+    font-weight: 500; /* Жирность шрифта */
 }
 
 .status-btn:hover {
-    background-color: #e2e8f0;
+    background-color: #e2e8f0; /* Цвет фона при наведении */
 }
 
 .status-btn.active {
-    background: linear-gradient(135deg, var(--primary-color), #e33982);
-    color: var(--light-text);
-    box-shadow: 0 2px 8px rgba(93, 155, 123, 0.3);
+    background: linear-gradient(135deg, #CD4662, #e33982); /* Градиент для активной кнопки */
+    color: var(--light-text); /* Цвет текста для активной кнопки */
+    box-shadow: 0 2px 8px rgba(93, 155, 123, 0.3); /* Тень для активной кнопки */
 }
 
 .order-card.completed {
-    opacity: 0.85;
-    background-color: #f8faf9;
+    opacity: 0.85; /* Прозрачность для завершенной карточки */
+    background-color: #f8faf9; /* Цвет фона для завершенной карточки */
 }
 
 .order-card.completed h3,
 .order-card.completed p,
 .order-card.completed .items {
-    color: #718096;
+    color: #718096; /* Цвет текста для завершенной карточки */
 }
 
 .order-card.completed::after {
-    content: '✓ Выполнен';
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: var(--success-color);
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: bold;
+    content: '✓ Выполнен'; /* Текст для завершенной карточки */
+    position: absolute; /* Абсолютное позиционирование */
+    top: 10px; /* Отступ сверху */
+    right: 10px; /* Отступ справа */
+    background-color: #CD4662; /* Цвет фона для метки завершения */
+    color: white; /* Цвет текста для метки завершения */
+    padding: 4px 8px; /* Отступы внутри метки */
+    border-radius: 4px; /* Радиус границ метки */
+    font-size: 0.75rem; /* Размер шрифта для метки */
+    font-weight: bold; /* Жирность шрифта для метки */
 }
 
 .order-card.cancelled::after {
-    content: '✕ Отменен';
-    background-color: var(--error-color);
+    content: '✕ Отменен'; /* Текст для отмененной карточки */
+    background-color: var(--error-color); /* Цвет фона для метки отмены */
 }

@@ -37,26 +37,56 @@
                         <h2> ВСЕГДА БУДЕМ РАДЫ ВИДЕТЬ ВАС!</h2>
                     </div>
                 </div>
-            <div class="contact-content">
-                <div class="contact-name">
-                    <h1>КОНТАКТНАЯ ИНФОРМАЦИЯ</h1>
-                </div>
-                    <div class="contact-text">
-                        <h1> Адрес:</h1>
-                        <p>г.Вологда ул.Первомайская 42</p>
-                        <h1> Мы открыты:</h1>
-                        <p> пн-пт: 9:00-22:00</p>
-                        <p>сб-вс: 10:00-00:00 </p>
-                        <h1>Телефон</h1>
-                        <p>89000000000</p>
-                        <h1> Свяжитесь с нами:</h1>
-                        <p>если у вас есть замечания или предложения по нашей работе, пожалуйста напишите в telegram: 2weit_support или на почту support@2weit</p>
-                        <h1> Отзывы на площадках</h1>
-                        <div class="feedback">
-                        <p><a href="{{ url_for('reviews_page') }}">Отзывы</a></p>
+             <div class="contact-section">
+    <div class="contact-image">
+        <img src="/static/photo/download.jpeg" alt="Наш офис">
+    </div>
+
+    <div class="contact-content">
+        <div class="contact-name">
+            <h1><span class="highlight">КОНТАКТНАЯ</span> ИНФОРМАЦИЯ</h1>
+        </div>
+                <div class="contact-text">
+                    <div class="contact-item">
+                        <div>
+                            <h2>Адрес:</h2>
+                            <p>г. Вологда, ул. Первомайская 42</p>
                         </div>
                     </div>
 
+                    <div class="contact-item">
+                        <div>
+                            <h2>Мы открыты:</h2>
+                            <p>пн-пт: 9:00-22:00</p>
+                            <p>сб-вс: 10:00-00:00</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div>
+                            <h2>Телефон:</h2>
+                            <p>8 (900) 000-00-00</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div>
+                            <h2>Свяжитесь с нами:</h2>
+                            <p>Если у вас есть замечания или предложения по нашей работе, пожалуйста напишите в Telegram: @2weit_support или на почту support@2weit</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div>
+                            <h2>Отзывы на площадках:</h2>
+                            <div class="feedback">
+                                <a href="{{ url_for('reviews_page') }}" class="feedback-btn">Читать отзывы</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
             </div>
         </div>
 </main>
