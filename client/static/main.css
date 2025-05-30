@@ -229,7 +229,7 @@ body {
 /* Custom Bouquet Section */
 .custom-bouquet {
     padding: 5rem 2rem;
-    background: linear-gradient(135deg, var(--light-bg), rgba(255, 255, 255, 0.9));
+    background:   var(--light-bg);
 }
 
 .container {

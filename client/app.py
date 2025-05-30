@@ -438,7 +438,6 @@ def contact_page():
 def admin_page():
     return render_template("admin.html")
 
-
 @app.route("/2weit/orders", methods=["GET"])
 def orders_page():
     try:
@@ -743,10 +742,8 @@ def menu():
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e)})
 
-
 def get_db_connection():
     return cnx  # Возвращаем уже созданное соединение, а не пытаемся его вызвать
-
 
 @app.route('/api/orders', methods=['GET'])
 def orders():
@@ -776,7 +773,6 @@ def orders():
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e)})
 
-
 @app.route('/flower_new_price', methods=['POST'])
 def flower_new_price():
     # Проверяем, что запрос содержит JSON
@@ -805,7 +801,6 @@ def flower_new_price():
         })
     except Exception as e:
         return jsonify({"status": "ERROR", "message": str(e)}), 500
-
 
 @app.route('/flower_quantity', methods=['POST'])
 def flower_quantity():
@@ -858,7 +853,6 @@ def flower_quantity():
     except Exception as e:
         cur.connection.rollback()
         return jsonify({"status": "ERROR", "message": str(e)})
-
 
 @app.route('/flower_quantity_show', methods=['GET'])
 def flower_quantity_show():

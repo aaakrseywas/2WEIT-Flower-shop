@@ -1,3 +1,4 @@
+ /* Основные стили */
 * {
     margin: 0;
     padding: 0;
@@ -11,6 +12,7 @@ body {
     padding: 0;
     line-height: 1.7;
     overflow-x: hidden;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .main-container {
@@ -19,10 +21,45 @@ body {
     padding: 40px 20px;
 }
 
-/* Стили для секции "О нас" с асимметричным дизайном */
+/* Параллакс галерея */
+.about-images {
+    display: flex;
+    height: 70vh;
+    gap: 15px;
+    margin-bottom: 40px;
+    perspective: 1000px;
+}
+
+.parallax-img {
+    flex: 1;
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: all 0.5s cubic-bezier(0.25, 0.4, 0.45, 1.4);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.parallax-img:hover {
+    flex: 3;
+}
+
+.parallax-img::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+}
+
+/* Стили для секции "О нас" */
 .about-container {
     position: relative;
-    background:  #ffffff;
+    background: #ffffff;
     padding: 60px 40px;
     border-radius: 30px;
     margin-bottom: 80px;
@@ -40,6 +77,7 @@ body {
     height: 500px;
     background: radial-gradient(circle, #f0dae7 0%, rgba(232, 71, 151, 0) 70%);
     z-index: -1;
+    opacity: 0.7;
 }
 
 .about-container::after {
@@ -49,28 +87,46 @@ body {
     left: -30px;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, #f0dae7 0%, rgba(32, 63, 154, 0) 70%);
+    background: radial-gradient(circle, #e8f0da 0%, rgba(32, 63, 154, 0) 70%);
     z-index: -1;
+    opacity: 0.7;
 }
 
 .about-container h1 {
     color: #e84797;
-    font-size: 2.8em;
-    font-family: "Unbounded", sans-serif;
+    font-size: 3em;
+    font-family: "Playfair Display", serif;
     margin-bottom: 40px;
     font-weight: 700;
-    letter-spacing: -0.5px;
     position: relative;
     display: inline-block;
+}
+
+.about-container h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #e84797, #203f9a);
 }
 
 .about-container h2 {
     color: #203f9a;
     text-align: center;
-    font-size: 2em;
+    font-size: 2.2em;
     margin-top: 50px;
     font-weight: 600;
-    text-shadow: 0 2px 4px rgba(32, 63, 154, 0.1);
+    position: relative;
+    padding: 10px 0;
+}
+
+.about-container h2::before,
+.about-container h2::after {
+    content: '✿';
+    margin: 0 15px;
+    color: #e84797;
 }
 
 .about-text {
@@ -85,46 +141,106 @@ body {
     text-align: justify;
     hyphens: auto;
     position: relative;
-    padding-left: 20px;
+    padding-left: 30px;
+    break-inside: avoid;
 }
 
 .about-text p::before {
-    content: "❀";
+    content: "";
     position: absolute;
-    left: -5px;
-    color: rgba(232, 71, 151, 0.3);
+    left: 0;
+    top: 8px;
+    width: 20px;
+    height: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e84797'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
+    background-size: contain;
+    opacity: 0.5;
 }
 
-/* Галерея с эффектом параллакса */
-.about-images {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 40px;
+/* Плавающие цветы */
+.floating-flowers {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
 }
 
-.about-images img {
-    width: calc(25% - 15px);
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
+.flower {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.15;
+    animation: float 15s linear infinite;
+    animation-delay: calc(var(--i) * -3s);
 }
 
-.about-images img:hover {
-    transform: scale(1.03);
+.flower:nth-child(1) {
+    width: 80px;
+    height: 80px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e84797'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3C/svg%3E");
+    top: 10%;
+    left: 5%;
 }
 
-/* Контактная информация с аккордеон-эффектом */
+.flower:nth-child(2) {
+    width: 60px;
+    height: 60px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23203f9a'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3C/svg%3E");
+    top: 70%;
+    left: 80%;
+}
+
+.flower:nth-child(3) {
+    width: 100px;
+    height: 100px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e84797'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3C/svg%3E");
+    top: 40%;
+    left: 20%;
+}
+
+.flower:nth-child(4) {
+    width: 50px;
+    height: 50px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23203f9a'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3C/svg%3E");
+    top: 20%;
+    left: 70%;
+}
+
+.flower:nth-child(5) {
+    width: 70px;
+    height: 70px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e84797'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z'/%3E%3C/svg%3E");
+    top: 80%;
+    left: 30%;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-50px) rotate(180deg);
+    }
+    100% {
+        transform: translateY(0) rotate(360deg);
+    }
+}
+
+/* Контактная секция */
 .contact-section {
     display: flex;
     max-width: 1200px;
-    margin: 40px auto;
+    margin: 80px auto;
     background: white;
-    border-radius: 12px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 10px 30px rgba(32, 63, 154, 0.1);
-    font-family: 'Arial', sans-serif;
+    box-shadow: 0 20px 50px rgba(32, 63, 154, 0.15);
+    font-family: 'Montserrat', sans-serif;
+    position: relative;
 }
 
 .contact-image {
@@ -139,88 +255,202 @@ body {
     object-fit: cover;
 }
 
+.interactive-map {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em;
+    color: #203f9a;
+    position: relative;
+}
+
+.interactive-map::before {
+    content: "📍 Вологда, ул. Первомайская 42";
+    position: absolute;
+    padding: 15px 25px;
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    font-weight: bold;
+}
+
 .contact-content {
     flex: 1;
-    padding: 40px;
+    padding: 50px;
     background: white;
+    position: relative;
 }
 
 .contact-name h1 {
-    font-size: 32px;
+    font-size: 2.5em;
     color: #203f9a;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     position: relative;
     padding-bottom: 15px;
+    font-family: 'Playfair Display', serif;
 }
 
-.contact-name h1:after {
+.contact-name h1::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 60px;
+    width: 80px;
     height: 4px;
-    background: #e84797;
+    background: linear-gradient(90deg, #e84797, #203f9a);
+    border-radius: 2px;
 }
 
 .highlight {
     color: #e84797;
+    position: relative;
+}
+
+.highlight::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.contact-name h1:hover .highlight::after {
+    transform: scaleX(1);
+    transform-origin: left;
 }
 
 .contact-item {
     display: flex;
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     align-items: flex-start;
+    transition: transform 0.3s;
+}
+
+.contact-item:hover {
+    transform: translateX(10px);
 }
 
 .contact-icon {
-    font-size: 24px;
-    margin-right: 15px;
-    color: #4e7cb2;
+    font-size: 28px;
+    margin-right: 20px;
+    color: #e84797;
     min-width: 30px;
+    transition: transform 0.3s;
 }
 
+.contact-item:hover .contact-icon {
+    transform: scale(1.2);
+}
 
 .contact-item h2 {
-    font-size: 18px;
+    font-size: 1.2em;
     color: #203f9a;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
+    font-weight: 600;
 }
 
 .contact-item p {
-    color: #000000;
+    color: #555;
     line-height: 1.6;
     margin-bottom: 5px;
 }
 
-.contact-item a {
-    color: #ffffff;
-    text-decoration: none;
-    transition: color 0.3s;
-}
-
-.contact-item a:hover {
-    background: #e7a0cc;
-    color: #ffffff;
-    text-decoration-line: none;
+.feedback {
+    margin-top: 15px;
 }
 
 .feedback-btn {
-    display: inline-block;
-    padding: 10px 20px;
-    background: #e84797;
-    color: #000000;
-    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #e84797, #d45b9b);
+    color: white;
+    border-radius: 30px;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
     transition: all 0.3s;
-    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(232, 71, 151, 0.3);
+    border: none;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.feedback-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: 0.5s;
 }
 
 .feedback-btn:hover {
-    background: #e84797;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(232, 71, 151, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(232, 71, 151, 0.4);
 }
 
+.feedback-btn:hover::before {
+    left: 100%;
+}
 
+/* Анимация пульсации */
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(232, 71, 151, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(232, 71, 151, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(232, 71, 151, 0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 992px) {
+    .about-text {
+        column-count: 1;
+    }
+
+    .contact-section {
+        flex-direction: column;
+    }
+
+    .contact-image {
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .about-images {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .parallax-img {
+        height: 200px;
+    }
+
+    .about-container {
+        padding: 40px 20px;
+    }
+
+    .contact-content {
+        padding: 30px;
+    }
+}

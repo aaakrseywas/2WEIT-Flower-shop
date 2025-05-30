@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title> 2WEIT flower | Отзывы</title>
+    <title>🌺 2WEIT flower | Отзывы</title>
     <link rel="stylesheet" href="/static/header.css">
     <link rel="stylesheet" href="/static/footer.css">
     <link rel="stylesheet" href="/static/reviews.css">
@@ -22,43 +22,57 @@
 </head>
 <body>
       {% include "header.html" %}
-      <div class="main-container">
-        <div class="menu-name">
-            <h1>Отзывы клиентов о нас</h1>
-            <p>Здесь вы можете посмотреть отзывы от наших клиентов</p>
-            <p>Также сами можете оставить о нас ваш отзыв</p>
+      <main>
+ <div class="main-container">
+    <div class="menu-name">
+        <div class="flower-decor left"></div>
+        <div class="flower-decor right"></div>
+        <h1 data-aos="fade-down">Отзывы клиентов о нас</h1>
+        <p data-aos="fade-down" data-aos-delay="100">Здесь вы можете посмотреть отзывы от наших клиентов</p>
+        <p data-aos="fade-down" data-aos-delay="200">Также сами можете оставить о нас ваш отзыв</p>
+    </div>
+
+    <div class="reviews-list" data-aos="fade-up">
+        <h2>Последние отзывы </h2>
+                <div class="review-content">
+                    {{ param | safe }}
+                </div>
+            </div>
         </div>
 
-    <div class="reviews-list">
-        <h2>Последние отзывы</h2>
-                <div class="review">
-                    <div class="review-content">
-                        <div class="reviews-container">
-                            {{ param | safe }}
-                    </div>
-                </div>
-                </div>
-        </div>
-
-    <div class="add-review-form">
+    <div class="add-review-form" data-aos="fade-up" data-aos-delay="200">
         <h2>Оставить отзыв</h2>
         <form id="reviewForm">
             <div class="form-group">
                 <label for="username">Ваше имя:</label>
-                <input type="text" id="username" name="username" required>
+                <div class="input-with-icon">
+                    <input type="text" id="username" name="username" required placeholder="Как к вам обращаться?">
+                    <span class="input-icon">👤</span>
+                </div>
             </div>
             <div class="form-group">
                 <label for="comment">Ваш отзыв:</label>
-                <textarea id="comment" name="comment" rows="4" required></textarea>
+                <div class="input-with-icon">
+                    <textarea id="comment" name="comment" rows="4" required placeholder="Поделитесь вашими впечатлениями"></textarea>
+                    <span class="input-icon">✍️</span>
+                </div>
             </div>
-             <div class="form-group">
+            <div class="form-group">
                 <label for="email">Ваша электронная почта:</label>
-                <input type="text" id="email" name="email" required>
+                <div class="input-with-icon">
+                    <input type="email" id="email" name="email" required placeholder="example@mail.com">
+                    <span class="input-icon">✉️</span>
+                </div>
             </div>
-            <button type="submit" class="submit-btn">Отправить отзыв</button>
+            <div class="form-footer">
+                <button type="submit" class="submit-btn pulse">
+                    <span class="btn-text">Отправить отзыв</span>
+                    <span class="btn-icon">→</span>
+                </button>
+            </div>
         </form>
     </div>
-</div>
+           </main>
       {% include "footer.html" %}
 <script>
     document.getElementById('reviewForm').addEventListener('submit', function(e) {
