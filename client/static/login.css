@@ -20,12 +20,12 @@ h2 {
 
 main {
     width: 100%;
-    padding: 50px;
+    padding: 100px;
 }
 
 form {
     background-color: white;
-    padding: 40px;
+    padding: 130px;
     border-radius: 16px;
     box-shadow: 0 10px 30px rgba(32, 63, 154, 0.15);
     width: 100%;
